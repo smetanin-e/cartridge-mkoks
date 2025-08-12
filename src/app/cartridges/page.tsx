@@ -1,6 +1,6 @@
 'use client';
 
-import { AddNewCartridge } from '@/shared/components';
+import { RegisterCartridge, RegisterModel } from '@/shared/components';
 import {
   Badge,
   Button,
@@ -47,15 +47,10 @@ const initialPrinters: Printer[] = [
   { id: 'p4', name: 'HP LaserJet Pro M402dn', compatibleModels: ['CF280A'] },
 ];
 
-export default function CartrigesPage() {
-  const [openPopup, setOpenPopup] = React.useState(false);
-  const closePopup = () => {
-    setOpenPopup(false);
-  };
-
+export default function CartridgesPage() {
   //=============================================
 
-  const [printers, setPrinters] = useState<Printer[]>(initialPrinters);
+  const [printers, setPrinters] = React.useState<Printer[]>(initialPrinters);
   const [printerSearchTerm, setPrinterSearchTerm] = useState('');
 
   const [cartridgeModels, setCartridgeModels] = useState<CartridgeModel[]>(initialCartridgeModels);
@@ -69,23 +64,9 @@ export default function CartrigesPage() {
     return matchesName || matchesModels;
   });
 
-  // Функции для управления моделями картриджей
-  const handleAddModel = () => {
-    const modelName = newModelName.trim();
-    if (!modelName) {
-      alert('Пожалуйста, введите название модели.');
-      return;
-    }
-    if (cartridgeModels.some((m) => m.name.toLowerCase() === modelName.toLowerCase())) {
-      alert('Модель с таким названием уже существует.');
-      return;
-    }
-    setCartridgeModels((prev) => [...prev, { id: Date.now().toString(), name: modelName }]);
-    setNewModelName('');
-  };
-
   return (
     <div className='container mx-auto p-6'>
+      {/* HEADER */}
       <div className='flex items-center gap-4 mb-6'>
         <Link href='/'>
           <Button variant='outline' size='sm'>
@@ -100,57 +81,14 @@ export default function CartrigesPage() {
           </p>
         </div>
       </div>
-      {/* <div className='flex gap-8'>
-        <Button onClick={() => setOpenPopup(true)} className='flex items-center gap-2'>
-          <Plus className='h-4 w-4' />
-          Зарегистрировать картридж
-        </Button>
-        <Button className='flex items-center gap-2'>
-          <Plus className='h-4 w-4' />
-          Добавить модель картриджа
-        </Button>
-      </div> */}
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <div className='space-y-6'>
-          <AddNewCartridge />
+          {/* Регистрация картриджа */}
+          <RegisterCartridge />
 
-          {/* Добавление модели картриджа */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Package className='h-5 w-5' />
-                Добавить модель картриджа
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              <div>
-                <Label htmlFor='new-model-name'>Название модели</Label>
-                <Input
-                  id='new-model-name'
-                  placeholder='Например, CE505A'
-                  value={newModelName}
-                  onChange={(e) => setNewModelName(e.target.value)}
-                />
-              </div>
-              <Button onClick={handleAddModel} className='w-full'>
-                <Plus className='h-4 w-4 mr-2' />
-                Добавить модель
-              </Button>
-              {cartridgeModels.length > 0 && (
-                <div className='mt-4'>
-                  <h3 className='text-md font-semibold mb-2'>Существующие модели:</h3>
-                  <div className='flex flex-wrap gap-2'>
-                    {cartridgeModels.map((model) => (
-                      <Badge key={model.id} variant='secondary'>
-                        {model.name}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* Добавление новой модели картриджа */}
+          <RegisterModel />
         </div>
 
         {/* Таблица принтеров */}

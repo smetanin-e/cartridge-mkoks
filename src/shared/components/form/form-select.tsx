@@ -1,3 +1,5 @@
+//!ПОКА НЕ ИСПОЛЬЗУЕТСЯ
+
 'use client';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ClearButton, ErrorText, RequiredSymbol } from '@/shared/components';

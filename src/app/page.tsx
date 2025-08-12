@@ -35,7 +35,7 @@ export default function Home() {
               Прием из сервиса
             </Button>
           </Link>
-          <Link href='/cartriges'>
+          <Link href='/cartridges'>
             <Button className='flex items-center gap-2'>Картриджи</Button>
           </Link>
         </div>

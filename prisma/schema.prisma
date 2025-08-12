@@ -1,0 +1,32 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Model {
+    id         Int         @id @default(autoincrement())
+    model      String      @unique
+    cartridges Cartridge[] // 1 → many
+}
+
+model Cartridge {
+    id     Int    @id @default(autoincrement())
+    number String @unique // Уникальный номер картриджа (например, МК101)
+
+    modelId Int
+    model   Model @relation(fields: [modelId], references: [id]) // many → 1
+
+    status CartridgeStatus @default(AVAILABLE)
+}
+
+enum CartridgeStatus {
+    SERVICE // В сервисе
+    WORKING // В работе
+    RESERVE // Сняты с обслуживания
+    AVAILABLE // Готовы к использованию
+    REFILL // Требуется заправка
+}
