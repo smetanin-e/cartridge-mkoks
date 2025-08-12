@@ -1,7 +1,6 @@
 import { Model } from '@prisma/client';
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
-import { CreateModel } from './dto/cartridge-model';
 import axios from 'axios';
 import { useModelsStore } from '../store/cartridge-models';
 
@@ -10,7 +9,7 @@ export const getModels = async (): Promise<Model[]> => {
   return data;
 };
 
-export const createModel = async (values: CreateModel): Promise<Model> => {
+export const createModel = async (values: Model): Promise<Model> => {
   try {
     const { data } = await axiosInstance.post<Model>('/cartridgemodels', values);
     useModelsStore.getState().getModels();
