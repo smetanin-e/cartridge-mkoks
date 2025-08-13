@@ -6,7 +6,6 @@ export async function GET() {
     const models = await prisma.model.findMany({
       include: { cartridges: true },
     });
-
     return NextResponse.json(models);
   } catch (error) {
     console.error('MODEL_CARTRIDGE_GET Server error', error);
@@ -34,7 +33,7 @@ export async function POST(req: NextRequest) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
-    console.error('MODEL_CARTRIDGE_POST Server error', error);
+    console.error('CARTRIDGE_MODELS_POST Server error', error);
     return NextResponse.json({ message: 'Не удалось добавить модель' }, { status: 500 });
   }
 }

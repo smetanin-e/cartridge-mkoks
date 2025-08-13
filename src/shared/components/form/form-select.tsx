@@ -33,7 +33,7 @@ export const FormSelect: React.FC<Props> = ({ name, label, required, options }) 
   const errorText = errors[name]?.message as string;
 
   return (
-    <div className=''>
+    <div className='relative'>
       {label && (
         <p className='font-medium mb-0.5 text-sm'>
           {label} {required && <RequiredSymbol />}
@@ -43,23 +43,25 @@ export const FormSelect: React.FC<Props> = ({ name, label, required, options }) 
       <Controller
         control={control}
         name={name}
-        render={({ field }) => (
-          <div className='relative'>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger className='h-12 text-md w-full'>
-                <SelectValue placeholder='Выберите...' />
-              </SelectTrigger>
-              <SelectContent>
-                {options.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {field.value && <ClearButton onClick={() => field.onChange('')} />}
-          </div>
-        )}
+        render={({ field }) => {
+          const value = field.value ?? '';
+          return (
+            <div className='relative'>
+              <Select value={value} onValueChange={field.onChange}>
+                <SelectTrigger className='h-12 text-md w-full'>
+                  <SelectValue placeholder='Выберите...' />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          );
+        }}
       />
 
       {errorText && <ErrorText text={errorText} className='absolute text-[12px] right-0' />}

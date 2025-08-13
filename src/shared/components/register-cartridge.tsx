@@ -1,37 +1,65 @@
+'use client';
 import React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
-import { FormInput, FormSelectWithSearch } from '@/shared/components';
+import { FormInput, FormSelect, FormSelectWithSearch } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  FormRegistercartridgeType,
-  registerСartrigeSchema,
+  RegisterCartridgeFormType,
+  registerCartridgeSchema,
 } from '@/shared/schemas/register-сartrige-schema';
 import toast from 'react-hot-toast';
+import { useModelsStore } from '../store/cartridge-models';
+import { CartridgeStatus } from '@prisma/client';
+import { registerCartridge } from '../services/register-cartridge';
 
 interface Props {
   className?: string;
 }
 
+const options = [
+  { label: 'Готов к использованию', value: CartridgeStatus.AVAILABLE },
+  { label: 'Требуется заправка', value: CartridgeStatus.REFILL },
+  { label: 'В сервисном центре', value: CartridgeStatus.SERVICE },
+  { label: 'В работе', value: CartridgeStatus.WORKING },
+  { label: 'В резерве', value: CartridgeStatus.RESERVE },
+];
+
 export const RegisterCartridge: React.FC<Props> = () => {
-  const form = useForm<FormRegistercartridgeType>({
-    resolver: zodResolver(registerСartrigeSchema),
+  ///!Позже отрефакторить
+  const { models, getModels } = useModelsStore();
+
+  React.useEffect(() => {
+    getModels();
+  }, []);
+  ///!=================
+
+  const form = useForm<RegisterCartridgeFormType>({
+    resolver: zodResolver(registerCartridgeSchema),
     defaultValues: {
       number: 'МК',
-      model: '',
     },
   });
 
-  const onSubmit = async (data: FormRegistercartridgeType) => {
-    console.log(data);
-    toast.success('Картридж добавлен в реестр', {
-      icon: '✅',
-    });
-    form.reset({
-      number: 'МК',
-      model: '',
-    });
+  const onSubmit = async (data: RegisterCartridgeFormType) => {
+    try {
+      console.log(data);
+      await registerCartridge(data);
+      toast.success('Картридж добавлен в реестр', {
+        icon: '✅',
+      });
+      form.reset({
+        number: 'МК',
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log('Error [REGISTER_CARTRIDGE_FORM]', error);
+        return toast.error(error.message, { icon: '❌' });
+      }
+    }
   };
+
+  //console.log(models);
 
   return (
     <Card>
@@ -49,15 +77,14 @@ export const RegisterCartridge: React.FC<Props> = () => {
                 required
               />
               <FormSelectWithSearch
-                name='model'
+                name='modelId'
                 label='Модель'
                 required
-                options={[
-                  { value: 'CE505A', label: 'CE505A' },
-                  { value: 'CF426X', label: 'CF426X' },
-                  { value: 'TK-1200', label: 'TK-1200' },
-                ]}
+                options={models}
+                error={'Необходимо выбрать модель из списка'}
               />
+
+              <FormSelect required name='status' label='Состояние картриджа' options={options} />
             </div>
 
             <div className='pt-4 flex justify-end gap-8'>

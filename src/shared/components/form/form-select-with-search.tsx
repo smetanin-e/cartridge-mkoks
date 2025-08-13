@@ -16,21 +16,26 @@ import {
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '@/shared/lib';
+import { Model } from '@prisma/client';
 
-interface Option {
-  value: string;
-  label: string;
-}
 interface Props {
   name: string;
   label?: string;
   required?: boolean;
   className?: string;
-  options: Option[];
+  options: Model[];
+  error: string;
 }
 
-export const FormSelectWithSearch: React.FC<Props> = ({ name, label, required, options }) => {
+export const FormSelectWithSearch: React.FC<Props> = ({
+  name,
+  label,
+  required,
+  options,
+  error,
+}) => {
   const [open, setOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState('');
   const {
     control,
     formState: { errors },
@@ -49,65 +54,75 @@ export const FormSelectWithSearch: React.FC<Props> = ({ name, label, required, o
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
-          <div className='relative'>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild className='relative'>
-                <Button
-                  variant='outline'
-                  role='combobox'
-                  aria-expanded={open}
-                  className='w-full justify-between font-normal'
-                >
-                  {field.value
-                    ? options.find((f) => f.value === field.value)?.label ?? field.value
-                    : 'Выберите или введите...'}
-                  <>
+        render={({ field }) => {
+          const selectedModel = options.find((f) => f.id === field.value)?.model ?? '';
+
+          return (
+            <div className='relative'>
+              <Popover
+                open={open}
+                onOpenChange={(o) => {
+                  setOpen(o);
+                  if (o) setSearchValue(selectedModel || ''); // при открытии подставляем выбранное имя
+                }}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    role='combobox'
+                    aria-expanded={open}
+                    className='w-full justify-between font-normal'
+                  >
+                    {selectedModel || 'Выберите или введите...'}
                     {!open && !field.value && (
                       <ChevronDown className='ml-2 mr-1 h-5 w-5 shrink-0 opacity-50' />
                     )}
-                  </>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align='start' className='p-0'>
-                <Command>
-                  <CommandInput
-                    placeholder='Поиск или ввод...'
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    autoFocus
-                  />
-                  <CommandEmpty>Ничего не найдено</CommandEmpty>
-                  <CommandGroup>
-                    {options.map((framework) => (
-                      <CommandItem
-                        className='cursor-pointer'
-                        key={framework.value}
-                        value={framework.value}
-                        onSelect={(currentValue) => {
-                          field.onChange(currentValue);
-                          setOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            'mr-2 h-4 w-4',
-                            field.value === framework.value ? 'opacity-100' : 'opacity-0',
-                          )}
-                        />
-                        {framework.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            {field.value && <ClearButton onClick={() => field.onChange('')} />}
-          </div>
-        )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align='start' className='p-0 '>
+                  <Command>
+                    <CommandInput
+                      placeholder='Поиск или ввод...'
+                      value={searchValue}
+                      onValueChange={setSearchValue} // управляем поиском отдельно
+                      autoFocus
+                    />
+                    <CommandEmpty>Ничего не найдено</CommandEmpty>
+                    <CommandGroup>
+                      {options
+                        .filter((opt) =>
+                          opt.model.toLowerCase().includes(searchValue.toLowerCase()),
+                        )
+                        .map((data) => (
+                          <CommandItem
+                            key={data.id}
+                            value={data.model}
+                            onSelect={() => {
+                              field.onChange(Number(data.id)); // сохраняем id
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                field.value === data.id ? 'opacity-100' : 'opacity-0',
+                              )}
+                            />
+                            {data.model}
+                          </CommandItem>
+                        ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {field.value && <ClearButton onClick={() => field.onChange('')} />}
+            </div>
+          );
+        }}
       />
 
-      {errorText && <ErrorText text={errorText} className='absolute text-[12px] right-0' />}
+      {errorText && <ErrorText text={error} className='absolute text-[12px] right-0' />}
     </div>
   );
 };

@@ -30,8 +30,6 @@ export const RegisterModel: React.FC<Props> = () => {
     getModels();
   }, []);
 
-  console.log(models);
-
   const form = useForm<FormRegisterModelType>({
     resolver: zodResolver(registerModelSchema),
     defaultValues: {
