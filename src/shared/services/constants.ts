@@ -1,4 +1,5 @@
 export enum ApiRoutes {
   MODELS = 'cartridge-models',
-  CARTRIDGES = 'cart',
+  CARTRIDGES = 'register-cartridge',
+  PRINTERS = 'printers',
 }

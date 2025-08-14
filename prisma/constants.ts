@@ -5,8 +5,10 @@ export const models = [
   { model: 'CF259A' },
   { model: '106A' },
   { model: 'Xerox 3300' },
-  { model: 'CF426X' },
-  { model: 'CF426A' },
+  { model: 'CF226X' },
+  { model: 'CF226A' },
+  { model: 'Q7553А' },
+  { model: 'Q7553X' },
 ];
 
 export const cartridges = [
@@ -20,4 +22,15 @@ export const cartridges = [
   { number: 'MK008', modelId: 8 },
   { number: 'MK009', modelId: 8 },
   { number: 'MK010', modelId: 8 },
+];
+
+export const printers = [
+  { name: 'HP LaserJet P2055dn' },
+  { name: 'Canon i-SENSYS MF4410' },
+  { name: 'HP LaserJet Pro M428dw' },
+  { name: 'HP LaserJet Pro M428fdn' },
+  { name: 'HP LaserJet Enterprise M430f' },
+  { name: 'HP LaserJet Pro M426fdn' },
+  { name: 'HP LaserJet M2727nf' },
+  { name: 'HP LaserJet P2015' },
 ];

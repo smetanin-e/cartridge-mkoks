@@ -2,7 +2,6 @@
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { Package, Plus } from 'lucide-react';
-import { CartridgeModel } from '@/app/cartridges/page';
 import { FormInput } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FormRegisterModelType, registerModelSchema } from '../schemas/register-model-schema';
@@ -15,13 +14,6 @@ import { createModel } from '../services/models';
 interface Props {
   className?: string;
 }
-
-const initialCartridgeModels: CartridgeModel[] = [
-  { id: 'm1', name: 'CE505A' },
-  { id: 'm2', name: 'CF280A' },
-  { id: 'm3', name: 'CB435A' },
-  { id: 'm4', name: 'HP 12A' },
-];
 
 export const RegisterModel: React.FC<Props> = () => {
   const { models, getModels } = useModelsStore();

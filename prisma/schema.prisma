@@ -11,6 +11,8 @@ model Model {
     id         Int         @id @default(autoincrement())
     model      String      @unique
     cartridges Cartridge[] // 1 → many
+
+    printers Printer[]
 }
 
 model Cartridge {
@@ -29,4 +31,10 @@ enum CartridgeStatus {
     RESERVE // Сняты с обслуживания
     AVAILABLE // Готовы к использованию
     REFILL // Требуется заправка
+}
+
+model Printer {
+    id     Int     @id @default(autoincrement())
+    name   String
+    models Model[]
 }

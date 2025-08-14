@@ -2,6 +2,7 @@ export { Button } from './button';
 export { Input } from './input';
 export { Label } from './label';
 export { Badge } from './badge';
+export { Checkbox } from './checkbox';
 export * from './select';
 export * from './dialog';
 export * from './popover';
