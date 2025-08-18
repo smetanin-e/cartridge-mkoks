@@ -3,7 +3,7 @@ import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import axios from 'axios';
 import { useModelsStore } from '../store/cartridge-models';
-import { CreateModelDTO } from './dto/cartridge-model';
+import { CreateModelDTO } from './dto/cartridge-model.dto.';
 
 export const getModels = async (): Promise<Model[]> => {
   const { data } = await axiosInstance.get<Model[]>(ApiRoutes.MODELS);

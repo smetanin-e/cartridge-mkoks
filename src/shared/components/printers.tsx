@@ -7,6 +7,10 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Input,
   Table,
   TableBody,
@@ -15,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { Plus, PrinterIcon, Search } from 'lucide-react';
+import { MoreHorizontal, Plus, PrinterIcon, Search } from 'lucide-react';
 import { usePrintersStore } from '../store/printers';
 import { CreatePrinter } from '@/shared/components';
 
@@ -32,13 +36,6 @@ export interface CartridgeModel {
   id: string;
   name: string; // Например, "CE505A"
 }
-
-const initialPrinters: Printer[] = [
-  { id: 'p1', name: 'HP LaserJet P2055dn', compatibleModels: ['CE505A', 'CF280A'] },
-  { id: 'p2', name: 'Canon i-SENSYS MF4410', compatibleModels: ['Canon 728'] },
-  { id: 'p3', name: 'HP LaserJet 1018', compatibleModels: ['HP 12A'] },
-  { id: 'p4', name: 'HP LaserJet Pro M402dn', compatibleModels: ['CF280A'] },
-];
 
 export const Printers: React.FC<Props> = () => {
   //const [printers_, setPrinters_] = React.useState<Printer[]>(initialPrinters);
@@ -96,6 +93,7 @@ export const Printers: React.FC<Props> = () => {
                 <TableRow>
                   <TableHead>Название принтера</TableHead>
                   <TableHead>Совместимые модели</TableHead>
+                  <TableHead className='text-center'>Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -116,6 +114,20 @@ export const Printers: React.FC<Props> = () => {
                           ))
                         )}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <div className='flex items-center justify-center'>
+                            <Button variant='ghost' className='h-8 w-8 p-0'>
+                              <MoreHorizontal className='h-4 w-4' />
+                            </Button>
+                          </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='end'>
+                          <DropdownMenuItem className='cursor-pointer'>Удалить</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}

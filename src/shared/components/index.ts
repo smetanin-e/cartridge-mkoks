@@ -6,4 +6,6 @@ export { RegisterCartridge } from './register-cartridge';
 export { RegisterModel } from './register-model';
 export { Printers } from './printers';
 export { CreatePrinter } from './create-printer';
+
+export { CartridgeList } from './cartridge-list';
 export * from './form';

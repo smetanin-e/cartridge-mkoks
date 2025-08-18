@@ -1,10 +1,10 @@
 'use client';
 
-import { Printers, RegisterCartridge, RegisterModel } from '@/shared/components';
+import { CartridgeList, Printers, RegisterCartridge, RegisterModel } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
-import { ArrowLeft, Package, Plus, PrinterIcon, Search } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
 export default function CartridgesPage() {
@@ -39,6 +39,10 @@ export default function CartridgesPage() {
 
         {/* Таблица принтеров */}
         <Printers />
+      </div>
+
+      <div>
+        <CartridgeList />
       </div>
 
       <Toaster />

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { CartridgeModelDTO } from '../services/dto/cartridge-model';
+
 import { Api } from '@/shared/services';
+import { CartridgeModelDTO } from '../services/dto/cartridge-model.dto.';
 
 interface ModelsState {
   loading: boolean;

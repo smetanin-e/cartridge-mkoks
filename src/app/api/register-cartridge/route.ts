@@ -26,3 +26,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Не удалось зарегистрировать картридж' }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const data = await prisma.cartridge.findMany({
+      include: {
+        model: true,
+      },
+    });
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('REGISTER_CARTRIDGE__GET Server error', error);
+    return NextResponse.json({ message: 'Не удалось получить список картриджей' }, { status: 500 });
+  }
+}
