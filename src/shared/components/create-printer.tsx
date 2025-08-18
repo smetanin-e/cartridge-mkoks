@@ -23,13 +23,13 @@ import { PrinterIcon } from 'lucide-react';
 import { FormCheckbox, FormInput } from '@/shared/components';
 import toast from 'react-hot-toast';
 import { FormProvider, useForm } from 'react-hook-form';
+import { registerPrinter } from '../services/printers';
+import { useModelsStore } from '../store/cartridge-models';
 
-// Массив доступных моделей картриджей
-const MODELS = [
-  { id: 1, name: 'CE505A' },
-  { id: 2, name: 'CF280A' },
-  { id: 3, name: 'CB435A' },
-];
+type FormDataType = {
+  name: string;
+  models: number[];
+};
 
 interface Props {
   open: boolean;
@@ -37,27 +37,29 @@ interface Props {
 }
 
 export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) => {
+  const { models } = useModelsStore();
+
   const form = useForm({
     defaultValues: {
-      printer: '',
+      name: '',
       models: [] as number[],
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormDataType) => {
     try {
-      console.log(data);
       const payload = {
-        name: data.printer,
+        name: data.name,
         models: data.models.map((id: number) => ({ id })),
       };
-      console.log(payload);
+
+      await registerPrinter(payload);
 
       toast.success('Модель картриджа добавлена в реестр', {
         icon: '✅',
       });
       form.reset({
-        printer: '',
+        name: '',
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -82,22 +84,22 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
         <FormProvider {...form}>
           <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
             <FormInput
-              name='printer'
+              name='name'
               label='Модель принтера'
               placeholder='Например, HP LaserJet Pro M404dn'
               required
             />
 
             {/* Выбор существующих моделей */}
-            {MODELS.length > 0 && (
+            {models.length > 0 && (
               <div>
                 <Label className='font-semibold'>Выберите совместимые модели картриджей</Label>
                 <Card className='mt-2'>
                   <CardContent className='p-4'>
                     <div className='grid grid-cols-2 gap-3'>
-                      {MODELS.map((model) => (
+                      {models.map((model) => (
                         <div key={model.id} className='flex items-center space-x-2'>
-                          <FormCheckbox name='models' label={model.name} value={model.id} />
+                          <FormCheckbox name='models' label={model.model} value={model.id} />
                         </div>
                       ))}
                     </div>
@@ -109,7 +111,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
             {/* Добавление новой модели */}
 
             {/* Выбранные модели */}
-
+            <Label className='font-semibold'>Предварительный просмотр:</Label>
             <div>
               <Table>
                 <TableHeader className='bg-muted/50'>
@@ -120,12 +122,14 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell className='font-medium'>{form.watch('printer') || '—'}</TableCell>
-                    <TableCell>
+                    <TableCell className='font-medium bg-gray-200'>
+                      {form.watch('name') || '—'}
+                    </TableCell>
+                    <TableCell className='bg-gray-200'>
                       <div className='flex flex-wrap gap-1'>
                         {form.watch('models')?.length > 0 ? (
                           form.watch('models').map((id: number) => {
-                            const model = MODELS.find((m) => m.id === id);
+                            const model = models.find((m) => m.id === id);
                             if (!model) return null;
                             return (
                               <Badge
@@ -133,7 +137,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
                                 variant='secondary'
                                 className='flex flex-wrap gap-1'
                               >
-                                {model.name}
+                                {model.model}
                               </Badge>
                             );
                           })
@@ -146,51 +150,13 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
                 </TableBody>
               </Table>
             </div>
-            <Label className='font-semibold'>Результат добавления:</Label>
-            <div className='grid grid-cols-2 gap-4'>
-              <p className='font-medium col-auto'>
-                {form.watch('printer') || '—'} {/* если пусто, показываем тире */}
-              </p>
-              <div className='flex flex-wrap gap-2 items-center'>
-                {form.watch('models')?.length > 0 ? (
-                  form.watch('models').map((id: number) => {
-                    const model = MODELS.find((m) => m.id === id);
-                    if (!model) return null;
-                    return (
-                      <Badge
-                        key={model.id}
-                        variant='secondary'
-                        className='flex items-center gap-1 pr-1'
-                      >
-                        {model.name}
-                      </Badge>
-                    );
-                  })
-                ) : (
-                  <span className='text-gray-500 text-sm'>модели не выбраны</span>
-                )}
-              </div>
-            </div>
-            <div>
-              <Label className='text-base font-semibold'>Выбранные модели ({4})</Label>
-              <div className='flex flex-wrap gap-2 mt-2'>
-                {MODELS.map((modelName) => (
-                  <Badge
-                    key={modelName.id}
-                    variant='secondary'
-                    className='flex items-center gap-1 pr-1'
-                  >
-                    {modelName.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
 
             <DialogFooter>
-              <Button type='button' variant='outline'>
+              <Button onClick={() => onOpenChange(false)} type='button' variant='outline'>
                 Отмена
               </Button>
               <Button
+                onClick={() => onOpenChange(false)}
                 type='submit'
                 disabled={!form.watch('models') || form.watch('models').length === 0}
               >
