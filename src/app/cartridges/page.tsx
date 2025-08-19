@@ -31,7 +31,8 @@ export default function CartridgesPage() {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <div className='space-y-6'>
           {/* Регистрация картриджа */}
-          <RegisterCartridge />
+          {/* <RegisterCartridge /> */}
+          <CartridgeList />
 
           {/* Добавление новой модели картриджа */}
           <RegisterModel />
@@ -41,9 +42,7 @@ export default function CartridgesPage() {
         <Printers />
       </div>
 
-      <div>
-        <CartridgeList />
-      </div>
+      <div>{/* <CartridgeList /> */}</div>
 
       <Toaster />
     </div>

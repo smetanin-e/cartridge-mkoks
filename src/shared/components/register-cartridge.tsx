@@ -17,14 +17,6 @@ interface Props {
   className?: string;
 }
 
-const options = [
-  { label: 'Готов к использованию', value: CartridgeStatus.AVAILABLE },
-  { label: 'Требуется заправка', value: CartridgeStatus.REFILL },
-  { label: 'В сервисном центре', value: CartridgeStatus.SERVICE },
-  { label: 'В работе', value: CartridgeStatus.WORKING },
-  { label: 'В резерве', value: CartridgeStatus.RESERVE },
-];
-
 export const RegisterCartridge: React.FC<Props> = () => {
   ///!Позже отрефакторить
   const { models, getModels } = useModelsStore();
@@ -84,7 +76,7 @@ export const RegisterCartridge: React.FC<Props> = () => {
                 error={'Необходимо выбрать модель из списка'}
               />
 
-              <FormSelect required name='status' label='Состояние картриджа' options={options} />
+              <FormSelect required name='status' label='Состояние картриджа' />
             </div>
 
             <div className='pt-4 flex justify-end gap-8'>

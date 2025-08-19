@@ -1,8 +1,6 @@
-//!ПОКА НЕ ИСПОЛЬЗУЕТСЯ
-
 'use client';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ClearButton, ErrorText, RequiredSymbol } from '@/shared/components';
+import { ErrorText, RequiredSymbol } from '@/shared/components';
 import {
   Select,
   SelectContent,
@@ -10,21 +8,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui';
-
-interface Option {
-  value: string;
-  label: string;
-}
+import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
 
 interface Props {
   name: string;
   label?: string;
   required?: boolean;
   className?: string;
-  options: Option[];
 }
 
-export const FormSelect: React.FC<Props> = ({ name, label, required, options }) => {
+export const FormSelect: React.FC<Props> = ({ name, label, required }) => {
   const {
     control,
     formState: { errors },
@@ -52,9 +45,9 @@ export const FormSelect: React.FC<Props> = ({ name, label, required, options }) 
                   <SelectValue placeholder='Выберите...' />
                 </SelectTrigger>
                 <SelectContent>
-                  {options.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
+                  {Object.entries(CARTRIDGE_STATUS_CONFIG).map(([key, value]) => (
+                    <SelectItem key={key} value={key}>
+                      {value.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
