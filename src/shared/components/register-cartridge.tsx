@@ -1,6 +1,13 @@
 'use client';
 import React from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/components/ui';
 import { FormInput, FormSelect, FormSelectWithSearch } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,14 +17,15 @@ import {
 } from '@/shared/schemas/register-сartrige-schema';
 import toast from 'react-hot-toast';
 import { useModelsStore } from '../store/cartridge-models';
-import { CartridgeStatus } from '@prisma/client';
 import { registerCartridge } from '../services/register-cartridge';
+import { ToyBrick } from 'lucide-react';
 
 interface Props {
-  className?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const RegisterCartridge: React.FC<Props> = () => {
+export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
   ///!Позже отрефакторить
   const { models, getModels } = useModelsStore();
 
@@ -43,6 +51,7 @@ export const RegisterCartridge: React.FC<Props> = () => {
       form.reset({
         number: 'МК',
       });
+      onOpenChange(false);
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [REGISTER_CARTRIDGE_FORM]', error);
@@ -51,14 +60,17 @@ export const RegisterCartridge: React.FC<Props> = () => {
     }
   };
 
-  //console.log(models);
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Добавление картриджа в реестр</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className='flex items-center gap-2'>
+            <ToyBrick className='h-5 w-5' />
+            Добавление картриджа в реестр
+          </DialogTitle>
+          <DialogDescription>Заполните номер и выберите модель картриджа</DialogDescription>
+        </DialogHeader>
+
         <FormProvider {...form}>
           <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
             <div className='flex flex-col gap-3 '>
@@ -80,14 +92,14 @@ export const RegisterCartridge: React.FC<Props> = () => {
             </div>
 
             <div className='pt-4 flex justify-end gap-8'>
-              <Button type='button' variant='outline'>
+              <Button onClick={() => onOpenChange(false)} type='button' variant='outline'>
                 Отмена
               </Button>
               <Button type='submit'>Сохранить</Button>
             </div>
           </form>
         </FormProvider>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 };

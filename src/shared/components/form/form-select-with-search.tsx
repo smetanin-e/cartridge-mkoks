@@ -13,10 +13,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Plus } from 'lucide-react';
 
 import { cn } from '@/shared/lib';
 import { Model } from '@prisma/client';
+import { useModelsStore } from '@/shared/store/cartridge-models';
 
 interface Props {
   name: string;
@@ -35,6 +36,7 @@ export const FormSelectWithSearch: React.FC<Props> = ({
   error,
 }) => {
   const [open, setOpen] = React.useState(false);
+
   const [searchValue, setSearchValue] = React.useState('');
   const {
     control,
@@ -42,6 +44,8 @@ export const FormSelectWithSearch: React.FC<Props> = ({
   } = useFormContext();
 
   const errorText = errors[name]?.message as string;
+
+  const { setOpenModal } = useModelsStore();
 
   return (
     <div className='relative'>
@@ -88,8 +92,19 @@ export const FormSelectWithSearch: React.FC<Props> = ({
                       onValueChange={setSearchValue} // управляем поиском отдельно
                       autoFocus
                     />
-                    <CommandEmpty>Ничего не найдено</CommandEmpty>
-                    <CommandGroup>
+                    <CommandEmpty>
+                      <p className='pb-2'>Ничего не найдено</p>{' '}
+                      <Button
+                        type='button'
+                        onClick={() => setOpenModal(true)}
+                        variant={'outline'}
+                        size={'sm'}
+                      >
+                        <Plus className='h-4 w-4 mr-2' />
+                        Добавить
+                      </Button>
+                    </CommandEmpty>
+                    <CommandGroup className='h-[200px] overflow-auto'>
                       {options
                         .filter((opt) =>
                           opt.model.toLowerCase().includes(searchValue.toLowerCase()),

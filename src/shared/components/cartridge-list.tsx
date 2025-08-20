@@ -28,7 +28,7 @@ import { Filter, MoreHorizontal, Plus, Search, ToyBrick } from 'lucide-react';
 import { useCartridgeStore } from '../store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
 import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
-import { ClearButton } from '@/shared/components';
+import { ClearButton, RegisterCartridge } from '@/shared/components';
 interface Props {
   className?: string;
 }
@@ -58,6 +58,8 @@ export const CartridgeList: React.FC<Props> = () => {
     setSearchValue('');
   };
 
+  const [showDialog, setShowDialog] = React.useState(false);
+
   return (
     <div>
       {/* Таблица картриджей */}
@@ -68,7 +70,7 @@ export const CartridgeList: React.FC<Props> = () => {
               <ToyBrick className='h-5 w-5' />
               Реестр картриджей
             </CardTitle>
-            <Button size={'sm'}>
+            <Button onClick={() => setShowDialog(true)} size={'sm'}>
               <Plus className='h-4 w-4 mr-2' />
               Добавить картридж
             </Button>
@@ -163,6 +165,7 @@ export const CartridgeList: React.FC<Props> = () => {
           )}
         </CardContent>
       </Card>
+      <RegisterCartridge open={showDialog} onOpenChange={setShowDialog} />
     </div>
   );
 };

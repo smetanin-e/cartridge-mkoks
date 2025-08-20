@@ -1,6 +1,6 @@
 'use client';
 
-import { CartridgeList, Printers, RegisterCartridge, RegisterModel } from '@/shared/components';
+import { CartridgeList, Printers, RegisterModel } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -33,16 +33,14 @@ export default function CartridgesPage() {
           {/* Регистрация картриджа */}
           {/* <RegisterCartridge /> */}
           <CartridgeList />
-
-          {/* Добавление новой модели картриджа */}
-          <RegisterModel />
         </div>
 
         {/* Таблица принтеров */}
         <Printers />
       </div>
 
-      <div>{/* <CartridgeList /> */}</div>
+      {/* Добавление новой модели картриджа */}
+      <RegisterModel />
 
       <Toaster />
     </div>

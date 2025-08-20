@@ -8,6 +8,10 @@ interface ModelsState {
   error: boolean;
   models: CartridgeModelDTO[];
   getModels: () => Promise<void>;
+
+  //попап добавления новой модели
+  openModal: boolean;
+  setOpenModal: (open: boolean) => void;
 }
 export const useModelsStore = create<ModelsState>()((set) => ({
   loading: true,
@@ -24,4 +28,8 @@ export const useModelsStore = create<ModelsState>()((set) => ({
       set({ loading: false });
     }
   },
+
+  //попап добавления новой модели
+  openModal: false,
+  setOpenModal: (openModal: boolean) => set({ openModal }),
 }));

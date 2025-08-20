@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { PrinterIcon } from 'lucide-react';
+import { Plus, PrinterIcon } from 'lucide-react';
 import { FormCheckbox, FormInput } from '@/shared/components';
 import toast from 'react-hot-toast';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -36,8 +36,8 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) => {
-  const { models } = useModelsStore();
+export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
+  const { models, setOpenModal } = useModelsStore();
 
   const form = useForm({
     defaultValues: {
@@ -55,7 +55,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
 
       await registerPrinter(payload);
 
-      toast.success('Модель картриджа добавлена в реестр', {
+      toast.success('Модель принтера добавлена в реестр', {
         icon: '✅',
       });
       form.reset({
@@ -68,9 +68,15 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
       }
     }
   };
+
+  const disabled =
+    !form.watch('models') ||
+    form.watch('models').length === 0 ||
+    !form.watch('name') ||
+    form.watch('name').length === 0;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-2xl max-h-[80vh] overflow-y-auto'>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <PrinterIcon className='h-5 w-5' />
@@ -94,14 +100,25 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
             {models.length > 0 && (
               <div>
                 <Label className='font-semibold'>Выберите совместимые модели картриджей</Label>
-                <Card className='mt-2'>
-                  <CardContent className='p-4'>
-                    <div className='grid grid-cols-2 gap-3'>
+                <Card className='mt-2 max-w-[462px] p-4'>
+                  <CardContent className='p-0'>
+                    <div className='grid grid-cols-4 gap-3 mb-6'>
                       {models.map((model) => (
                         <div key={model.id} className='flex items-center space-x-2'>
                           <FormCheckbox name='models' label={model.model} value={model.id} />
                         </div>
                       ))}
+                    </div>
+                    <div className='text-right'>
+                      <Button
+                        type='button'
+                        onClick={() => setOpenModal(true)}
+                        variant={'outline'}
+                        size={'sm'}
+                      >
+                        <Plus className='h-4 w-4 mr-2' />
+                        Добавить
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -112,12 +129,12 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
 
             {/* Выбранные модели */}
             <Label className='font-semibold'>Предварительный просмотр:</Label>
-            <div>
+            <div className='max-w-[462px]'>
               <Table>
                 <TableHeader className='bg-muted/50'>
                   <TableRow>
                     <TableHead>Название принтера</TableHead>
-                    <TableHead>Совместимые модели</TableHead>
+                    <TableHead className='text-center'>Совместимые модели</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -155,11 +172,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }: Props) =>
               <Button onClick={() => onOpenChange(false)} type='button' variant='outline'>
                 Отмена
               </Button>
-              <Button
-                onClick={() => onOpenChange(false)}
-                type='submit'
-                disabled={!form.watch('models') || form.watch('models').length === 0}
-              >
+              <Button onClick={() => onOpenChange(false)} type='submit' disabled={disabled}>
                 Добавить принтер
               </Button>
             </DialogFooter>

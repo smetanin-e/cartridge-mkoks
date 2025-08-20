@@ -1,6 +1,17 @@
 'use client';
 
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/components/ui';
 import { Package, Plus } from 'lucide-react';
 import { FormInput } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -16,7 +27,7 @@ interface Props {
 }
 
 export const RegisterModel: React.FC<Props> = () => {
-  const { models, getModels } = useModelsStore();
+  const { models, getModels, openModal, setOpenModal } = useModelsStore();
 
   React.useEffect(() => {
     getModels();
@@ -39,6 +50,7 @@ export const RegisterModel: React.FC<Props> = () => {
       form.reset({
         model: '',
       });
+      setOpenModal(false);
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [ADD_MODEL_FORM]', error);
@@ -48,14 +60,14 @@ export const RegisterModel: React.FC<Props> = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='flex items-center gap-2'>
-          <Package className='h-5 w-5' />
-          Добавить модель картриджа
-        </CardTitle>
-      </CardHeader>
-      <CardContent className='space-y-4'>
+    <Dialog open={openModal} onOpenChange={setOpenModal}>
+      <DialogContent className='space-y-4'>
+        <DialogHeader>
+          <DialogTitle className='flex items-center gap-2'>
+            <Package className='h-5 w-5' />
+            Добавить модель картриджа
+          </DialogTitle>
+        </DialogHeader>
         <FormProvider {...form}>
           <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
             <div className='flex flex-col gap-3 '>
@@ -97,7 +109,7 @@ export const RegisterModel: React.FC<Props> = () => {
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 };
