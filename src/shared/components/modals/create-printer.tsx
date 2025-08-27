@@ -23,8 +23,8 @@ import { Plus, PrinterIcon } from 'lucide-react';
 import { FormCheckbox, FormInput } from '@/shared/components';
 import toast from 'react-hot-toast';
 import { FormProvider, useForm } from 'react-hook-form';
-import { registerPrinter } from '../services/printers';
-import { useModelsStore } from '../store/cartridge-models';
+import { registerPrinter } from '../../services/printers';
+import { useModelsStore } from '../../store/cartridge-models';
 
 type FormDataType = {
   name: string;

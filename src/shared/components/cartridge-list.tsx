@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -29,6 +28,7 @@ import { useCartridgeStore } from '../store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
 import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
 import { ClearButton, RegisterCartridge } from '@/shared/components';
+import { getStatusBadge } from '@/shared/components/utils';
 interface Props {
   className?: string;
 }
@@ -38,11 +38,6 @@ export const CartridgeList: React.FC<Props> = () => {
   React.useEffect(() => {
     getCartriges();
   }, []);
-
-  const getStatusBadge = (status: CartridgeStatus) => {
-    const config = CARTRIDGE_STATUS_CONFIG[status];
-    return <Badge className={`${config.color} text-white`}>{config.label}</Badge>;
-  };
 
   const [searchValue, setSearchValue] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<CartridgeStatus | 'all'>('all');

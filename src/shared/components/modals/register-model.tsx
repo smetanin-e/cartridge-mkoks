@@ -15,12 +15,12 @@ import {
 import { Package, Plus } from 'lucide-react';
 import { FormInput } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FormRegisterModelType, registerModelSchema } from '../schemas/register-model-schema';
+import { FormRegisterModelType, registerModelSchema } from '../../schemas/register-model-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useModelsStore } from '../store/cartridge-models';
+import { useModelsStore } from '../../store/cartridge-models';
 import React from 'react';
-import { createModel } from '../services/models';
+import { createModel } from '../../services/models';
 
 interface Props {
   className?: string;

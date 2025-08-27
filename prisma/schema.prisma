@@ -23,6 +23,10 @@ model Cartridge {
     model   Model @relation(fields: [modelId], references: [id]) // many → 1
 
     status CartridgeStatus @default(AVAILABLE)
+
+    // Связи с записями о заменах
+    replacementInstalled Replacement[] @relation("InstalledCartridge")
+    replacementRemoved   Replacement[] @relation("RemovedCartridge")
 }
 
 enum CartridgeStatus {
@@ -37,4 +41,33 @@ model Printer {
     id     Int     @id @default(autoincrement())
     name   String
     models Model[]
+}
+
+model Departament {
+    id   Int    @id @default(autoincrement())
+    name String
+
+    replacements Replacement[]
+}
+
+enum BatchStatus {
+    in_progress // В стадии заправки (отправлена в сервис)
+    completed // Выполнено (все картриджи вернулись)
+    partial_return // Частичный возврат (некоторые картриджи вернулись)
+}
+
+model Replacement {
+    id   Int      @id @default(autoincrement())
+    date DateTime @db.Date
+
+    departament   Departament @relation(fields: [departamentId], references: [id])
+    departamentId Int
+
+    installedCartridgeNumber String? // Номер установленного картриджа
+    removedCartridgeNumber   String? // Номер снятого картриджа
+    responsible              String // Ответственный за исполнение
+    createdAt                DateTime @default(now())
+
+    installedCartridge Cartridge? @relation("InstalledCartridge", fields: [installedCartridgeNumber], references: [number])
+    removedCartridge   Cartridge? @relation("RemovedCartridge", fields: [removedCartridgeNumber], references: [number])
 }

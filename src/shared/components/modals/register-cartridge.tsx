@@ -16,9 +16,10 @@ import {
   registerCartridgeSchema,
 } from '@/shared/schemas/register-сartrige-schema';
 import toast from 'react-hot-toast';
-import { useModelsStore } from '../store/cartridge-models';
-import { registerCartridge } from '../services/register-cartridge';
+import { useModelsStore } from '../../store/cartridge-models';
+import { registerCartridge } from '../../services/register-cartridge';
 import { ToyBrick } from 'lucide-react';
+import { Model } from '@prisma/client';
 
 interface Props {
   open: boolean;
@@ -27,7 +28,7 @@ interface Props {
 
 export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
   ///!Позже отрефакторить
-  const { models, getModels } = useModelsStore();
+  const { models, getModels, setOpenModal } = useModelsStore();
 
   React.useEffect(() => {
     getModels();
@@ -80,12 +81,17 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
                 placeholder='Например, МК101'
                 required
               />
-              <FormSelectWithSearch
+              <FormSelectWithSearch<Model>
                 name='modelId'
                 label='Модель'
                 required
                 options={models}
                 error={'Необходимо выбрать модель из списка'}
+                onAdd={() => setOpenModal(true)}
+                addLabel='Добавить модель'
+                getOptionLabel={(m) => m.model}
+                getOptionValue={(m) => m.id}
+                placeholder='Выберите модель из списка'
               />
 
               <FormSelect required name='status' label='Состояние картриджа' />
