@@ -59,7 +59,7 @@ export function FormSelectWithSearch<T>({
                 addLabel={addLabel}
                 placeholder={placeholder}
               />
-              {field.value && <ClearButton onClick={() => field.onChange('')} />}
+              {field.value && <ClearButton onClick={() => field.onChange(null)} />}
             </div>
           );
         }}

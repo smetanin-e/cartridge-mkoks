@@ -13,22 +13,26 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { Replacement } from '@/shared/components';
+import { CreateDepartament, Replacement } from '@/shared/components';
 import { Edit } from 'lucide-react';
 import { useCartridgeStore } from '@/shared/store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
+import { useDepartamentStore } from '../store/departaments';
 
 interface Props {
   className?: string;
 }
 
 export const ReplacementsTable: React.FC<Props> = () => {
-  const [showDialog, setShowDialog] = React.useState(false);
+  const [popupReplacement, setPopupReplacement] = React.useState(false);
+  const [popupDepartament, setPopupDepartament] = React.useState(false);
 
   const { cartridges, getCartriges } = useCartridgeStore();
+  const { departaments, getDepartaments } = useDepartamentStore();
 
   React.useEffect(() => {
     getCartriges();
+    getDepartaments();
   }, []);
   const avaibleCartridges = cartridges.filter(
     (cartridge) => cartridge.status === CartridgeStatus.AVAILABLE,
@@ -43,7 +47,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
           <div className='flex items-center justify-between'>
             <CardTitle>История замен</CardTitle>
             <Button
-              onClick={() => setShowDialog(true)}
+              onClick={() => setPopupReplacement(true)}
               variant='outline'
               className='flex items-center gap-2'
             >
@@ -147,11 +151,15 @@ export const ReplacementsTable: React.FC<Props> = () => {
 
       {/* Попап замены картриджа */}
       <Replacement
-        open={showDialog}
-        onOpenChange={setShowDialog}
+        open={popupReplacement}
+        onOpenChange={setPopupReplacement}
         avaibleCartridges={avaibleCartridges}
         workingCartridges={workingCartridges}
+        departaments={departaments}
+        setPopupDepartament={setPopupDepartament}
       />
+      {/* Попап добавления нового подразделения*/}
+      <CreateDepartament open={popupDepartament} onOpenChange={setPopupDepartament} />
     </>
   );
 };

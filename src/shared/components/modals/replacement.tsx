@@ -3,8 +3,9 @@ import React from 'react';
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui';
 import { Package } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FormDate, FormSelectWithSearch } from '@/shared/components';
+import { FormDate, FormInput, FormSelectWithSearch } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
+import { Departament } from '@prisma/client';
 
 interface Props {
   className?: string;
@@ -12,6 +13,8 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   avaibleCartridges: any;
   workingCartridges: any;
+  departaments: Departament[];
+  setPopupDepartament: (value: boolean) => void;
 }
 
 export const Replacement: React.FC<Props> = ({
@@ -19,6 +22,8 @@ export const Replacement: React.FC<Props> = ({
   onOpenChange,
   avaibleCartridges,
   workingCartridges,
+  departaments,
+  setPopupDepartament,
 }) => {
   const form = useForm<any>({
     defaultValues: {
@@ -43,6 +48,18 @@ export const Replacement: React.FC<Props> = ({
           <FormProvider {...form}>
             <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
               <FormDate name='date' required />
+              <FormSelectWithSearch<Departament>
+                name={'departament'}
+                label='Подразделение'
+                options={departaments}
+                getOptionValue={(d) => d.id}
+                getOptionLabel={(d) => d.name}
+                placeholder='Укажите подразделение'
+                required
+                onAdd={() => setPopupDepartament(true)}
+                addLabel='Добавить подразделение'
+              />
+
               <FormSelectWithSearch<CartridgeDTO>
                 name={'installedCartridge'}
                 label='Установленный картридж'
@@ -60,6 +77,8 @@ export const Replacement: React.FC<Props> = ({
                 getOptionLabel={(c) => `${c.number} (${c.model!.model})`}
                 placeholder='----------------'
               />
+
+              <FormInput name='responsible' label='Ответственный' required />
 
               <Button type='submit'>Подтвердить</Button>
             </form>

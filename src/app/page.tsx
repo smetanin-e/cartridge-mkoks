@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/ui';
 import { Download, Edit, Package } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 // import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
@@ -44,6 +45,7 @@ export default function Home() {
 
       {/* Таблица замен */}
       <ReplacementsTable />
+      <Toaster />
     </div>
   );
 }

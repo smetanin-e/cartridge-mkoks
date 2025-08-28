@@ -24,7 +24,7 @@ export const getCartridges = async (): Promise<CartridgeDTO[]> => {
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || 'Ошибка регистрации картриджа');
+      throw new Error(error.response?.data?.error || 'Ошибка получения картриджей');
     }
     throw error;
   }

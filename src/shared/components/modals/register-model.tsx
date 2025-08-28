@@ -3,10 +3,6 @@
 import {
   Badge,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -91,16 +87,6 @@ export const RegisterModel: React.FC<Props> = () => {
           <div className='mt-4'>
             <h3 className='text-md font-semibold mb-2'>Существующие модели:</h3>
             <div className='flex flex-wrap gap-2'>
-              {/* {models.map(
-                (model) =>
-                  model.cartridges &&
-                  model.cartridges.length > 0 && (
-                    <Badge key={model.id} variant='secondary'>
-                      {model.model}
-                    </Badge>
-                  ),
-              )} */}
-
               {models.map((model) => (
                 <Badge key={model.id} variant='secondary'>
                   {model.model}

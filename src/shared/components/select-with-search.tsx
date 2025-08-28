@@ -71,7 +71,7 @@ export function SelectWithSearch<T>({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align='start' className='p-0 relative'>
+      <PopoverContent align='start' className='p-0 relative w-full'>
         <div className='w-[462px]'>
           <Command>
             <CommandInput
@@ -98,6 +98,7 @@ export function SelectWithSearch<T>({
                   const optionValue = getOptionValue(opt);
                   return (
                     <CommandItem
+                      className='w-full'
                       key={optionValue}
                       value={getOptionLabel(opt)}
                       onSelect={() => {
@@ -111,7 +112,7 @@ export function SelectWithSearch<T>({
                           value === optionValue ? 'opacity-100' : 'opacity-0',
                         )}
                       />
-                      <div className='w-full grid grid-cols-2 items-center gap-2'>
+                      <div className='w-full grid grid-cols-[1fr_auto] items-center gap-2'>
                         <div>{getOptionLabel(opt)}</div>
                         <div>{'status' in opt && getStatusBadge((opt as any).status)}</div>
                       </div>
