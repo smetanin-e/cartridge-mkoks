@@ -11,8 +11,9 @@ import {
   PopoverTrigger,
 } from '@/shared/components/ui';
 import { Check, ChevronDown, Plus } from 'lucide-react';
-import { cn } from '@/shared/lib';
+import { cn, hasStatus } from '@/shared/lib';
 import { getStatusBadge } from './utils';
+import { CartridgeStatus } from '@prisma/client';
 interface BaseSelectProps<T> {
   options: T[];
   value?: string | number;
@@ -26,7 +27,7 @@ interface BaseSelectProps<T> {
   addLabel?: string;
 }
 
-export function SelectWithSearch<T>({
+export function SelectWithSearch<T extends object>({
   options,
   value,
   onChange,
@@ -41,7 +42,8 @@ export function SelectWithSearch<T>({
 
   const selected = options.find((f) => getOptionValue(f) === value);
   const selectedLabel = selected ? getOptionLabel(selected) : '';
-
+  const selectedStatus =
+    selected !== undefined && hasStatus(selected) ? selected.status : undefined;
   return (
     <Popover
       open={open}
@@ -59,9 +61,11 @@ export function SelectWithSearch<T>({
           className='w-full justify-between font-normal'
         >
           {selectedLabel ? (
-            <div className='flex items-center gap-2'>
-              <div className='shrink-0'>{getOptionLabel(selected)}</div>
-              {'status' in selected && getStatusBadge((selected as any).status)}
+            <div className='w-full flex items-center justify-between gap-2'>
+              <div className='shrink-0'>{selected ? getOptionLabel(selected) : ''}</div>
+              <div className='pr-8'>
+                {selectedStatus && getStatusBadge(selectedStatus as CartridgeStatus)}
+              </div>
             </div>
           ) : (
             placeholder
@@ -96,6 +100,7 @@ export function SelectWithSearch<T>({
                 )
                 .map((opt) => {
                   const optionValue = getOptionValue(opt);
+                  const status = hasStatus(opt) ? opt.status : undefined;
                   return (
                     <CommandItem
                       className='w-full'
@@ -114,7 +119,7 @@ export function SelectWithSearch<T>({
                       />
                       <div className='w-full grid grid-cols-[1fr_auto] items-center gap-2'>
                         <div>{getOptionLabel(opt)}</div>
-                        <div>{'status' in opt && getStatusBadge((opt as any).status)}</div>
+                        {status && <div>{getStatusBadge(status as CartridgeStatus)}</div>}
                       </div>
                     </CommandItem>
                   );

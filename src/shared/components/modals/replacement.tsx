@@ -7,12 +7,19 @@ import { FormDate, FormInput, FormSelectWithSearch } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { Departament } from '@prisma/client';
 
+export type FormReplacementType = {
+  date: string;
+  departamentId: number;
+  installedCartridge: string | undefined;
+  removedCartridge: string | undefined;
+  responsible: string;
+};
 interface Props {
   className?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  avaibleCartridges: any;
-  workingCartridges: any;
+  avaibleCartridges: CartridgeDTO[];
+  workingCartridges: CartridgeDTO[];
   departaments: Departament[];
   setPopupDepartament: (value: boolean) => void;
 }
@@ -25,13 +32,13 @@ export const Replacement: React.FC<Props> = ({
   departaments,
   setPopupDepartament,
 }) => {
-  const form = useForm<any>({
+  const form = useForm({
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormReplacementType) => {
     console.log(data);
   };
   return (
@@ -49,7 +56,7 @@ export const Replacement: React.FC<Props> = ({
             <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
               <FormDate name='date' required />
               <FormSelectWithSearch<Departament>
-                name={'departament'}
+                name={'departamentId'}
                 label='Подразделение'
                 options={departaments}
                 getOptionValue={(d) => d.id}
@@ -64,18 +71,18 @@ export const Replacement: React.FC<Props> = ({
                 name={'installedCartridge'}
                 label='Установленный картридж'
                 options={avaibleCartridges}
-                getOptionValue={(c) => c.id}
-                getOptionLabel={(c) => `${c.number} (${c.model!.model})`}
-                placeholder='----------------'
+                getOptionValue={(c) => c.number}
+                getOptionLabel={(c) => `${c.number}`}
+                placeholder='-'
               />
-
+              {/*  (${c.model!.model}) */}
               <FormSelectWithSearch<CartridgeDTO>
                 name={'removedCartridge'}
                 label='Снятый картридж'
                 options={workingCartridges}
-                getOptionValue={(c) => c.id}
-                getOptionLabel={(c) => `${c.number} (${c.model!.model})`}
-                placeholder='----------------'
+                getOptionValue={(c) => c.number}
+                getOptionLabel={(c) => `${c.number}`}
+                placeholder='-'
               />
 
               <FormInput name='responsible' label='Ответственный' required />
