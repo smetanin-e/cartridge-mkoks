@@ -3,4 +3,5 @@ export enum ApiRoutes {
   CARTRIDGES = 'register-cartridge',
   PRINTERS = 'printers',
   DEPARTAMENT = 'departament',
+  REPLACEMENT = 'replacement',
 }

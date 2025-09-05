@@ -45,7 +45,11 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
   const onSubmit = async (data: RegisterCartridgeFormType) => {
     try {
       console.log(data);
-      await registerCartridge(data);
+      const payload = {
+        ...data,
+        numericNumber: parseInt(data.number.replace(/\D/g, ''), 10),
+      };
+      await registerCartridge(payload);
       toast.success('Картридж добавлен в реестр', {
         icon: '✅',
       });

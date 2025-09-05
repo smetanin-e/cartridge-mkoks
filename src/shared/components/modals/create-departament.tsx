@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui';
 import { Building2, Plus } from 'lucide-react';

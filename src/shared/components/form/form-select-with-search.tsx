@@ -1,8 +1,9 @@
+'use client';
 import React from 'react';
 import { ClearButton, ErrorText, RequiredSymbol, SelectWithSearch } from '@/shared/components';
 import { Controller, useFormContext } from 'react-hook-form';
 
-interface Props<T> {
+interface Props<T extends object> {
   name: string;
   label?: string;
   placeholder?: string;
@@ -16,7 +17,7 @@ interface Props<T> {
   getOptionValue: (option: T) => string | number;
 }
 
-export function FormSelectWithSearch<T>({
+export function FormSelectWithSearch<T extends object>({
   name,
   label,
   placeholder,

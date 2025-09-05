@@ -6,18 +6,17 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { FormDate, FormInput, FormSelectWithSearch } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { Departament } from '@prisma/client';
+import { convertDate } from '@/shared/lib';
+import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replacement-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
+import { replacing } from '@/shared/services/replacement';
 
-export type FormReplacementType = {
-  date: string;
-  departamentId: number;
-  installedCartridge: string | undefined;
-  removedCartridge: string | undefined;
-  responsible: string;
-};
 interface Props {
   className?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+
   avaibleCartridges: CartridgeDTO[];
   workingCartridges: CartridgeDTO[];
   departaments: Departament[];
@@ -32,14 +31,38 @@ export const Replacement: React.FC<Props> = ({
   departaments,
   setPopupDepartament,
 }) => {
-  const form = useForm({
+  const form = useForm<ReplacementFormType>({
+    resolver: zodResolver(replacementSchema),
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
+      installedCartridge: null,
+      removedCartridge: null,
+      responsible: '',
     },
   });
 
-  const onSubmit = async (data: FormReplacementType) => {
-    console.log(data);
+  const onSubmit = async (data: ReplacementFormType) => {
+    try {
+      data.date = convertDate(data.date);
+      console.log(data);
+      await replacing(data);
+      onOpenChange(false);
+      toast.success('Замена оформлена', {
+        icon: '✅',
+      });
+
+      form.reset({
+        date: new Date().toISOString().split('T')[0],
+        installedCartridge: null,
+        removedCartridge: null,
+        responsible: '',
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log('Error [REPLACEMENT_FORM]', error);
+        return toast.error(error.message, { icon: '❌' });
+      }
+    }
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -65,6 +88,7 @@ export const Replacement: React.FC<Props> = ({
                 required
                 onAdd={() => setPopupDepartament(true)}
                 addLabel='Добавить подразделение'
+                error='Укажите подразделение'
               />
 
               <FormSelectWithSearch<CartridgeDTO>

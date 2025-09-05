@@ -33,6 +33,7 @@ export async function GET() {
       include: {
         model: true,
       },
+      orderBy: { numericNumber: 'asc' },
     });
     return NextResponse.json(data);
   } catch (error) {
