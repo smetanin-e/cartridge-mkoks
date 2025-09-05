@@ -33,7 +33,30 @@ export const CartridgesForRefile: React.FC<Props> = () => {
       cartridge.status === CartridgeStatus.REFILL || cartridge.status === CartridgeStatus.RESERVE,
   );
 
-  console.log(availableForService);
+  const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
+
+  const handleCartridgeSelect = (cartridgeId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedCartridges((prev) => [...prev, cartridgeId]);
+    } else {
+      setSelectedCartridges((prev) => prev.filter((id) => id !== cartridgeId));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const availableIds = availableForService.map((c) => c.id);
+      setSelectedCartridges(availableIds);
+    } else {
+      setSelectedCartridges([]);
+    }
+  };
+
+  const isAllSelected =
+    availableForService.length > 0 && selectedCartridges.length === availableForService.length;
+
+  console.log('selectedCartridges===========', selectedCartridges);
+
   return (
     <div className='lg:col-span-2'>
       <Card>
@@ -41,11 +64,7 @@ export const CartridgesForRefile: React.FC<Props> = () => {
           <div className='flex items-center justify-between'>
             <CardTitle>Доступные для отправки ({availableForService.length})</CardTitle>
             <div className='flex items-center space-x-2'>
-              <Checkbox
-                id='select-all'
-                // checked={isAllSelected}
-                // onCheckedChange={handleSelectAll}
-              />
+              <Checkbox id='select-all' checked={isAllSelected} onCheckedChange={handleSelectAll} />
               <Label htmlFor='select-all' className='text-sm'>
                 Выбрать все
               </Label>
@@ -72,10 +91,10 @@ export const CartridgesForRefile: React.FC<Props> = () => {
                   <TableRow key={cartridge.id}>
                     <TableCell>
                       <Checkbox
-                        checked={false}
-                        // onCheckedChange={(checked) =>
-                        //  handleCartridgeSelect(cartridge.id, checked as boolean)
-                        // }
+                        checked={selectedCartridges.includes(cartridge.id)}
+                        onCheckedChange={(checked) =>
+                          handleCartridgeSelect(cartridge.id, checked as boolean)
+                        }
                       />
                     </TableCell>
                     <TableCell className='font-medium'>{cartridge.number}</TableCell>

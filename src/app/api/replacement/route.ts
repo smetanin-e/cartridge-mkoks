@@ -23,15 +23,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const data = (await req.json()) as ReplacementFormType;
-    const replace = await prisma.replacement.create({
-      data: {
-        date: data.date,
-        departamentId: data.departamentId,
-        installedCartridgeNumber: data.installedCartridge,
-        removedCartridgeNumber: data.removedCartridge,
-        responsible: data.responsible,
-      },
-    });
 
     if (!data.installedCartridge && !data.removedCartridge) {
       return NextResponse.json(
@@ -53,6 +44,16 @@ export async function POST(req: NextRequest) {
         data: { status: CartridgeStatus.REFILL },
       });
     }
+
+    const replace = await prisma.replacement.create({
+      data: {
+        date: data.date,
+        departamentId: data.departamentId,
+        installedCartridgeNumber: data.installedCartridge,
+        removedCartridgeNumber: data.removedCartridge,
+        responsible: data.responsible,
+      },
+    });
 
     return NextResponse.json(replace);
   } catch (error) {
