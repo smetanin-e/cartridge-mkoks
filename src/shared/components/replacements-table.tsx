@@ -19,6 +19,7 @@ import { useCartridgeStore } from '@/shared/store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
 import { useDepartamentStore } from '../store/departaments';
 import { useReplacementStore } from '../store/replacement';
+import { useServiceBatchStore } from '../store/service-batch';
 
 interface Props {
   className?: string;
@@ -47,6 +48,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
   const workingCartridges = cartridges.filter(
     (cartridge) => cartridge.status === CartridgeStatus.WORKING,
   );
+
   return (
     <>
       <Card className='mt-6'>

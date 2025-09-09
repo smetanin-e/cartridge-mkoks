@@ -6,7 +6,7 @@ export const CARTRIDGE_STATUS_CONFIG = {
     bgColor: 'bg-green-50',
   },
   RESERVE: {
-    label: 'Снят с обслуживания',
+    label: 'В резерве',
     color: 'bg-blue-500',
     textColor: 'text-blue-700',
     bgColor: 'bg-blue-50',

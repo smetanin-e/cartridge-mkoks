@@ -55,9 +55,9 @@ model Departament {
 }
 
 enum BatchStatus {
-    in_progress // В стадии заправки (отправлена в сервис)
-    completed // Выполнено (все картриджи вернулись)
-    partial_return // Частичный возврат (некоторые картриджи вернулись)
+    IN_PROGRESS // В стадии заправки (отправлена в сервис)
+    COMPLITED // Выполнено (все картриджи вернулись)
+    PARTIAL_RETURN // Частичный возврат (некоторые картриджи вернулись)
 }
 
 model Replacement {
@@ -84,7 +84,7 @@ model ServiceBatch {
     responsible String // Ответственный за отправку
     notes       String? // Примечания
     createdAt   DateTime    @default(now())
-    status      BatchStatus @default(in_progress) // Статус партии (в работе, выполнено, частичный возврат)
+    status      BatchStatus @default(IN_PROGRESS) // Статус партии (в работе, выполнено, частичный возврат)
 
     // Связь с картриджами, входящими в эту партию (через промежуточную таблицу)
     cartridgesInBatch ServiceBatchCartridge[]

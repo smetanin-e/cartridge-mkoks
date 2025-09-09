@@ -7,10 +7,11 @@ import { ErrorText, RequiredSymbol } from '@/shared/components';
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   name: string;
+  label?: string;
   required?: boolean;
 }
 
-export const FormDate: React.FC<Props> = ({ name, required, ...props }) => {
+export const FormDate: React.FC<Props> = ({ name, required, label, ...props }) => {
   const {
     register,
     formState: { errors },
@@ -20,7 +21,9 @@ export const FormDate: React.FC<Props> = ({ name, required, ...props }) => {
 
   return (
     <div className='relative'>
-      <p className='font-medium mb-0.5 text-sm'>Дата {required && <RequiredSymbol />}</p>
+      <p className='font-medium mb-0.5 text-sm'>
+        {label ? label : 'Дата'} {required && <RequiredSymbol />}
+      </p>
 
       <div className='relative max-w-[462px]'>
         <Input id='date' type='date' {...register(name)} {...props} />
