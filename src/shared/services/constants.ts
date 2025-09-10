@@ -4,5 +4,5 @@ export enum ApiRoutes {
   PRINTERS = 'printers',
   DEPARTAMENT = 'departament',
   REPLACEMENT = 'replacement',
-  SEND_TO_SERVICE = 'service-batch',
+  BATCH = 'batch',
 }

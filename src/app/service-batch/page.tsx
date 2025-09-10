@@ -1,4 +1,4 @@
-import { CartridgesForService, ServiceBatchForm } from '@/shared/components';
+import { Batches, CartridgesForService, ServiceBatchForm } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ export default function ServiceBatch() {
         {/* Форма создания партии */}
         <ServiceBatchForm />
       </div>
+      <Batches />
       <Toaster />
     </div>
   );

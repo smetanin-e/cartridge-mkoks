@@ -8,8 +8,8 @@ import { useServiceBatchStore } from '../store/service-batch';
 import { convertDate } from '../lib';
 import { ServiceFormType, serviceSchema } from '../schemas/service-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { sendToService } from '../services/send-to-service';
 import toast from 'react-hot-toast';
+import { sendToService } from '../services/batch';
 
 interface Props {
   className?: string;
