@@ -1,7 +1,8 @@
-import { CartridgesForRefile, ServiceBatchForm } from '@/shared/components';
+import { CartridgesForService, ServiceBatchForm } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { Toaster } from 'react-hot-toast';
 
 export default function ServiceBatch() {
   return (
@@ -23,11 +24,12 @@ export default function ServiceBatch() {
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         {/* Список доступных картриджей */}
-        <CartridgesForRefile />
+        <CartridgesForService />
 
         {/* Форма создания партии */}
         <ServiceBatchForm />
       </div>
+      <Toaster />
     </div>
   );
 }

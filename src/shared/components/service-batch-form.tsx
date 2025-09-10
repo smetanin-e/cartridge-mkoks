@@ -6,23 +6,49 @@ import { FormDate, FormInput, FormTextarea } from './form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useServiceBatchStore } from '../store/service-batch';
 import { convertDate } from '../lib';
+import { ServiceFormType, serviceSchema } from '../schemas/service-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { sendToService } from '../services/send-to-service';
+import toast from 'react-hot-toast';
 
 interface Props {
   className?: string;
 }
 
 export const ServiceBatchForm: React.FC<Props> = () => {
-  const { selectedCartridges } = useServiceBatchStore();
-  const form = useForm({
+  const { selectedCartridges, cleareSelectedCartridges } = useServiceBatchStore();
+  const form = useForm<ServiceFormType>({
+    resolver: zodResolver(serviceSchema),
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
+      notes: '',
+      responsible: '',
     },
   });
 
-  const onSubmit = async (data: any) => {
-    data.date = convertDate(data.date);
-    const placeholder = { ...data, cartridges: selectedCartridges };
-    console.log(placeholder);
+  const onSubmit = async (data: ServiceFormType) => {
+    try {
+      data.date = convertDate(data.date);
+      const placeholder = { ...data, cartridges: selectedCartridges };
+      console.log(placeholder);
+      await sendToService(placeholder);
+
+      toast.success('Партия создана', {
+        icon: '✅',
+      });
+
+      form.reset({
+        date: new Date().toISOString().split('T')[0],
+        notes: '',
+        responsible: '',
+      });
+      cleareSelectedCartridges();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log('Error [SERVICE_BATCH_FORM]', error);
+        return toast.error(error.message, { icon: '❌' });
+      }
+    }
   };
   return (
     <FormProvider {...form}>

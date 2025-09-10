@@ -25,7 +25,7 @@ interface Props {
   className?: string;
 }
 
-export const CartridgesForRefile: React.FC<Props> = () => {
+export const CartridgesForService: React.FC<Props> = () => {
   const { cartridges, getCartriges } = useCartridgeStore();
   const [cartridgesSearch, setCartridgesSearch] = React.useState('');
   const {
@@ -63,7 +63,7 @@ export const CartridgesForRefile: React.FC<Props> = () => {
 
   return (
     <div className='lg:col-span-2'>
-      <Card>
+      <Card className=' h-[431px]'>
         <CardHeader>
           <div className='flex items-center justify-between'>
             <CardTitle>Доступные для отправки ({availableForService.length})</CardTitle>
@@ -103,7 +103,7 @@ export const CartridgesForRefile: React.FC<Props> = () => {
             {cartridgesSearch && <ClearButton onClick={() => setCartridgesSearch('')} />}
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className='overflow-y-scroll h-[100%]'>
           {availableForService.length === 0 ? (
             <div className='text-center py-8 text-muted-foreground'>
               Нет картриджей доступных для отправки в сервис
