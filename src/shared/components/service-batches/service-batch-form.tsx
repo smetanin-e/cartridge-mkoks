@@ -2,14 +2,15 @@
 import React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { Send } from 'lucide-react';
-import { FormDate, FormInput, FormTextarea } from './form';
+import { FormDate, FormInput, FormTextarea } from '@/shared/components/form';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useServiceBatchStore } from '../store/service-batch';
-import { convertDate } from '../lib';
-import { ServiceFormType, serviceSchema } from '../schemas/service-schema';
+
+import { convertDate } from '@/shared/lib';
+import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { sendToService } from '../services/batch';
+import { useServiceBatchStore } from '@/shared/store/service-batch';
+import { sendToService } from '@/shared/services/batch';
 
 interface Props {
   className?: string;

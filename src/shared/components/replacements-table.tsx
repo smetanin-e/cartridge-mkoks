@@ -50,8 +50,8 @@ export const ReplacementsTable: React.FC<Props> = () => {
 
   return (
     <>
-      <Card className='mt-6'>
-        <CardHeader>
+      <Card className='mt-6 p-0'>
+        <CardHeader className='pb-5 pt-4 bg-card-header'>
           <div className='flex items-center justify-between'>
             <CardTitle>История замен</CardTitle>
             <Button
@@ -67,7 +67,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className='bg-gray-100'>
+              <TableRow className=''>
                 <TableHead>Дата</TableHead>
                 <TableHead>Подразделение</TableHead>
                 <TableHead>Установлен</TableHead>
@@ -77,28 +77,27 @@ export const ReplacementsTable: React.FC<Props> = () => {
             </TableHeader>
             <TableBody>
               {replacements.map((rep) => (
-                <TableRow
-                  key={rep.id}
-                  className='odd:bg-white even:bg-gray-50 hover:bg-grey-100 transition-colors'
-                >
+                <TableRow key={rep.id} className=''>
                   <TableCell>{rep.date}</TableCell>
                   <TableCell>{rep.departament.name}</TableCell>
                   <TableCell>
-                    <Badge variant='outline' className='bg-orange-50 text-orange-700 text-md'>
-                      {rep.installedCartridgeNumber ? (
+                    {rep.installedCartridgeNumber ? (
+                      <Badge variant='outline' className=' text-green-700 text-md'>
                         <p>
                           {rep.installedCartridgeNumber}{' '}
                           <span className='text-primary'>
                             ({currentModel(rep.installedCartridgeNumber)})
                           </span>
                         </p>
-                      ) : (
-                        `Отсутствует`
-                      )}
-                    </Badge>
+                      </Badge>
+                    ) : (
+                      <Badge variant='outline' className='bg-secondary  text-md'>
+                        <span>Отсутствует</span>
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant='outline' className='bg-purple-1 text-purple-700 text-md'>
+                    <Badge variant='outline' className=' text-purple-700 text-md'>
                       {rep.removedCartridgeNumber ? (
                         <p>
                           {rep.removedCartridgeNumber}{' '}

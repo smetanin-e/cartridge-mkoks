@@ -52,7 +52,7 @@ export const Printers: React.FC<Props> = () => {
   return (
     <div>
       <Card className='gap-1 p-0 overflow-hidden'>
-        <CardHeader className='pb-5 pt-4 relative shadow-sm bg-gray-50'>
+        <CardHeader className='pb-5 pt-4 relative shadow-sm bg-card-header'>
           <div className='flex items-center justify-between'>
             <CardTitle className='flex items-center gap-2'>
               <PrinterIcon className='h-5 w-5' />

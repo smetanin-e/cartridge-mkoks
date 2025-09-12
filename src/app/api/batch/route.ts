@@ -9,7 +9,13 @@ export async function GET() {
       id: true,
       date: true,
       responsible: true,
-      cartridgesInBatch: { select: { cartridge: true } },
+      status: true,
+      cartridgesInBatch: {
+        select: { cartridge: { select: { number: true, numericNumber: true, model: true } } },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 
@@ -17,7 +23,10 @@ export async function GET() {
     id: batch.id,
     date: batch.date,
     responsible: batch.responsible,
-    cartridges: batch.cartridgesInBatch.map((cb) => cb.cartridge),
+    status: batch.status,
+    cartridges: batch.cartridgesInBatch
+      .map((cb) => cb.cartridge)
+      .sort((a, b) => a.numericNumber - b.numericNumber),
   }));
 
   return NextResponse.json(batches);

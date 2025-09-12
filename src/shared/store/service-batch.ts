@@ -52,7 +52,11 @@ export const useServiceBatchStore = create<ServiceBatchState>()((set) => ({
   //
   batches: [],
   getBatchesFromDB: async () => {
-    const batches = await Api.batch.getBatches();
-    set({ batches });
+    try {
+      const data = await Api.batch.getBatches();
+      set({ batches: data });
+    } catch (error) {
+      console.error(error);
+    }
   },
 }));

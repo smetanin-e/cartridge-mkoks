@@ -59,7 +59,7 @@ export const CartridgeList: React.FC<Props> = () => {
     <div>
       {/* Таблица картриджей */}
       <Card className='gap-1 p-0 overflow-hidden  '>
-        <CardHeader className='pb-5 pt-4 relative shadow-sm bg-gray-50'>
+        <CardHeader className='pb-5 pt-4 relative shadow-sm bg-card-header'>
           <div className='flex items-center justify-between'>
             <CardTitle className='flex items-center gap-2'>
               <ToyBrick className='h-5 w-5' />

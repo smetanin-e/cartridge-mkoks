@@ -1,3 +1,5 @@
+import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+
 export const CARTRIDGE_STATUS_CONFIG = {
   AVAILABLE: {
     label: 'Готов к использованию',
@@ -29,4 +31,10 @@ export const CARTRIDGE_STATUS_CONFIG = {
     textColor: 'text-purple-700',
     bgColor: 'bg-purple-50',
   },
+} as const;
+
+export const BATCH_STATUS = {
+  IN_PROGRESS: { label: 'В стадии заправки', color: 'bg-orange-500', icon: Clock },
+  COMPLITED: { label: 'Выполнено', color: 'bg-green-500', icon: CheckCircle },
+  PARTIAL_RETURN: { label: 'Частичный возврат', color: 'bg-yellow-500', icon: AlertCircle },
 } as const;
