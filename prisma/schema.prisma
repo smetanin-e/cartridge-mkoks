@@ -85,6 +85,7 @@ model ServiceBatch {
     createdAt   DateTime    @default(now())
     status      BatchStatus @default(IN_PROGRESS) // Статус партии (в работе, выполнено, частичный возврат)
 
+    partialReturnDate String? //дата частичного возврата
     // Связь с картриджами, входящими в эту партию (через промежуточную таблицу)
     cartridgesInBatch ServiceBatchCartridge[]
 }

@@ -38,7 +38,7 @@ export const CartridgeList: React.FC<Props> = () => {
   React.useEffect(() => {
     getCartriges();
   }, []);
-
+  console.log('22222222222222222222', cartridges);
   const [searchValue, setSearchValue] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<CartridgeStatus | 'all'>('all');
   const filteredCartridges = cartridges.filter((cartridge) => {

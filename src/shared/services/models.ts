@@ -12,7 +12,7 @@ export const getModels = async (): Promise<Model[]> => {
 
 export const createModel = async (values: CreateModelDTO): Promise<Model> => {
   try {
-    const { data } = await axiosInstance.post<Model>('/cartridge-models', values);
+    const { data } = await axiosInstance.post<Model>(ApiRoutes.MODELS, values);
     useModelsStore.getState().getModels();
     return data;
   } catch (error) {

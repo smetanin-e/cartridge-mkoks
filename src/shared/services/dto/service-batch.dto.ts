@@ -1,5 +1,5 @@
 import { ServiceFormType } from '@/shared/schemas/service-schema';
-import { BatchStatus, Model } from '@prisma/client';
+import { BatchStatus, CartridgeStatus, Model } from '@prisma/client';
 
 //тип отправки данных в API/batch (POST)
 export type ServiceBatchDTO = ServiceFormType & { cartridges: number[] };
@@ -9,6 +9,12 @@ export type BatchCartridges = {
   number: string;
   numericNumber: number;
   model: Model;
+  status: CartridgeStatus;
+
+  returned: boolean;
+  returnDate: string;
+  returnResponsible: string;
+  returnNotes: string;
 };
 
 export type Batch = {
@@ -16,5 +22,6 @@ export type Batch = {
   date: string;
   responsible: string;
   status: BatchStatus;
+  partialReturnDate: string | null;
   cartridges: BatchCartridges[];
 };

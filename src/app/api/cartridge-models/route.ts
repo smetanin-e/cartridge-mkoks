@@ -1,4 +1,5 @@
 import { prisma } from '@/shared/lib';
+import { CreateModelDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
@@ -15,7 +16,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
+    const data = (await req.json()) as CreateModelDTO;
     const findModel = await prisma.model.findFirst({
       where: { model: data.model },
     });

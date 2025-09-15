@@ -10,8 +10,16 @@ export async function GET() {
       date: true,
       responsible: true,
       status: true,
+      partialReturnDate: true,
       cartridgesInBatch: {
-        select: { cartridge: { select: { number: true, numericNumber: true, model: true } } },
+        select: {
+          serviceBatchId: true,
+          returned: true,
+          returnDate: true,
+          returnResponsible: true,
+          returnNotes: true,
+          cartridge: { select: { number: true, numericNumber: true, model: true, status: true } },
+        },
       },
     },
     orderBy: {
@@ -24,8 +32,15 @@ export async function GET() {
     date: batch.date,
     responsible: batch.responsible,
     status: batch.status,
+    partialReturnDate: batch.partialReturnDate,
     cartridges: batch.cartridgesInBatch
-      .map((cb) => cb.cartridge)
+      .map((cb) => ({
+        ...cb.cartridge,
+        returned: cb.returned,
+        returnDate: cb.returnDate,
+        returnResponsible: cb.returnResponsible,
+        returnNotes: cb.returnNotes,
+      }))
       .sort((a, b) => a.numericNumber - b.numericNumber),
   }));
 
@@ -59,7 +74,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(serviceBatch);
   } catch (error) {
-    console.error('SERVICE_BATCH_POST Server error', error);
+    console.error('[SERVICE_BATCH_POST] Server error', error);
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }

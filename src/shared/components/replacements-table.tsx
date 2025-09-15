@@ -50,7 +50,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
 
   return (
     <>
-      <Card className='mt-6 p-0'>
+      <Card className='mt-6 p-0 overflow-hidden'>
         <CardHeader className='pb-5 pt-4 bg-card-header'>
           <div className='flex items-center justify-between'>
             <CardTitle>История замен</CardTitle>
