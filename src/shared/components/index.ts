@@ -1,6 +1,7 @@
 export { ErrorText } from './error-text';
 export { RequiredSymbol } from './required-symbol';
 export { ClearButton } from './cleare-button';
+export { LoadingBounce } from './loading-bounce';
 
 export { Printers } from './printers';
 

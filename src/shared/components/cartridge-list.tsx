@@ -27,18 +27,18 @@ import { Filter, MoreHorizontal, Plus, Search, ToyBrick } from 'lucide-react';
 import { useCartridgeStore } from '../store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
 import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
-import { ClearButton, RegisterCartridge } from '@/shared/components';
+import { ClearButton, LoadingBounce, RegisterCartridge } from '@/shared/components';
 import { getStatusBadge } from '@/shared/components/utils';
 interface Props {
   className?: string;
 }
 
 export const CartridgeList: React.FC<Props> = () => {
-  const { cartridges, getCartriges } = useCartridgeStore();
+  const { loading, cartridges, getCartriges } = useCartridgeStore();
   React.useEffect(() => {
     getCartriges();
   }, []);
-  console.log('22222222222222222222', cartridges);
+
   const [searchValue, setSearchValue] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<CartridgeStatus | 'all'>('all');
   const filteredCartridges = cartridges.filter((cartridge) => {
@@ -71,18 +71,18 @@ export const CartridgeList: React.FC<Props> = () => {
             </Button>
           </div>
           <div className='flex flex-col  md:flex-row gap-4 mt-2'>
-            <div className='relative'>
+            <div className='relative '>
               <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
               <Input
                 placeholder='Поиск...'
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                className='pl-10 bg-white'
+                className='pl-10 bg-white '
               />
               {searchValue && <ClearButton onClick={onClickClear} />}
             </div>
 
-            <div className='w-full md:w-4'>
+            <div className='w-full md:w-4 '>
               <Select
                 value={statusFilter}
                 onValueChange={(value) => setStatusFilter(value as CartridgeStatus | 'all')}
@@ -103,60 +103,66 @@ export const CartridgeList: React.FC<Props> = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          {filteredCartridges.length === 0 ? (
-            <div className='h-[625px] text-center py-8 text-muted-foreground'>
-              Нет такого картриджа
-            </div>
+        <CardContent className='relative h-[625px]'>
+          {loading ? (
+            <LoadingBounce />
           ) : (
-            <div className='h-[625px] overflow-auto overflow-y-scroll'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Номер</TableHead>
-                    <TableHead>Модель</TableHead>
-                    <TableHead>Статус</TableHead>
-                    <TableHead className='text-right'>Действия</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {/* <TableRow>
+            <>
+              {filteredCartridges.length === 0 ? (
+                <div className='h-[625px] text-center py-8 text-muted-foreground'>
+                  Нет такого картриджа
+                </div>
+              ) : (
+                <div className='h-[625px] overflow-auto overflow-y-scroll'>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Номер</TableHead>
+                        <TableHead>Модель</TableHead>
+                        <TableHead>Статус</TableHead>
+                        <TableHead className='text-right'>Действия</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {/* <TableRow>
                   <TableCell colSpan={4} className='text-center py-8 text-muted-foreground'>
                     Картриджи не найдены
                   </TableCell>
                 </TableRow> */}
-                  {cartridges.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className='text-center py-8 text-muted-foreground'>
-                        Картриджи не найдены
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    <>
-                      {filteredCartridges.map((cartridge) => (
-                        <TableRow key={cartridge.id}>
-                          <TableCell className='font-medium'>{cartridge.number}</TableCell>
-                          <TableCell>{cartridge.model?.model}</TableCell>
-                          <TableCell>{getStatusBadge(cartridge.status)}</TableCell>
-                          <TableCell className='text-right'>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant='ghost' className='h-8 w-8 p-0'>
-                                  <MoreHorizontal className='h-4 w-4' />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align='end'>
-                                <DropdownMenuItem> Статус</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                      {cartridges.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className='text-center py-8 text-muted-foreground'>
+                            Картриджи не найдены
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                      ) : (
+                        <>
+                          {filteredCartridges.map((cartridge) => (
+                            <TableRow key={cartridge.id}>
+                              <TableCell className='font-medium'>{cartridge.number}</TableCell>
+                              <TableCell>{cartridge.model?.model}</TableCell>
+                              <TableCell>{getStatusBadge(cartridge.status)}</TableCell>
+                              <TableCell className='text-right'>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant='ghost' className='h-8 w-8 p-0'>
+                                      <MoreHorizontal className='h-4 w-4' />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align='end'>
+                                    <DropdownMenuItem> Статус</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

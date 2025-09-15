@@ -21,13 +21,13 @@ import {
 } from '@/shared/components/ui';
 import { MoreHorizontal, Plus, PrinterIcon, Search } from 'lucide-react';
 import { usePrintersStore } from '../store/printers';
-import { ClearButton, CreatePrinter } from '@/shared/components';
+import { ClearButton, CreatePrinter, LoadingBounce } from '@/shared/components';
 
 interface Props {
   className?: string;
 }
 export const Printers: React.FC<Props> = () => {
-  const { printers, getPrinters } = usePrintersStore();
+  const { loading, printers, getPrinters } = usePrintersStore();
 
   React.useEffect(() => {
     getPrinters();
@@ -69,65 +69,73 @@ export const Printers: React.FC<Props> = () => {
               placeholder='Поиск принтера по названию или модели картриджа...'
               value={printerSearchTerm}
               onChange={(e) => setPrinterSearchTerm(e.target.value)}
-              className='pl-10'
+              className='pl-10 bg-white'
             />
             {printerSearchTerm && <ClearButton onClick={onClickClear} />}
           </div>
         </CardHeader>
-        <CardContent>
-          {filteredPrinters.length === 0 ? (
-            <div className='h-[625px] text-center py-8 text-muted-foreground'>
-              Нет данных о принтерах
-            </div>
+        <CardContent className='relative h-[625px]'>
+          {loading ? (
+            <LoadingBounce />
           ) : (
-            <div className='h-[625px] overflow-auto overflow-y-scroll'>
-              {' '}
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Название принтера</TableHead>
-                    <TableHead>Совместимые модели</TableHead>
-                    <TableHead className='text-center'>Действия</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredPrinters.map((printer) => (
-                    <TableRow key={printer.id}>
-                      <TableCell className='font-medium'>{printer.name}</TableCell>
-                      <TableCell>
-                        <div className='flex flex-wrap gap-1'>
-                          {printer.models?.length === 0 ? (
-                            <Badge variant='outline' className='text-muted-foreground'>
-                              Нет данных
-                            </Badge>
-                          ) : (
-                            printer.models?.map((modelName) => (
-                              <Badge key={modelName.id} variant='secondary'>
-                                {modelName.model}
-                              </Badge>
-                            ))
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <div className='flex items-center justify-center'>
-                              <Button variant='ghost' className='h-8 w-8 p-0'>
-                                <MoreHorizontal className='h-4 w-4' />
-                              </Button>
+            <>
+              {filteredPrinters.length === 0 ? (
+                <div className='h-[625px] text-center py-8 text-muted-foreground'>
+                  Нет данных о принтерах
+                </div>
+              ) : (
+                <div className='h-[625px] overflow-auto overflow-y-scroll'>
+                  {' '}
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Название принтера</TableHead>
+                        <TableHead>Совместимые модели</TableHead>
+                        <TableHead className='text-center'>Действия</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPrinters.map((printer) => (
+                        <TableRow key={printer.id}>
+                          <TableCell className='font-medium'>{printer.name}</TableCell>
+                          <TableCell>
+                            <div className='flex flex-wrap gap-1'>
+                              {printer.models?.length === 0 ? (
+                                <Badge variant='outline' className='text-muted-foreground'>
+                                  Нет данных
+                                </Badge>
+                              ) : (
+                                printer.models?.map((modelName) => (
+                                  <Badge key={modelName.id} variant='secondary'>
+                                    {modelName.model}
+                                  </Badge>
+                                ))
+                              )}
                             </div>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align='end'>
-                            <DropdownMenuItem className='cursor-pointer'>Удалить</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <div className='flex items-center justify-center'>
+                                  <Button variant='ghost' className='h-8 w-8 p-0'>
+                                    <MoreHorizontal className='h-4 w-4' />
+                                  </Button>
+                                </div>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align='end'>
+                                <DropdownMenuItem className='cursor-pointer'>
+                                  Удалить
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
