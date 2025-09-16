@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -17,7 +16,7 @@ import { useServiceBatchStore } from '@/shared/store/service-batch';
 import { BatchStatus } from '@prisma/client';
 import { getBatchStatusBadge } from '../utils';
 import { Batch } from '@/shared/services/dto/service-batch.dto';
-import { ShowBatchForReturn } from '../modals';
+import { CartridgesReturn, ShowBatchForReturn } from '../modals';
 interface Props {
   className?: string;
 }
@@ -41,7 +40,7 @@ export const BatchesForReturn: React.FC<Props> = () => {
   return (
     <Card className='mb-6'>
       <CardHeader>
-        <CardTitle>Партии в работе (5)</CardTitle>
+        <CardTitle>Партии в работе ({batchesInService.length})</CardTitle>
       </CardHeader>
       <CardContent>
         {batchesInService.length === 0 ? (
@@ -87,20 +86,17 @@ export const BatchesForReturn: React.FC<Props> = () => {
                         cartridges={batch.cartridges}
                         batch={batch}
                       />
-                      <Button
-                        size='sm'
-                        // onClick={() => openReturnDialog(batch)}
-                        // disabled={getAvailableCartridges(batch).length === 0}
-                      >
-                        Принять
-                      </Button>
+                      <CartridgesReturn
+                        batchId={batch.id}
+                        date={batch.date}
+                        responsible={batch.responsible}
+                        status={getBatchStatusBadge(batch.status)}
+                        cartridges={batch.cartridges}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
-
-              {/* );
-                })} */}
             </TableBody>
           </Table>
         )}

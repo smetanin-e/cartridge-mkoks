@@ -15,12 +15,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { useCartridgeStore } from '../store/cartridges';
+
 import { CartridgeStatus } from '@prisma/client';
 import { getStatusBadge } from '@/shared/components/utils';
-import { useServiceBatchStore } from '../store/service-batch';
+
 import { ClearButton } from '@/shared/components';
 import { Search } from 'lucide-react';
+import { useCartridgeStore } from '@/shared/store/cartridges';
+import { useServiceBatchStore } from '@/shared/store/service-batch';
 interface Props {
   className?: string;
 }
@@ -58,8 +60,6 @@ export const CartridgesForService: React.FC<Props> = () => {
       ? cartridge.number.toLowerCase().includes(cartridgesSearch.toLowerCase())
       : true,
   );
-
-  console.log('selectedCartridges===========', selectedCartridges);
 
   return (
     <div className='lg:col-span-2'>

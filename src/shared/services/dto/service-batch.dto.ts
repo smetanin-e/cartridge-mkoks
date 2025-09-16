@@ -6,6 +6,7 @@ export type ServiceBatchDTO = ServiceFormType & { cartridges: number[] };
 
 //тип получения партий с картриджами с API/batch (GET)
 export type BatchCartridges = {
+  id: number;
   number: string;
   numericNumber: number;
   model: Model;
@@ -24,4 +25,12 @@ export type Batch = {
   status: BatchStatus;
   partialReturnDate: string | null;
   cartridges: BatchCartridges[];
+};
+
+export type ReturnCartrige = {
+  batchId: string;
+  date: string;
+  responsible: string;
+  notes: string | null;
+  cartridges: number[];
 };

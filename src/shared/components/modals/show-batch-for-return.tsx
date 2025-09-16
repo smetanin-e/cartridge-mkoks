@@ -19,7 +19,7 @@ import { Calendar, Eye } from 'lucide-react';
 import { CartridgeStatus } from '@prisma/client';
 
 import { Batch, BatchCartridges } from '@/shared/services/dto/service-batch.dto';
-import { getCartridgeReturnInfo } from '@/shared/lib';
+import { cn, getCartridgeReturnInfo } from '@/shared/lib';
 
 interface Props {
   className?: string;
@@ -76,19 +76,16 @@ export const ShowBatchForReturn: React.FC<Props> = ({
             <TableBody>
               {cartridges.map((cartridge) => {
                 const returnInfo = getCartridgeReturnInfo(batch, cartridge.number);
+                const isStatusAvaible = cartridge.status === CartridgeStatus.AVAILABLE;
                 return (
                   <TableRow key={cartridge.number}>
                     <TableCell>{cartridge.number}</TableCell>
                     <TableCell>{cartridge.model.model}</TableCell>
 
                     <TableCell>
-                      {cartridge.status === CartridgeStatus.AVAILABLE ? (
-                        <Badge className='bg-green-500' variant='default'>
-                          Возвращен
-                        </Badge>
-                      ) : (
-                        <Badge variant='outline'>В сервисе</Badge>
-                      )}
+                      <Badge variant={isStatusAvaible ? 'success' : 'outline'}>
+                        {isStatusAvaible ? 'Возвращен' : 'В сервисе'}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       {returnInfo?.returnDate ? (

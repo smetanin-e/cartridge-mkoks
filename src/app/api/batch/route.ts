@@ -18,7 +18,9 @@ export async function GET() {
           returnDate: true,
           returnResponsible: true,
           returnNotes: true,
-          cartridge: { select: { number: true, numericNumber: true, model: true, status: true } },
+          cartridge: {
+            select: { id: true, number: true, numericNumber: true, model: true, status: true },
+          },
         },
       },
     },
