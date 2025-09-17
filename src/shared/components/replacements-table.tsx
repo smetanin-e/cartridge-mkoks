@@ -27,6 +27,7 @@ interface Props {
 export const ReplacementsTable: React.FC<Props> = () => {
   const [popupReplacement, setPopupReplacement] = React.useState(false);
   const [popupDepartament, setPopupDepartament] = React.useState(false);
+  const [submiting, setSubmiting] = React.useState(false);
 
   const { cartridges, getCartriges } = useCartridgeStore();
   const { departaments, getDepartaments } = useDepartamentStore();
@@ -37,10 +38,13 @@ export const ReplacementsTable: React.FC<Props> = () => {
   };
 
   React.useEffect(() => {
-    getCartriges();
     getDepartaments();
     getReplacements();
   }, []);
+
+  React.useEffect(() => {
+    getCartriges();
+  }, [submiting]);
   const avaibleCartridges = cartridges.filter(
     (cartridge) => cartridge.status === CartridgeStatus.AVAILABLE,
   );
@@ -126,6 +130,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
         workingCartridges={workingCartridges}
         departaments={departaments}
         setPopupDepartament={setPopupDepartament}
+        setSubmiting={setSubmiting}
       />
       {/* Попап добавления нового подразделения*/}
       <CreateDepartament open={popupDepartament} onOpenChange={setPopupDepartament} />

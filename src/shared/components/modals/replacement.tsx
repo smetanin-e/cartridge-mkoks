@@ -21,6 +21,7 @@ interface Props {
   workingCartridges: CartridgeDTO[];
   departaments: Departament[];
   setPopupDepartament: (value: boolean) => void;
+  setSubmiting: (value: boolean) => void;
 }
 
 export const Replacement: React.FC<Props> = ({
@@ -30,6 +31,7 @@ export const Replacement: React.FC<Props> = ({
   workingCartridges,
   departaments,
   setPopupDepartament,
+  setSubmiting,
 }) => {
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
@@ -43,6 +45,7 @@ export const Replacement: React.FC<Props> = ({
 
   const onSubmit = async (data: ReplacementFormType) => {
     try {
+      setSubmiting(true);
       data.date = convertDate(data.date);
       console.log(data);
       await replacing(data);
@@ -57,7 +60,9 @@ export const Replacement: React.FC<Props> = ({
         removedCartridge: null,
         responsible: '',
       });
+      setSubmiting(false);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [REPLACEMENT_FORM]', error);
         return toast.error(error.message, { icon: '❌' });

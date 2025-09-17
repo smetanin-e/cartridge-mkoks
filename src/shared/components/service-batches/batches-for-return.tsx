@@ -23,9 +23,11 @@ interface Props {
 
 export const BatchesForReturn: React.FC<Props> = () => {
   const { batches, getBatchesFromDB } = useServiceBatchStore();
+  const [submiting, setSubmiting] = React.useState(false); //используем для обновления состояния отправки формы в CartridgesReturn, чтобы запросить обновленные данные с сервера
+
   React.useEffect(() => {
     getBatchesFromDB();
-  }, []);
+  }, [submiting]);
 
   const batchesInService = batches.filter((batch) => batch.status !== BatchStatus.COMPLITED);
 
@@ -92,6 +94,7 @@ export const BatchesForReturn: React.FC<Props> = () => {
                         responsible={batch.responsible}
                         status={getBatchStatusBadge(batch.status)}
                         cartridges={batch.cartridges}
+                        setSubmiting={setSubmiting}
                       />
                     </div>
                   </TableCell>
