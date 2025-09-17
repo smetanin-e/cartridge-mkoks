@@ -1,10 +1,13 @@
+'use client';
 import { Batches, CartridgesForService, ServiceBatchForm } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
 export default function ServiceBatch() {
+  const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
   return (
     <div className='container mx-auto p-6'>
       <div className='flex items-center gap-4 mb-6'>
@@ -24,10 +27,16 @@ export default function ServiceBatch() {
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         {/* Список доступных картриджей */}
-        <CartridgesForService />
+        <CartridgesForService
+          selectedCartridges={selectedCartridges}
+          setSelectedCartridges={setSelectedCartridges}
+        />
 
         {/* Форма создания партии */}
-        <ServiceBatchForm />
+        <ServiceBatchForm
+          selectedCartridges={selectedCartridges}
+          setSelectedCartridges={setSelectedCartridges}
+        />
       </div>
       <Batches />
       <Toaster />

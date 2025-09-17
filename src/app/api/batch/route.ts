@@ -1,10 +1,24 @@
 import { prisma } from '@/shared/lib';
 import { ServiceBatchDTO } from '@/shared/services/dto/service-batch.dto';
-import { CartridgeStatus } from '@prisma/client';
+import { BatchStatus, CartridgeStatus, Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined;
+  const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!, 10) : undefined;
+  const statuses = searchParams.getAll('status') as BatchStatus[];
+
+  //Подготовка по каким параметрам будем искать партии
+  const where: Prisma.ServiceBatchWhereInput = {};
+
+  if (statuses.length > 0) {
+    where.status = { in: statuses }; // фильтруем только по конкретному статусу
+  }
+
   const batchesRaw = await prisma.serviceBatch.findMany({
+    where,
     select: {
       id: true,
       date: true,
@@ -27,6 +41,8 @@ export async function GET() {
     orderBy: {
       createdAt: 'desc',
     },
+    skip: offset,
+    take: limit,
   });
 
   const batches = batchesRaw.map((batch) => ({

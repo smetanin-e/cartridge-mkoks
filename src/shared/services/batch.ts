@@ -2,13 +2,19 @@ import axios from 'axios';
 import { axiosInstance } from './instance';
 import { Batch, ServiceBatchDTO } from './dto/service-batch.dto';
 import { ApiRoutes } from './constants';
-import { ServiceBatch } from '@prisma/client';
+import { BatchStatus, ServiceBatch } from '@prisma/client';
 import { useCartridgeStore } from '../store/cartridges';
 import { useServiceBatchStore } from '../store/service-batch';
 
-export const getBatches = async () => {
+export const getBatches = async (statuses?: BatchStatus[]) => {
   try {
-    const { data } = await axiosInstance.get<Batch[]>(ApiRoutes.BATCH);
+    const params = new URLSearchParams();
+    if (statuses && statuses.length > 0) {
+      statuses.forEach((s) => params.append('status', s));
+    }
+    const { data } = await axiosInstance.get<Batch[]>(
+      ApiRoutes.BATCH + (params.toString ? `/?${params.toString()}` : ''),
+    );
 
     return data;
   } catch (error) {

@@ -18,16 +18,17 @@ import {
 import { Printer } from 'lucide-react';
 import { useServiceBatchStore } from '../../store/service-batch';
 import { ShowBatch, PrintBatch } from '@/shared/components';
+import { BatchStatus } from '@prisma/client';
 
 interface Props {
   className?: string;
 }
 
 export const Batches: React.FC<Props> = () => {
-  const { batches, getBatchesFromDB } = useServiceBatchStore();
-
+  const { batches } = useServiceBatchStore();
+  const getBatchesFromDB = useServiceBatchStore((state) => state.getBatchesFromDB);
   React.useEffect(() => {
-    getBatchesFromDB();
+    getBatchesFromDB([BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN]);
   }, []);
 
   const contentRef = React.useRef<HTMLDivElement>(null);

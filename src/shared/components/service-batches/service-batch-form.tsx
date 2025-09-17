@@ -9,15 +9,18 @@ import { convertDate } from '@/shared/lib';
 import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useServiceBatchStore } from '@/shared/store/service-batch';
 import { sendToService } from '@/shared/services/batch';
 
 interface Props {
   className?: string;
+  selectedCartridges: number[];
+  setSelectedCartridges: (selectedCartridges: number[]) => void;
 }
 
-export const ServiceBatchForm: React.FC<Props> = () => {
-  const { selectedCartridges, cleareSelectedCartridges } = useServiceBatchStore();
+export const ServiceBatchForm: React.FC<Props> = ({
+  selectedCartridges,
+  setSelectedCartridges,
+}) => {
   const form = useForm<ServiceFormType>({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
@@ -33,7 +36,7 @@ export const ServiceBatchForm: React.FC<Props> = () => {
       const placeholder = { ...data, cartridges: selectedCartridges };
       console.log(placeholder);
       await sendToService(placeholder);
-
+      setSelectedCartridges([]);
       toast.success('Партия создана', {
         icon: '✅',
       });
@@ -43,7 +46,6 @@ export const ServiceBatchForm: React.FC<Props> = () => {
         notes: '',
         responsible: '',
       });
-      cleareSelectedCartridges();
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [SERVICE_BATCH_FORM]', error);
@@ -59,7 +61,7 @@ export const ServiceBatchForm: React.FC<Props> = () => {
             <CardTitle>Данные партии</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='space-y-4'>
+            <div className='space-y-4 '>
               <FormDate name='date' label='Дата отправки' required />
 
               <FormInput name='responsible' label='Ответственный' required />

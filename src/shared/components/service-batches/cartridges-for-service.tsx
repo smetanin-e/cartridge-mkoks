@@ -1,8 +1,10 @@
 'use client';
 import React from 'react';
 import {
+  Badge,
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
   Checkbox,
@@ -22,35 +24,62 @@ import { getStatusBadge } from '@/shared/components/utils';
 import { ClearButton } from '@/shared/components';
 import { Search } from 'lucide-react';
 import { useCartridgeStore } from '@/shared/store/cartridges';
-import { useServiceBatchStore } from '@/shared/store/service-batch';
+import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 interface Props {
   className?: string;
+  selectedCartridges: number[];
+  setSelectedCartridges: (selectedCartridges: number[]) => void;
 }
 
-export const CartridgesForService: React.FC<Props> = () => {
+export const CartridgesForService: React.FC<Props> = ({
+  selectedCartridges,
+  setSelectedCartridges,
+}) => {
   const { cartridges, getCartriges } = useCartridgeStore();
   const [cartridgesSearch, setCartridgesSearch] = React.useState('');
-  const {
-    selectedCartridges,
-    checkedReserve,
-    handleCheckedReserve,
-    handleSelectAll,
-    handleCartridgeSelect,
-    cleareSelectedCartridges,
-  } = useServiceBatchStore();
 
-  React.useEffect(() => {
-    getCartriges();
-    return () => {
-      cleareSelectedCartridges();
-    };
-  }, []);
+  const [checkedReserve, setCheckedReserve] = React.useState(false);
 
   const availableForService = cartridges.filter((cartridge) =>
     checkedReserve
       ? cartridge.status === CartridgeStatus.REFILL || cartridge.status === CartridgeStatus.RESERVE
       : cartridge.status === CartridgeStatus.REFILL,
   );
+
+  const previewModels = cartridges.filter((c) => selectedCartridges.includes(c.id));
+
+  //Отображаем или не отображаем резервные картриджи
+  const handleCheckedReserve = (checked: boolean) => {
+    const isChecked = checked === true;
+    setCheckedReserve(isChecked);
+
+    if (!isChecked) {
+      setSelectedCartridges([]);
+    }
+  };
+  //=====================================================
+
+  const handleSelectAll = (checked: boolean, availableForService: CartridgeDTO[]) => {
+    if (checked) {
+      const availableIds = availableForService.map((c) => c.id);
+      setSelectedCartridges(availableIds);
+    } else {
+      setSelectedCartridges([]);
+    }
+  };
+  //=====================================================
+
+  const handleCartridgeSelect = (cartridgeId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedCartridges([...selectedCartridges, cartridgeId]);
+    } else {
+      setSelectedCartridges(selectedCartridges.filter((id) => id !== cartridgeId));
+    }
+  };
+
+  React.useEffect(() => {
+    getCartriges();
+  }, []);
 
   const isAllSelected =
     availableForService.length > 0 && selectedCartridges.length === availableForService.length;
@@ -63,7 +92,7 @@ export const CartridgesForService: React.FC<Props> = () => {
 
   return (
     <div className='lg:col-span-2'>
-      <Card className=' h-[431px]'>
+      <Card className='min-h-[431px] max-h-[620px] flex flex-col'>
         <CardHeader>
           <div className='flex items-center justify-between'>
             <CardTitle>Доступные для отправки ({availableForService.length})</CardTitle>
@@ -103,7 +132,7 @@ export const CartridgesForService: React.FC<Props> = () => {
             {cartridgesSearch && <ClearButton onClick={() => setCartridgesSearch('')} />}
           </div>
         </CardHeader>
-        <CardContent className='overflow-y-scroll h-[100%]'>
+        <CardContent className='flex-1 overflow-y-scroll h-[100%]'>
           {availableForService.length === 0 ? (
             <div className='text-center py-8 text-muted-foreground'>
               Нет картриджей доступных для отправки в сервис
@@ -138,6 +167,25 @@ export const CartridgesForService: React.FC<Props> = () => {
             </Table>
           )}
         </CardContent>
+        <CardFooter>
+          <div>
+            <h6>Выбранные картриджи:</h6>
+
+            <div className='flex flex-wrap gap-2'>
+              {previewModels.length > 0 ? (
+                previewModels.map((c) => {
+                  return (
+                    <Badge key={c.id} variant='secondary' className='text-sm'>
+                      {c.number}
+                    </Badge>
+                  );
+                })
+              ) : (
+                <span className='text-gray-500 text-sm'>Ничего не выбрано</span>
+              )}
+            </div>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );
