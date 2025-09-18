@@ -16,8 +16,9 @@ import {
   TableRow,
 } from '@/shared/components/ui';
 import { Printer } from 'lucide-react';
-import { useServiceBatchStore } from '../../store/service-batch';
 import { ShowBatch, PrintBatch } from '@/shared/components';
+
+import { useBatchList } from '@/shared/hooks';
 import { BatchStatus } from '@prisma/client';
 
 interface Props {
@@ -25,11 +26,17 @@ interface Props {
 }
 
 export const Batches: React.FC<Props> = () => {
-  const { batches } = useServiceBatchStore();
-  const getBatchesFromDB = useServiceBatchStore((state) => state.getBatchesFromDB);
-  React.useEffect(() => {
-    getBatchesFromDB([BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN]);
-  }, []);
+  //   const getBatchesFromDB = useServiceBatchStore((state) => state.getBatchesFromDB);
+  //   const batches = useServiceBatchStore((state) => state.batches);
+  //   React.useEffect(() => {
+  //     // getBatchesFromDB([BatchStatus.COMPLITED], 1, 1);
+  //     getBatchesFromDB();
+  //   }, []);
+
+  const { batches, loadBatches, hasMore, loading } = useBatchList(
+    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
+    5,
+  );
 
   const contentRef = React.useRef<HTMLDivElement>(null);
   // какой batch печатаем
@@ -90,6 +97,11 @@ export const Batches: React.FC<Props> = () => {
               })}
           </TableBody>
         </Table>
+        {hasMore && (
+          <Button variant={'outline'} onClick={() => loadBatches()} disabled={loading}>
+            {loading ? 'Загрузка...' : 'Показать ещё'}
+          </Button>
+        )}
       </CardContent>
       {/* Компонент, который печатается */}
       <div className='hidden '>

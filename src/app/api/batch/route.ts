@@ -6,9 +6,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined;
-  const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!, 10) : undefined;
+  const take = searchParams.get('take') ? parseInt(searchParams.get('take')!, 10) : undefined;
+  const skip = searchParams.get('skip') ? parseInt(searchParams.get('skip')!, 10) : undefined;
   const statuses = searchParams.getAll('status') as BatchStatus[];
+  console.log({ statuses, take, skip }); // ПРОВЕРЬ ЧТО ПРИХОДИТ
 
   //Подготовка по каким параметрам будем искать партии
   const where: Prisma.ServiceBatchWhereInput = {};
@@ -41,8 +42,8 @@ export async function GET(req: NextRequest) {
     orderBy: {
       createdAt: 'desc',
     },
-    skip: offset,
-    take: limit,
+    skip,
+    take,
   });
 
   const batches = batchesRaw.map((batch) => ({

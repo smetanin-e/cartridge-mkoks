@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Badge,
   Button,
@@ -16,11 +15,7 @@ import {
   TableRow,
 } from '@/shared/components/ui';
 import { Calendar, Eye } from 'lucide-react';
-import { CartridgeStatus } from '@prisma/client';
-
 import { Batch, BatchCartridges } from '@/shared/services/dto/service-batch.dto';
-import { getCartridgeReturnInfo } from '@/shared/lib';
-
 interface Props {
   className?: string;
   date: string;
@@ -30,13 +25,7 @@ interface Props {
   batch: Batch;
 }
 
-export const ShowBatchForReturn: React.FC<Props> = ({
-  date,
-  responsible,
-  status,
-  cartridges,
-  batch,
-}) => {
+export const ShowBatchComplited: React.FC<Props> = ({ date, responsible, status, cartridges }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -44,24 +33,24 @@ export const ShowBatchForReturn: React.FC<Props> = ({
           <Eye className='h-4 w-4' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-w-2xl sm:max-w-auto'>
+      <DialogContent className='max-w-4xl sm:max-w-auto'>
         <DialogHeader>
-          <DialogTitle>Партия от {date}</DialogTitle>
+          <DialogTitle>Партия от {date} - Выполнено</DialogTitle>
         </DialogHeader>
         <div className='space-y-4'>
-          <div className='grid grid-cols-1 gap-1 text-sm'>
+          <div className='grid grid-cols-2 gap-4 text-sm bg-green-50 p-4 rounded-lg'>
             <div>
-              <strong>Партию отправлял:</strong> {responsible}
+              <strong>Дата отправки:</strong> {date}
+            </div>
+            <div>
+              <strong>Ответственный за отправку:</strong> {responsible}
             </div>
             <div className='flex gap-3'>
               <strong>Статус:</strong> <p>{status}</p>
             </div>
-
-            {batch.partialReturnDate && (
-              <div>
-                <strong>Дата частичного возврата:</strong> {batch.partialReturnDate}
-              </div>
-            )}
+            <div>
+              <strong>Всего картриджей:</strong> {cartridges.length}
+            </div>
           </div>
           <Table>
             <TableHeader>
@@ -76,35 +65,21 @@ export const ShowBatchForReturn: React.FC<Props> = ({
             </TableHeader>
             <TableBody>
               {cartridges.map((cartridge) => {
-                const returnInfo = getCartridgeReturnInfo(batch, cartridge.number);
-                const isStatusAvaible = cartridge.status === CartridgeStatus.AVAILABLE;
                 return (
                   <TableRow key={cartridge.number}>
                     <TableCell>{cartridge.number}</TableCell>
                     <TableCell>{cartridge.model.model}</TableCell>
 
                     <TableCell>
-                      <Badge variant={isStatusAvaible ? 'success' : 'outline'}>
-                        {isStatusAvaible ? 'Возвращен' : 'В сервисе'}
-                      </Badge>
+                      <Badge variant={'success'}>Возвращен</Badge>
                     </TableCell>
                     <TableCell>
-                      {returnInfo?.returnDate ? (
-                        <div className='flex items-center gap-1 text-sm'>
-                          <Calendar className='h-3 w-3' />
-                          {returnInfo.returnDate}
-                        </div>
-                      ) : (
-                        <span className='text-muted-foreground text-sm'>—</span>
-                      )}
+                      <div className='flex items-center gap-1 text-sm'>
+                        <Calendar className='h-3 w-3' />
+                        {cartridge.returnDate}
+                      </div>
                     </TableCell>
-                    <TableCell>
-                      {cartridge.returnResponsible ? (
-                        cartridge.returnResponsible
-                      ) : (
-                        <span className='text-muted-foreground text-sm'>—</span>
-                      )}
-                    </TableCell>
+                    <TableCell>{cartridge.returnResponsible}</TableCell>
                     <TableCell className='max-w-[200px] truncate whitespace-normal break-words'>
                       {cartridge.returnNotes ? (
                         <div className='text-xs max-w-[250px]'>{cartridge.returnNotes}</div>

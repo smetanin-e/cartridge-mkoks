@@ -5,4 +5,5 @@ export { Replacement } from './replacement';
 export { CreateDepartament } from './create-departament';
 export { ShowBatch } from './show-batch';
 export { ShowBatchForReturn } from './show-batch-for-return';
+export { ShowBatchComplited } from './show-batch-complited';
 export { CartridgesReturn } from './cartridges-return';
