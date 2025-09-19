@@ -1,6 +1,6 @@
 'use client';
 
-import { ReplacementsTable } from '@/shared/components';
+import { ReplacementsTable, Stats } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { Download, Package } from 'lucide-react';
 import Link from 'next/link';
@@ -30,10 +30,15 @@ export default function Home() {
             </Button>
           </Link>
           <Link href='/cartridges'>
-            <Button className='flex items-center gap-2'>Картриджи</Button>
+            <Button variant='outline' className='flex items-center gap-2'>
+              Картриджи
+            </Button>
           </Link>
         </div>
       </div>
+
+      {/* Статистика */}
+      <Stats />
 
       {/* Таблица замен */}
       <ReplacementsTable />

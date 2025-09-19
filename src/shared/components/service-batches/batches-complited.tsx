@@ -30,7 +30,7 @@ interface Props {
 }
 
 export const BatchesComplited: React.FC<Props> = () => {
-  const { batches, loading, loadingInitial, refetch } = useBatchList([BatchStatus.COMPLITED]);
+  const { batches, loading, loadingInitial } = useBatchList([BatchStatus.COMPLITED]);
   return (
     <Card className='min-h-[184px] relative'>
       {loadingInitial || loading ? (

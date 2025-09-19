@@ -18,23 +18,25 @@ import {
 import { Printer } from 'lucide-react';
 import { ShowBatch, PrintBatch } from '@/shared/components';
 
-import { Batch } from '@/shared/services/dto/service-batch.dto';
+import { useBatchList } from '@/shared/hooks';
+import { BatchStatus } from '@prisma/client';
 
 interface Props {
   className?: string;
-  batches: Batch[];
-  loadBatches: () => void;
-  hasMore: boolean;
-  loading: boolean;
 }
 
-export const Batches: React.FC<Props> = ({ batches, loading, hasMore, loadBatches }) => {
+export const Batches: React.FC<Props> = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   // какой batch печатаем
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const printBatch = useReactToPrint({
     contentRef,
   });
+
+  const { batches, loadBatches, hasMore, loading } = useBatchList(
+    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
+    5,
+  );
 
   return (
     <Card className='mt-6 h-[500px]'>

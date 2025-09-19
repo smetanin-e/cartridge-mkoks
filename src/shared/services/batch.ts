@@ -4,7 +4,6 @@ import { Batch, ServiceBatchDTO } from './dto/service-batch.dto';
 import { ApiRoutes } from './constants';
 import { BatchStatus, ServiceBatch } from '@prisma/client';
 import { useCartridgeStore } from '../store/cartridges';
-import { useServiceBatchStore } from '../store/service-batch';
 
 export const getBatches = async (statuses?: BatchStatus[], take?: number, skip?: number) => {
   try {
@@ -39,7 +38,6 @@ export const sendToService = async (value: ServiceBatchDTO): Promise<ServiceBatc
   try {
     const { data } = await axiosInstance.post<ServiceBatch>(ApiRoutes.BATCH, value);
     useCartridgeStore.getState().getCartriges();
-    useServiceBatchStore.getState().getBatchesFromDB();
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

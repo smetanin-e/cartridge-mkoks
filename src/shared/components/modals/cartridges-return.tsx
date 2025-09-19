@@ -18,6 +18,7 @@ import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema'
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { returnCartriges } from '@/app/service-return/actions';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
@@ -26,7 +27,6 @@ interface Props {
   responsible: string;
   status: React.ReactNode;
   cartridges: BatchCartridges[];
-  refetch: () => void;
 }
 
 export const CartridgesReturn: React.FC<Props> = ({
@@ -35,8 +35,8 @@ export const CartridgesReturn: React.FC<Props> = ({
   status,
   cartridges,
   batchId,
-  refetch,
 }) => {
+  const queryClient = useQueryClient();
   const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
   const [open, setOpen] = React.useState(false);
   const form = useForm<ServiceFormType>({
@@ -57,12 +57,15 @@ export const CartridgesReturn: React.FC<Props> = ({
         cartridges: selectedCartridges,
       };
       await returnCartriges(payload);
+
+      // 🔥 Обновляем все списки useBatchList
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
       toast.success('Прием картриджей успешно обработан', {
         icon: '✅',
       });
 
       setOpen(false);
-      refetch();
+
       form.reset({
         date: new Date().toISOString().split('T')[0],
         notes: '',

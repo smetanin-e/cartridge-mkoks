@@ -58,11 +58,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
         <CardHeader className='pb-5 pt-4 bg-card-header'>
           <div className='flex items-center justify-between'>
             <CardTitle>История замен</CardTitle>
-            <Button
-              onClick={() => setPopupReplacement(true)}
-              variant='outline'
-              className='flex items-center gap-2'
-            >
+            <Button onClick={() => setPopupReplacement(true)} className='flex items-center gap-2'>
               <Edit className='h-4 w-4' />
               Замена картриджа
             </Button>
@@ -86,11 +82,11 @@ export const ReplacementsTable: React.FC<Props> = () => {
                   <TableCell>{rep.departament.name}</TableCell>
                   <TableCell>
                     {rep.installedCartridgeNumber ? (
-                      <Badge variant='outline' className=' text-green-700 text-md'>
+                      <Badge variant='outline' className=' text-green-500 text-md'>
                         <p>
-                          {rep.installedCartridgeNumber}{' '}
+                          {rep.installedCartridgeNumber}
                           <span className='text-primary'>
-                            ({currentModel(rep.installedCartridgeNumber)})
+                            {' - '}({currentModel(rep.installedCartridgeNumber)})
                           </span>
                         </p>
                       </Badge>
@@ -101,12 +97,12 @@ export const ReplacementsTable: React.FC<Props> = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge variant='outline' className=' text-purple-700 text-md'>
+                    <Badge variant='outline' className=' text-red-500 text-md'>
                       {rep.removedCartridgeNumber ? (
                         <p>
-                          {rep.removedCartridgeNumber}{' '}
+                          {rep.removedCartridgeNumber}
                           <span className='text-primary'>
-                            ({currentModel(rep.removedCartridgeNumber)})
+                            {' - '}({currentModel(rep.removedCartridgeNumber)})
                           </span>
                         </p>
                       ) : (

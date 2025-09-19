@@ -95,7 +95,6 @@ export const BatchesForReturn: React.FC<Props> = () => {
                             responsible={batch.responsible}
                             status={getBatchStatusBadge(batch.status)}
                             cartridges={batch.cartridges}
-                            refetch={refetch}
                           />
                         </div>
                       </TableCell>

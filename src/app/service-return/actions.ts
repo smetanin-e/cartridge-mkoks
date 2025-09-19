@@ -2,7 +2,6 @@
 
 import { prisma } from '@/shared/lib';
 import { ReturnCartrige } from '@/shared/services/dto/service-batch.dto';
-import { useServiceBatchStore } from '@/shared/store/service-batch';
 import { BatchStatus, CartridgeStatus } from '@prisma/client';
 
 export async function returnCartriges(data: ReturnCartrige) {
@@ -48,8 +47,6 @@ export async function returnCartriges(data: ReturnCartrige) {
         data: { status: newStatus, partialReturnDate: data.date },
       });
     }
-
-    useServiceBatchStore.getState().getBatchesFromDB();
   } catch (error) {
     console.log('[ReturnCartriges] Server error', error);
   }

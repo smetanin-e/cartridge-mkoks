@@ -1,50 +1,32 @@
 'use client';
 import { BatchStatus } from '@prisma/client';
-import React from 'react';
 import { Batch } from '../services/dto/service-batch.dto';
 import { Api } from '../services';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 export const useBatchList = (statuses?: BatchStatus[], take = 10) => {
-  const [batches, setBatches] = React.useState<Batch[]>([]);
-  const [skip, setSkip] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
-  const [loadingInitial, setLoadingInitial] = React.useState(true);
-  const [hasMore, setHasMore] = React.useState(true);
+  const query = useInfiniteQuery<Batch[]>({
+    initialPageParam: 0,
+    queryKey: ['batches', { statuses, take }],
+    queryFn: async ({ pageParam = 0 }) => {
+      return Api.batch.getBatches(statuses, take, pageParam as number);
+    },
 
-  const loadBatches = async (customSkip?: number, reset = false) => {
-    if (loading) return;
-    setLoading(true);
+    getNextPageParam: (lastPage, allPages) => {
+      // если получили меньше чем take — значит страниц больше нет
+      return lastPage.length === take ? allPages.length * take : undefined;
+    },
+    staleTime: 30_000,
+  });
 
-    const currentSkip = customSkip ?? skip;
+  const batches = query.data?.pages.flat() ?? [];
 
-    try {
-      const data = await Api.batch.getBatches(statuses, take, currentSkip);
-
-      setBatches((prev) => (reset ? data : [...prev, ...data]));
-      setSkip(currentSkip + take);
-      setHasMore(data.length === take);
-    } finally {
-      setLoading(false);
-      setLoadingInitial(false);
-    }
+  return {
+    batches,
+    loading: query.isLoading,
+    loadingInitial: query.isLoading && !query.isFetchingNextPage,
+    hasMore: query.hasNextPage,
+    loadBatches: query.fetchNextPage,
+    refetch: query.refetch,
   };
-
-  const refetch = () => {
-    setBatches([]);
-    setSkip(0);
-    setHasMore(true);
-    loadBatches(0, true);
-  };
-
-  // загружаем при первом монтировании
-  React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(statuses)]);
-
-  return React.useMemo(
-    () => ({ loading, loadingInitial, batches, loadBatches, hasMore, refetch }),
-    [statuses, take],
-  );
-  // return { loading, loadingInitial, batches, loadBatches, hasMore, refetch };
 };

@@ -9,6 +9,7 @@ export async function GET() {
       include: {
         departament: true,
       },
+      orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(replacements);
   } catch (error) {

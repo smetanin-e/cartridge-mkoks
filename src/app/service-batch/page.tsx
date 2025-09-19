@@ -9,10 +9,7 @@ import React from 'react';
 
 export default function ServiceBatch() {
   const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
-  const { batches, loadBatches, hasMore, loading, refetch } = useBatchList(
-    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
-    5,
-  );
+
   return (
     <div className='container mx-auto p-6'>
       <div className='flex items-center gap-4 mb-6'>
@@ -41,10 +38,9 @@ export default function ServiceBatch() {
         <ServiceBatchForm
           selectedCartridges={selectedCartridges}
           setSelectedCartridges={setSelectedCartridges}
-          refetch={refetch}
         />
       </div>
-      <Batches batches={batches} loadBatches={loadBatches} hasMore={hasMore} loading={loading} />
+      <Batches />
     </div>
   );
 }

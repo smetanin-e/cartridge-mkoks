@@ -10,19 +10,19 @@ import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema'
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { sendToService } from '@/shared/services/batch';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
   selectedCartridges: number[];
   setSelectedCartridges: (selectedCartridges: number[]) => void;
-  refetch: () => void;
 }
 
 export const ServiceBatchForm: React.FC<Props> = ({
   selectedCartridges,
   setSelectedCartridges,
-  refetch,
 }) => {
+  const queryClient = useQueryClient();
   const form = useForm<ServiceFormType>({
     resolver: zodResolver(serviceSchema),
     defaultValues: {
@@ -38,12 +38,14 @@ export const ServiceBatchForm: React.FC<Props> = ({
       const placeholder = { ...data, cartridges: selectedCartridges };
       console.log(placeholder);
       await sendToService(placeholder);
+
+      // 🔥 Обновляем все списки useBatchList
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+
       setSelectedCartridges([]);
       toast.success('Партия создана', {
         icon: '✅',
       });
-
-      refetch();
 
       form.reset({
         date: new Date().toISOString().split('T')[0],
