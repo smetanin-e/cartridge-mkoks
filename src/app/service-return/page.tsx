@@ -24,6 +24,7 @@ export default function ServiceReturn() {
       {/* Партии для возврата */}
       <BatchesForReturn />
 
+      {/* Выполненные партии*/}
       <BatchesComplited />
     </div>
   );

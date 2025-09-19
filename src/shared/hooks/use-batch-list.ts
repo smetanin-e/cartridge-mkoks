@@ -23,8 +23,8 @@ export const useBatchList = (statuses?: BatchStatus[], take = 10) => {
 
   return {
     batches,
-    loading: query.isLoading,
-    loadingInitial: query.isLoading && !query.isFetchingNextPage,
+    loading: query.isFetchingNextPage, // для кнопки "Загрузить ещё"
+    loadingInitial: query.isLoading, // для скелетона при первом рендере
     hasMore: query.hasNextPage,
     loadBatches: query.fetchNextPage,
     refetch: query.refetch,

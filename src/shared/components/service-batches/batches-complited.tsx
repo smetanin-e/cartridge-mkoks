@@ -25,15 +25,19 @@ import { BatchStatus } from '@prisma/client';
 import { LoadingBounce } from '../loading-bounce';
 import { getBatchStatusBadge } from '../utils';
 import { ShowBatchComplited } from '../modals';
+import { ChevronsDown } from 'lucide-react';
 interface Props {
   className?: string;
 }
 
 export const BatchesComplited: React.FC<Props> = () => {
-  const { batches, loading, loadingInitial } = useBatchList([BatchStatus.COMPLITED]);
+  const { batches, loading, loadingInitial, hasMore, loadBatches } = useBatchList(
+    [BatchStatus.COMPLITED],
+    3,
+  );
   return (
-    <Card className='min-h-[184px] relative'>
-      {loadingInitial || loading ? (
+    <Card className='min-h-[184px] relative pb-12'>
+      {loadingInitial ? (
         <LoadingBounce />
       ) : (
         <>
@@ -75,6 +79,27 @@ export const BatchesComplited: React.FC<Props> = () => {
                 </TableBody>
               </Table>
             )}
+            <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
+              {hasMore && (
+                <>
+                  {loading ? (
+                    <div className='relative pb-4'>
+                      <LoadingBounce />
+                    </div>
+                  ) : (
+                    <Button
+                      className='translate-x-[-50%]'
+                      size='sm'
+                      disabled={loading}
+                      variant='ghost'
+                      onClick={() => loadBatches()}
+                    >
+                      <ChevronsDown />
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
           </CardContent>
         </>
       )}

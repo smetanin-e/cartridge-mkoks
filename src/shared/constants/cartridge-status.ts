@@ -1,35 +1,40 @@
-import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { AlertCircle, Bolt, CheckCircle, Clock, LifeBuoy, TriangleAlert } from 'lucide-react';
 
 export const CARTRIDGE_STATUS_CONFIG = {
   AVAILABLE: {
     label: 'Готов к использованию',
     color: 'bg-green-500',
-    textColor: 'text-green-700',
+    textColor: 'text-green-500',
     bgColor: 'bg-green-50',
+    icon: CheckCircle,
   },
   RESERVE: {
     label: 'В резерве',
     color: 'bg-blue-500',
-    textColor: 'text-blue-700',
+    textColor: 'text-blue-500',
     bgColor: 'bg-blue-50',
+    icon: LifeBuoy,
   },
   WORKING: {
     label: 'В работе',
     color: 'bg-orange-500',
-    textColor: 'text-orange-700',
+    textColor: 'text-orange-500',
     bgColor: 'bg-orange-50',
+    icon: Clock,
   },
   SERVICE: {
     label: 'В сервисе',
     color: 'bg-red-500',
-    textColor: 'text-red-700',
+    textColor: 'text-red-500',
     bgColor: 'bg-red-50',
+    icon: Bolt,
   },
   REFILL: {
     label: 'Требуется заправка',
     color: 'bg-purple-500',
-    textColor: 'text-purple-700',
+    textColor: 'text-purple-500',
     bgColor: 'bg-purple-50',
+    icon: TriangleAlert,
   },
 } as const;
 
