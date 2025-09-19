@@ -1,13 +1,18 @@
 'use client';
 import { Batches, CartridgesForService, ServiceBatchForm } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
+import { useBatchList } from '@/shared/hooks';
+import { BatchStatus } from '@prisma/client';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { Toaster } from 'react-hot-toast';
 
 export default function ServiceBatch() {
   const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
+  const { batches, loadBatches, hasMore, loading, refetch } = useBatchList(
+    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
+    5,
+  );
   return (
     <div className='container mx-auto p-6'>
       <div className='flex items-center gap-4 mb-6'>
@@ -36,10 +41,10 @@ export default function ServiceBatch() {
         <ServiceBatchForm
           selectedCartridges={selectedCartridges}
           setSelectedCartridges={setSelectedCartridges}
+          refetch={refetch}
         />
       </div>
-      <Batches />
-      <Toaster />
+      <Batches batches={batches} loadBatches={loadBatches} hasMore={hasMore} loading={loading} />
     </div>
   );
 }

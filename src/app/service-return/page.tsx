@@ -2,7 +2,6 @@ import { BatchesComplited, BatchesForReturn } from '@/shared/components/';
 import { Button, Card, CardContent } from '@/shared/components/ui';
 import { ArrowLeft, CheckCircle, Clock, Package } from 'lucide-react';
 import Link from 'next/link';
-import { Toaster } from 'react-hot-toast';
 
 export default function ServiceReturn() {
   return (
@@ -63,7 +62,6 @@ export default function ServiceReturn() {
       <BatchesForReturn />
 
       <BatchesComplited />
-      <Toaster />
     </div>
   );
 }

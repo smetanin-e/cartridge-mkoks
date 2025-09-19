@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { Calendar, Eye } from 'lucide-react';
+
 import { useBatchList } from '@/shared/hooks';
 import { BatchStatus } from '@prisma/client';
 import { LoadingBounce } from '../loading-bounce';

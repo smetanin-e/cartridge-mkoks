@@ -15,11 +15,13 @@ interface Props {
   className?: string;
   selectedCartridges: number[];
   setSelectedCartridges: (selectedCartridges: number[]) => void;
+  refetch: () => void;
 }
 
 export const ServiceBatchForm: React.FC<Props> = ({
   selectedCartridges,
   setSelectedCartridges,
+  refetch,
 }) => {
   const form = useForm<ServiceFormType>({
     resolver: zodResolver(serviceSchema),
@@ -40,6 +42,8 @@ export const ServiceBatchForm: React.FC<Props> = ({
       toast.success('Партия создана', {
         icon: '✅',
       });
+
+      refetch();
 
       form.reset({
         date: new Date().toISOString().split('T')[0],

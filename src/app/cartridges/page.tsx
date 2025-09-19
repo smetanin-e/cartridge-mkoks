@@ -5,7 +5,6 @@ import { Button } from '@/shared/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
-import { Toaster } from 'react-hot-toast';
 
 export default function CartridgesPage() {
   //=============================================
@@ -41,8 +40,6 @@ export default function CartridgesPage() {
 
       {/* Добавление новой модели картриджа */}
       <RegisterModel />
-
-      <Toaster />
     </div>
   );
 }

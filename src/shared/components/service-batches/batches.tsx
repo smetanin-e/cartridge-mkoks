@@ -18,26 +18,17 @@ import {
 import { Printer } from 'lucide-react';
 import { ShowBatch, PrintBatch } from '@/shared/components';
 
-import { useBatchList } from '@/shared/hooks';
-import { BatchStatus } from '@prisma/client';
+import { Batch } from '@/shared/services/dto/service-batch.dto';
 
 interface Props {
   className?: string;
+  batches: Batch[];
+  loadBatches: () => void;
+  hasMore: boolean;
+  loading: boolean;
 }
 
-export const Batches: React.FC<Props> = () => {
-  //   const getBatchesFromDB = useServiceBatchStore((state) => state.getBatchesFromDB);
-  //   const batches = useServiceBatchStore((state) => state.batches);
-  //   React.useEffect(() => {
-  //     // getBatchesFromDB([BatchStatus.COMPLITED], 1, 1);
-  //     getBatchesFromDB();
-  //   }, []);
-
-  const { batches, loadBatches, hasMore, loading } = useBatchList(
-    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
-    5,
-  );
-
+export const Batches: React.FC<Props> = ({ batches, loading, hasMore, loadBatches }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   // какой batch печатаем
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);

@@ -42,5 +42,9 @@ export const useBatchList = (statuses?: BatchStatus[], take = 10) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(statuses)]);
 
-  return { loading, loadingInitial, batches, loadBatches, hasMore, refetch };
+  return React.useMemo(
+    () => ({ loading, loadingInitial, batches, loadBatches, hasMore, refetch }),
+    [statuses, take],
+  );
+  // return { loading, loadingInitial, batches, loadBatches, hasMore, refetch };
 };
