@@ -65,7 +65,7 @@ export const CartridgesReturn: React.FC<Props> = ({
       });
 
       setOpen(false);
-
+      setSelectedCartridges([]);
       form.reset({
         date: new Date().toISOString().split('T')[0],
         notes: '',
