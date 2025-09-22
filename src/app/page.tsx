@@ -2,6 +2,7 @@
 
 import { ReplacementsTable, Stats } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
+import { Test } from '@/shared/test';
 import { Download, Package } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -39,7 +40,7 @@ export default function Home() {
 
       {/* Статистика */}
       <Stats />
-
+      <Test />
       {/* Таблица замен */}
       <ReplacementsTable />
     </div>

@@ -11,6 +11,7 @@ import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replace
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { replacing } from '@/shared/services/replacement';
+import { CustomSelect } from '../form/custom-select';
 
 interface Props {
   className?: string;
