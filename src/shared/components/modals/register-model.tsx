@@ -17,13 +17,16 @@ import toast from 'react-hot-toast';
 import { useModelsStore } from '../../store/cartridge-models';
 import React from 'react';
 import { createModel } from '../../services/models';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 
 interface Props {
   className?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const RegisterModel: React.FC<Props> = () => {
-  const { models, getModels, openModal, setOpenModal } = useModelsStore();
+export const RegisterModel: React.FC<Props> = ({ open, onOpenChange }) => {
+  const { models, getModels } = useModelsStore();
 
   React.useEffect(() => {
     getModels();
@@ -46,7 +49,7 @@ export const RegisterModel: React.FC<Props> = () => {
       form.reset({
         model: '',
       });
-      setOpenModal(false);
+      onOpenChange(false);
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [ADD_MODEL_FORM]', error);
@@ -56,7 +59,7 @@ export const RegisterModel: React.FC<Props> = () => {
   };
 
   return (
-    <Dialog open={openModal} onOpenChange={setOpenModal}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='space-y-4'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>

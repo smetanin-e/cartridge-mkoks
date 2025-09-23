@@ -1,9 +1,16 @@
 'use client';
 import React from 'react';
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui';
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/components/ui';
 import { Package } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FormDate, FormInput, FormSelectWithSearch } from '@/shared/components';
+import { CreateDepartament, FormCustomSelect, FormDate, FormInput } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { Departament } from '@prisma/client';
 import { convertDate } from '@/shared/lib';
@@ -11,7 +18,8 @@ import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replace
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { replacing } from '@/shared/services/replacement';
-import { CustomSelect } from '../form/custom-select';
+
+import { getStatusBadge } from '@/shared/components/utils';
 
 interface Props {
   className?: string;
@@ -31,7 +39,6 @@ export const Replacement: React.FC<Props> = ({
   avaibleCartridges,
   workingCartridges,
   departaments,
-  setPopupDepartament,
   setSubmiting,
 }) => {
   const form = useForm<ReplacementFormType>({
@@ -84,35 +91,68 @@ export const Replacement: React.FC<Props> = ({
           <FormProvider {...form}>
             <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
               <FormDate name='date' required />
-              <FormSelectWithSearch<Departament>
+              <FormCustomSelect<Departament>
                 name={'departamentId'}
                 label='Подразделение'
-                options={departaments}
-                getOptionValue={(d) => d.id}
-                getOptionLabel={(d) => d.name}
-                placeholder='Укажите подразделение'
                 required
-                onAdd={() => setPopupDepartament(true)}
-                addLabel='Добавить подразделение'
-                error='Укажите подразделение'
+                error='Нужно указать подразделение'
+                items={departaments}
+                placeholder='Укажите подразделение'
+                getKey={(c) => c.id}
+                getLabel={(c) => c.name}
+                renderValue={(c) => c.name}
+                renderItem={(c) => c.name}
+                onAdd={<CreateDepartament />}
               />
 
-              <FormSelectWithSearch<CartridgeDTO>
+              <FormCustomSelect<CartridgeDTO>
                 name={'installedCartridge'}
                 label='Установленный картридж'
-                options={avaibleCartridges}
-                getOptionValue={(c) => c.number}
-                getOptionLabel={(c) => `${c.number}`}
-                placeholder='-'
+                items={avaibleCartridges}
+                placeholder='---'
+                getKey={(c) => c.id}
+                getLabel={(c) => c.number}
+                renderValue={(c) => (
+                  <div className='flex gap-2 items-center flex-1'>
+                    <span>{c.number}</span>
+                    <Badge variant='secondary'>{c.model?.model}</Badge>
+                    {getStatusBadge(c.status)}
+                  </div>
+                )}
+                renderItem={(c) => (
+                  <div className='grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full'>
+                    <div>{c.number}</div>
+                    <Badge variant='outline'>
+                      <strong>{c.model?.model}</strong>
+                    </Badge>
+                    <div>{getStatusBadge(c.status)}</div>
+                  </div>
+                )}
               />
-              {/*  (${c.model!.model}) */}
-              <FormSelectWithSearch<CartridgeDTO>
+
+              <FormCustomSelect<CartridgeDTO>
                 name={'removedCartridge'}
                 label='Снятый картридж'
-                options={workingCartridges}
-                getOptionValue={(c) => c.number}
-                getOptionLabel={(c) => `${c.number}`}
-                placeholder='-'
+                items={workingCartridges}
+                placeholder='---'
+                getKey={(c) => c.id}
+                getLabel={(c) => c.number}
+                renderValue={(c) => (
+                  <div className='flex gap-2 items-center flex-1'>
+                    <span>{c.number}</span>
+                    <Badge variant='secondary'>{c.model?.model}</Badge>
+                    {getStatusBadge(c.status)}
+                  </div>
+                )}
+                renderItem={(c) => (
+                  <div className='grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full'>
+                    <div>{c.number}</div>
+                    <Badge variant='outline'>
+                      <strong>{c.model?.model}</strong>
+                    </Badge>
+                    <div>{getStatusBadge(c.status)}</div>
+                  </div>
+                )}
               />
 
               <FormInput name='responsible' label='Ответственный' required />

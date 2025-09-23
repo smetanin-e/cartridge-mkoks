@@ -32,26 +32,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    let installedNumber: string | null = null;
+    let removedNumber: string | null = null;
+
     if (data.installedCartridge !== null) {
-      await prisma.cartridge.update({
-        where: { number: data.installedCartridge },
+      const installed = await prisma.cartridge.update({
+        where: { id: data.installedCartridge },
         data: { status: CartridgeStatus.WORKING },
       });
+      installedNumber = installed.number;
     }
 
     if (data.removedCartridge !== null) {
-      await prisma.cartridge.update({
-        where: { number: data.removedCartridge },
+      const removed = await prisma.cartridge.update({
+        where: { id: data.removedCartridge },
         data: { status: CartridgeStatus.REFILL },
       });
+      removedNumber = removed.number;
     }
 
     const replace = await prisma.replacement.create({
       data: {
         date: data.date,
         departamentId: data.departamentId,
-        installedCartridgeNumber: data.installedCartridge,
-        removedCartridgeNumber: data.removedCartridge,
+        installedCartridgeNumber: installedNumber,
+        removedCartridgeNumber: removedNumber,
         responsible: data.responsible,
       },
     });

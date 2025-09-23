@@ -8,7 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui';
-import { FormInput, FormSelect, FormSelectWithSearch } from '@/shared/components';
+import {
+  FormCustomSelect,
+  FormInput,
+  FormSelect,
+  RegisterModel,
+  RegisterModelTrigger,
+} from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -19,7 +25,6 @@ import toast from 'react-hot-toast';
 import { useModelsStore } from '../../store/cartridge-models';
 import { registerCartridge } from '../../services/register-cartridge';
 import { ToyBrick } from 'lucide-react';
-import { Model } from '@prisma/client';
 
 interface Props {
   open: boolean;
@@ -28,7 +33,7 @@ interface Props {
 
 export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
   ///!Позже отрефакторить
-  const { models, getModels, setOpenModal } = useModelsStore();
+  const { models, getModels } = useModelsStore();
 
   React.useEffect(() => {
     getModels();
@@ -85,17 +90,17 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
                 placeholder='Например, МК101'
                 required
               />
-              <FormSelectWithSearch<Model>
+              <FormCustomSelect
                 name='modelId'
                 label='Модель'
                 required
-                options={models}
                 error={'Необходимо выбрать модель из списка'}
-                onAdd={() => setOpenModal(true)}
-                addLabel='Добавить модель'
-                getOptionLabel={(m) => m.model}
-                getOptionValue={(m) => m.id}
+                items={models}
                 placeholder='Выберите модель из списка'
+                getKey={(m) => m.id}
+                getLabel={(m) => m.model}
+                renderItem={(m) => m.model}
+                onAdd={<RegisterModelTrigger />}
               />
 
               <FormSelect required name='status' label='Состояние картриджа' />

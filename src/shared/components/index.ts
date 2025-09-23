@@ -9,6 +9,7 @@ export { StatsCard } from './stats-card';
 export { CartridgeList } from './cartridge-list';
 export { ReplacementsTable } from './replacements-table';
 export { SelectWithSearch } from './select-with-search';
+export { RegisterModelTrigger } from './register-model-trigger';
 
 export { Providers } from './providers';
 

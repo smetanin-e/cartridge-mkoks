@@ -2,19 +2,20 @@
 
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent, Button, Input } from '@/shared/components/ui';
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/shared/lib';
-import { ClearButton } from '../cleare-button';
+import { ClearButton } from '@/shared/components';
 
 type CustomSelectProps<T> = {
   items: T[];
   value: T | null;
   onChange: (val: T | null) => void;
-  getKey: (item: T) => string | number;
+  getKey: (item: T) => number;
   getLabel: (item: T) => string; // используется для поиска
   placeholder?: string;
   renderItem: (item: T, selected: boolean) => React.ReactNode;
   renderValue?: (item: T) => React.ReactNode;
+  onAdd?: React.ReactNode;
 };
 
 export function CustomSelect<T>({
@@ -26,6 +27,7 @@ export function CustomSelect<T>({
   placeholder = 'Select...',
   renderItem,
   renderValue,
+  onAdd,
 }: CustomSelectProps<T>) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
@@ -50,16 +52,13 @@ export function CustomSelect<T>({
             {!value && <ChevronDown className='h-4 w-4 shrink-0 opacity-50' />}
           </Button>
         </PopoverTrigger>
-        {value && (
-          <ClearButton
-            onClick={() => {
-              onChange(null);
-            }}
-          />
-        )}
       </div>
 
-      <PopoverContent align='start' className='w-[350px] p-2'>
+      <PopoverContent
+        align='start'
+        className='min-w-[var(--radix-popover-trigger-width)] p-2'
+        onWheel={(e) => e.stopPropagation()}
+      >
         <div className='relative'>
           <Input
             placeholder='Поиск...'
@@ -72,7 +71,10 @@ export function CustomSelect<T>({
 
         <div className='max-h-[200px] overflow-y-auto mt-2'>
           {filtered.length === 0 && (
-            <div className='text-sm text-muted-foreground px-2 py-1.5'>Ничего не найдено</div>
+            <div className='flex items-center justify-between'>
+              <div className='text-sm text-muted-foreground px-2 py-1.5'>Ничего не найдено</div>
+              {onAdd}
+            </div>
           )}
           {filtered.map((item) => {
             const selected = value ? getKey(value) === getKey(item) : false;

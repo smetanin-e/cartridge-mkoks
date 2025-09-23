@@ -8,13 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '../form';
 import toast from 'react-hot-toast';
 import { createDepartament } from '@/shared/services/departaments';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 interface Props {
   className?: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export const CreateDepartament: React.FC<Props> = ({ open, onOpenChange }) => {
+export const CreateDepartament: React.FC<Props> = () => {
+  const [open, setOpen] = React.useState(false);
   const form = useForm<FormDepartamentType>({
     resolver: zodResolver(createDepartamentSchema),
     defaultValues: {
@@ -29,10 +29,10 @@ export const CreateDepartament: React.FC<Props> = ({ open, onOpenChange }) => {
       toast.success('Подразделение добавлено в реестр', {
         icon: '✅',
       });
+      setOpen(false);
       form.reset({
         name: '',
       });
-      onOpenChange(false);
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [ADD_DEPARTAMENT_FORM]', error);
@@ -41,7 +41,13 @@ export const CreateDepartament: React.FC<Props> = ({ open, onOpenChange }) => {
     }
   };
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button type='button' variant={'outline'} size={'sm'}>
+          <Plus className='h-4 w-4 mr-2' />
+          Добавить
+        </Button>
+      </DialogTrigger>
       <DialogContent className='space-y-4'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>

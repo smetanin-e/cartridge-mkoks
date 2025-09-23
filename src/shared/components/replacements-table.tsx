@@ -128,8 +128,6 @@ export const ReplacementsTable: React.FC<Props> = () => {
         setPopupDepartament={setPopupDepartament}
         setSubmiting={setSubmiting}
       />
-      {/* Попап добавления нового подразделения*/}
-      <CreateDepartament open={popupDepartament} onOpenChange={setPopupDepartament} />
     </>
   );
 };
