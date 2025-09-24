@@ -7,6 +7,9 @@ interface DepartamentState {
   error: boolean;
   departaments: Departament[];
   getDepartaments: () => Promise<void>;
+
+  openModal: boolean;
+  setOpenModal: (open: boolean) => void;
 }
 
 export const useDepartamentStore = create<DepartamentState>()((set) => ({
@@ -24,4 +27,7 @@ export const useDepartamentStore = create<DepartamentState>()((set) => ({
       set({ loading: false });
     }
   },
+
+  openModal: false,
+  setOpenModal: (openModal) => set({ openModal }),
 }));

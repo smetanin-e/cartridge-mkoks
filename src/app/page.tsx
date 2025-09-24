@@ -1,6 +1,6 @@
 'use client';
 
-import { ReplacementsTable, Stats } from '@/shared/components';
+import { CreateDepartament, ReplacementsTable, Stats } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { Download, Package } from 'lucide-react';
 import Link from 'next/link';
@@ -42,6 +42,8 @@ export default function Home() {
 
       {/* Таблица замен */}
       <ReplacementsTable />
+
+      <CreateDepartament />
     </div>
   );
 }

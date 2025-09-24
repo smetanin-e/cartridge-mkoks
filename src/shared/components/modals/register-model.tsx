@@ -14,19 +14,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { FormRegisterModelType, registerModelSchema } from '../../schemas/register-model-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useModelsStore } from '../../store/cartridge-models';
 import React from 'react';
 import { createModel } from '../../services/models';
-import { DialogTrigger } from '@radix-ui/react-dialog';
+import { useModelsStore } from '@/shared/store/cartridge-models';
 
 interface Props {
   className?: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export const RegisterModel: React.FC<Props> = ({ open, onOpenChange }) => {
-  const { models, getModels } = useModelsStore();
+export const RegisterModel: React.FC<Props> = () => {
+  const { models, getModels, openModal, setOpenModal } = useModelsStore(); //!ИСПРАВИТЬ
 
   React.useEffect(() => {
     getModels();
@@ -49,7 +46,7 @@ export const RegisterModel: React.FC<Props> = ({ open, onOpenChange }) => {
       form.reset({
         model: '',
       });
-      onOpenChange(false);
+      setOpenModal(false);
     } catch (error) {
       if (error instanceof Error) {
         console.log('Error [ADD_MODEL_FORM]', error);
@@ -59,7 +56,7 @@ export const RegisterModel: React.FC<Props> = ({ open, onOpenChange }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={openModal} onOpenChange={setOpenModal}>
       <DialogContent className='space-y-4'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>

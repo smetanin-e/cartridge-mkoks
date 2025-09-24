@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui';
-import { Package } from 'lucide-react';
+import { Package, Plus } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateDepartament, FormCustomSelect, FormDate, FormInput } from '@/shared/components';
+import { FormCustomSelect, FormDate, FormInput } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { Departament } from '@prisma/client';
 import { convertDate } from '@/shared/lib';
@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import { replacing } from '@/shared/services/replacement';
 
 import { getStatusBadge } from '@/shared/components/utils';
+import { useDepartamentStore } from '@/shared/store/departaments';
 
 interface Props {
   className?: string;
@@ -29,7 +30,7 @@ interface Props {
   avaibleCartridges: CartridgeDTO[];
   workingCartridges: CartridgeDTO[];
   departaments: Departament[];
-  setPopupDepartament: (value: boolean) => void;
+
   setSubmiting: (value: boolean) => void;
 }
 
@@ -41,6 +42,7 @@ export const Replacement: React.FC<Props> = ({
   departaments,
   setSubmiting,
 }) => {
+  const { setOpenModal } = useDepartamentStore();
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
     defaultValues: {
@@ -102,7 +104,17 @@ export const Replacement: React.FC<Props> = ({
                 getLabel={(c) => c.name}
                 renderValue={(c) => c.name}
                 renderItem={(c) => c.name}
-                onAdd={<CreateDepartament />}
+                onAdd={
+                  <Button
+                    type='button'
+                    variant={'outline'}
+                    size={'sm'}
+                    onClick={() => setOpenModal(true)}
+                  >
+                    <Plus className='h-4 w-4 mr-2' />
+                    Добавить
+                  </Button>
+                }
               />
 
               <FormCustomSelect<CartridgeDTO>

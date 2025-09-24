@@ -8,13 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui';
-import {
-  FormCustomSelect,
-  FormInput,
-  FormSelect,
-  RegisterModel,
-  RegisterModelTrigger,
-} from '@/shared/components';
+import { FormCustomSelect, FormInput, FormSelect } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -24,7 +18,7 @@ import {
 import toast from 'react-hot-toast';
 import { useModelsStore } from '../../store/cartridge-models';
 import { registerCartridge } from '../../services/register-cartridge';
-import { ToyBrick } from 'lucide-react';
+import { Plus, ToyBrick } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -33,7 +27,7 @@ interface Props {
 
 export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
   ///!Позже отрефакторить
-  const { models, getModels } = useModelsStore();
+  const { models, getModels, setOpenModal } = useModelsStore();
 
   React.useEffect(() => {
     getModels();
@@ -100,7 +94,17 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
                 getKey={(m) => m.id}
                 getLabel={(m) => m.model}
                 renderItem={(m) => m.model}
-                onAdd={<RegisterModelTrigger />}
+                onAdd={
+                  <Button
+                    type='button'
+                    size='sm'
+                    variant='outline'
+                    onClick={() => setOpenModal(true)}
+                  >
+                    <Plus className='h-4 w-4 mr-2' />
+                    Добавить
+                  </Button>
+                }
               />
 
               <FormSelect required name='status' label='Состояние картриджа' />

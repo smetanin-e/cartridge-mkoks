@@ -1,17 +1,11 @@
 'use client';
 import React from 'react';
 import {
-  Badge,
   Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
   Table,
   TableBody,
   TableCell,
@@ -83,7 +77,7 @@ export const BatchesComplited: React.FC<Props> = () => {
               {hasMore && (
                 <>
                   {loading ? (
-                    <div className='relative pb-4'>
+                    <div className='relative pb-8'>
                       <LoadingBounce />
                     </div>
                   ) : (

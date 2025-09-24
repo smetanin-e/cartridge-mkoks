@@ -22,7 +22,7 @@ export const PrintBatch = forwardRef<HTMLDivElement, Props>(
       <div ref={ref} className='py-12 px-16 text-[14px]' style={{ fontFamily: 'Arial' }}>
         <div className='flex gap-10 justify-between mb-10'>
           <div className='shrink-0'>
-            <Image src='/ygmk.jpg' alt='logo' width={158} height={81} />
+            <Image src='/ygmk.jpg' alt='logo' width={158} height={81} loading='eager' />
           </div>
 
           <div className='flex flex-col gap-1'>

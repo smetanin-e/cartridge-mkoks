@@ -31,5 +31,5 @@ export const useModelsStore = create<ModelsState>()((set) => ({
 
   //попап добавления новой модели
   openModal: false,
-  setOpenModal: (openModal: boolean) => set({ openModal }),
+  setOpenModal: (openModal) => set({ openModal }),
 }));
