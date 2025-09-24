@@ -1,8 +1,6 @@
 'use client';
 import { Batches, CartridgesForService, ServiceBatchForm } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
-import { useBatchList } from '@/shared/hooks';
-import { BatchStatus } from '@prisma/client';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

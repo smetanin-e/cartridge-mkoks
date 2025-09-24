@@ -9,7 +9,6 @@ export async function GET(req: NextRequest) {
   const take = searchParams.get('take') ? parseInt(searchParams.get('take')!, 10) : undefined;
   const skip = searchParams.get('skip') ? parseInt(searchParams.get('skip')!, 10) : undefined;
   const statuses = searchParams.getAll('status') as BatchStatus[];
-  console.log({ statuses, take, skip }); // ПРОВЕРЬ ЧТО ПРИХОДИТ
 
   //Подготовка по каким параметрам будем искать партии
   const where: Prisma.ServiceBatchWhereInput = {};

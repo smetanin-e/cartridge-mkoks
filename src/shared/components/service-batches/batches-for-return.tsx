@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const BatchesForReturn: React.FC<Props> = () => {
-  const { batches, loading, loadingInitial, refetch } = useBatchList([
+  const { batches, loading, loadingInitial } = useBatchList([
     BatchStatus.IN_PROGRESS,
     BatchStatus.PARTIAL_RETURN,
   ]);

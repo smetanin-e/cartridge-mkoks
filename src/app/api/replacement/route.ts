@@ -3,14 +3,34 @@ import { ReplacementFormType } from '@/shared/schemas/replacement-schema';
 import { CartridgeStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+
+    const take = searchParams.get('take') ? parseInt(searchParams.get('take')!, 10) : undefined;
+    const skip = searchParams.get('skip') ? parseInt(searchParams.get('skip')!, 10) : undefined;
+    const search = searchParams.get('search') || '';
+
     const replacements = await prisma.replacement.findMany({
+      where: search
+        ? {
+            OR: [
+              { installedCartridgeNumber: { contains: search, mode: 'insensitive' } },
+              { removedCartridgeNumber: { contains: search, mode: 'insensitive' } },
+              { departament: { name: { contains: search, mode: 'insensitive' } } },
+            ],
+          }
+        : {},
       include: {
         departament: true,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip,
+      take,
     });
+
     return NextResponse.json(replacements);
   } catch (error) {
     console.error('REPLACEMENTS_GET Server error', error);

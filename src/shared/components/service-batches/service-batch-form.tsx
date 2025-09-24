@@ -22,6 +22,7 @@ export const ServiceBatchForm: React.FC<Props> = ({
   selectedCartridges,
   setSelectedCartridges,
 }) => {
+  const [submiting, setSubmiting] = React.useState(false);
   const queryClient = useQueryClient();
   const form = useForm<ServiceFormType>({
     resolver: zodResolver(serviceSchema),
@@ -34,6 +35,7 @@ export const ServiceBatchForm: React.FC<Props> = ({
 
   const onSubmit = async (data: ServiceFormType) => {
     try {
+      setSubmiting(true);
       data.date = convertDate(data.date);
       const placeholder = { ...data, cartridges: selectedCartridges };
       console.log(placeholder);
@@ -46,7 +48,7 @@ export const ServiceBatchForm: React.FC<Props> = ({
       toast.success('Партия создана', {
         icon: '✅',
       });
-
+      setSubmiting(false);
       form.reset({
         date: new Date().toISOString().split('T')[0],
         notes: '',
@@ -54,6 +56,7 @@ export const ServiceBatchForm: React.FC<Props> = ({
       });
     } catch (error) {
       if (error instanceof Error) {
+        setSubmiting(false);
         console.log('Error [SERVICE_BATCH_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
       }
@@ -81,7 +84,11 @@ export const ServiceBatchForm: React.FC<Props> = ({
                 <div className='text-sm text-muted-foreground mb-4'>
                   Выбрано картриджей: <strong>{selectedCartridges.length}</strong>
                 </div>
-                <Button type='submit' className='w-full' disabled={selectedCartridges.length === 0}>
+                <Button
+                  type='submit'
+                  className='w-full'
+                  disabled={selectedCartridges.length === 0 || submiting}
+                >
                   <Send className='h-4 w-4 mr-2' />
                   Отправить в сервис
                 </Button>

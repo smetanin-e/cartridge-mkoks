@@ -7,8 +7,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/shared/components/ui';
-import { Package, Plus } from 'lucide-react';
+import { Edit, Package, Plus } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FormCustomSelect, FormDate, FormInput } from '@/shared/components';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
@@ -21,11 +22,10 @@ import { replacing } from '@/shared/services/replacement';
 
 import { getStatusBadge } from '@/shared/components/utils';
 import { useDepartamentStore } from '@/shared/store/departaments';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 
   avaibleCartridges: CartridgeDTO[];
   workingCartridges: CartridgeDTO[];
@@ -35,13 +35,13 @@ interface Props {
 }
 
 export const Replacement: React.FC<Props> = ({
-  open,
-  onOpenChange,
   avaibleCartridges,
   workingCartridges,
   departaments,
   setSubmiting,
 }) => {
+  const [popupReplacement, setPopupReplacement] = React.useState(false);
+  const queryClient = useQueryClient();
   const { setOpenModal } = useDepartamentStore();
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
@@ -59,7 +59,11 @@ export const Replacement: React.FC<Props> = ({
       data.date = convertDate(data.date);
       console.log(data);
       await replacing(data);
-      onOpenChange(false);
+
+      // 🔥 Обновляем все списки useBatchList
+      queryClient.invalidateQueries({ queryKey: ['replacements'] });
+
+      setPopupReplacement(false);
       toast.success('Замена оформлена', {
         icon: '✅',
       });
@@ -80,7 +84,13 @@ export const Replacement: React.FC<Props> = ({
     }
   };
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={popupReplacement} onOpenChange={setPopupReplacement}>
+      <DialogTrigger asChild>
+        <Button className='flex items-center gap-2'>
+          <Edit className='h-4 w-4' />
+          Замена картриджа
+        </Button>
+      </DialogTrigger>
       <DialogContent className='space-y-4'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>

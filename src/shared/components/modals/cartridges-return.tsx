@@ -37,6 +37,7 @@ export const CartridgesReturn: React.FC<Props> = ({
   batchId,
 }) => {
   const queryClient = useQueryClient();
+  const [submiting, setSubmiting] = React.useState(false);
   const [selectedCartridges, setSelectedCartridges] = React.useState<number[]>([]);
   const [open, setOpen] = React.useState(false);
   const form = useForm<ServiceFormType>({
@@ -50,6 +51,7 @@ export const CartridgesReturn: React.FC<Props> = ({
 
   const onSubmit = async (data: ServiceFormType) => {
     try {
+      setSubmiting(true);
       data.date = convertDate(data.date);
       const payload = {
         ...data,
@@ -63,7 +65,7 @@ export const CartridgesReturn: React.FC<Props> = ({
       toast.success('Прием картриджей успешно обработан', {
         icon: '✅',
       });
-
+      setSubmiting(false);
       setOpen(false);
       setSelectedCartridges([]);
       form.reset({
@@ -73,6 +75,7 @@ export const CartridgesReturn: React.FC<Props> = ({
       });
       console.log(payload);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [SERVICE_BATCH_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
@@ -141,7 +144,7 @@ export const CartridgesReturn: React.FC<Props> = ({
                   </Button>
                 </DialogClose>
 
-                <Button type='submit' disabled={selectedCartridges.length === 0}>
+                <Button type='submit' disabled={selectedCartridges.length === 0 || submiting}>
                   Принять
                   {selectedCartridges.length !== 0 ? ` (${selectedCartridges.length} шт.)` : ''}
                 </Button>

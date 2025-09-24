@@ -7,9 +7,22 @@ import axios from 'axios';
 import { ReplacementsDTO } from './dto/replacements.dto';
 import { useReplacementStore } from '../store/replacement';
 
-export const getReplacements = async () => {
+export const getReplacements = async (search?: string, take?: number, skip?: number) => {
   try {
-    const { data } = await axiosInstance.get<ReplacementsDTO[]>(ApiRoutes.REPLACEMENT);
+    const params = new URLSearchParams();
+    if (search !== undefined) {
+      params.append('search', search.toLowerCase());
+    }
+    if (take !== undefined) {
+      params.append('take', take.toString());
+    }
+    if (skip !== undefined) {
+      params.append('skip', skip.toString());
+    }
+
+    const { data } = await axiosInstance.get<ReplacementsDTO[]>(
+      ApiRoutes.REPLACEMENT + (params.toString ? `/?${params.toString()}` : ''),
+    );
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
