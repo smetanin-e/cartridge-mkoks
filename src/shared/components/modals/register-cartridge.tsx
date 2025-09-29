@@ -26,6 +26,7 @@ interface Props {
 }
 
 export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
+  const [submiting, setSubmiting] = React.useState(false);
   ///!Позже отрефакторить
   const { models, getModels, setOpenModal } = useModelsStore();
 
@@ -43,7 +44,7 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
 
   const onSubmit = async (data: RegisterCartridgeFormType) => {
     try {
-      console.log(data);
+      setSubmiting(true);
       const payload = {
         ...data,
         numericNumber: parseInt(data.number.replace(/\D/g, ''), 10),
@@ -56,7 +57,9 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
         number: 'МК',
       });
       onOpenChange(false);
+      setSubmiting(false);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [REGISTER_CARTRIDGE_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
@@ -114,7 +117,9 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
               <Button onClick={() => onOpenChange(false)} type='button' variant='outline'>
                 Отмена
               </Button>
-              <Button type='submit'>Сохранить</Button>
+              <Button disabled={submiting} type='submit'>
+                Сохранить
+              </Button>
             </div>
           </form>
         </FormProvider>

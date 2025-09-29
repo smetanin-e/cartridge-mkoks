@@ -31,13 +31,15 @@ interface Props {
   workingCartridges: CartridgeDTO[];
   departaments: Departament[];
 
-  setSubmiting: (value: boolean) => void;
+  submiting: boolean;
+  setSubmiting: (submiting: boolean) => void;
 }
 
 export const Replacement: React.FC<Props> = ({
   avaibleCartridges,
   workingCartridges,
   departaments,
+  submiting,
   setSubmiting,
 }) => {
   const [popupReplacement, setPopupReplacement] = React.useState(false);
@@ -179,7 +181,9 @@ export const Replacement: React.FC<Props> = ({
 
               <FormInput name='responsible' label='Ответственный' required />
 
-              <Button type='submit'>Подтвердить</Button>
+              <Button disabled={submiting} type='submit'>
+                Подтвердить
+              </Button>
             </form>
           </FormProvider>
         </div>

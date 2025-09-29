@@ -23,6 +23,7 @@ interface Props {
 }
 
 export const RegisterModel: React.FC<Props> = () => {
+  const [submiting, setSubmiting] = React.useState(false);
   const { models, getModels, openModal, setOpenModal } = useModelsStore(); //!ИСПРАВИТЬ
 
   React.useEffect(() => {
@@ -38,7 +39,7 @@ export const RegisterModel: React.FC<Props> = () => {
 
   const onSubmit = async (data: FormRegisterModelType) => {
     try {
-      console.log(data);
+      setSubmiting(true);
       await createModel(data);
       toast.success('Модель картриджа добавлена в реестр', {
         icon: '✅',
@@ -47,7 +48,9 @@ export const RegisterModel: React.FC<Props> = () => {
         model: '',
       });
       setOpenModal(false);
+      setSubmiting(false);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [ADD_MODEL_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
@@ -75,7 +78,7 @@ export const RegisterModel: React.FC<Props> = () => {
               />
             </div>
             <div className='pt-4 flex justify-end'>
-              <Button type='submit' className='w-[250px]'>
+              <Button disabled={submiting} type='submit' className='w-[250px]'>
                 <Plus className='h-4 w-4 mr-2' />
                 Добавить модель
               </Button>

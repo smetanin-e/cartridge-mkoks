@@ -85,6 +85,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
               avaibleCartridges={avaibleCartridges}
               workingCartridges={workingCartridges}
               departaments={departaments}
+              submiting={submiting}
               setSubmiting={setSubmiting}
             />
           </div>

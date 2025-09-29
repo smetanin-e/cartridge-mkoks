@@ -37,6 +37,7 @@ interface Props {
 }
 
 export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
+  const [submiting, setSubmiting] = React.useState(false);
   const { models, setOpenModal } = useModelsStore();
 
   const form = useForm({
@@ -48,6 +49,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
 
   const onSubmit = async (data: FormDataType) => {
     try {
+      setSubmiting(true);
       const payload = {
         name: data.name,
         models: data.models.map((id: number) => ({ id })),
@@ -61,7 +63,9 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
       form.reset({
         name: '',
       });
+      setSubmiting(false);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [ADD_PRINTER_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
@@ -111,6 +115,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
                     </div>
                     <div className='text-right'>
                       <Button
+                        disabled={submiting}
                         type='button'
                         onClick={() => setOpenModal(true)}
                         variant={'outline'}

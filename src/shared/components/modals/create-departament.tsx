@@ -14,6 +14,7 @@ interface Props {
 }
 
 export const CreateDepartament: React.FC<Props> = () => {
+  const [submiting, setSubmiting] = React.useState(false);
   const { openModal, setOpenModal } = useDepartamentStore();
   const form = useForm<FormDepartamentType>({
     resolver: zodResolver(createDepartamentSchema),
@@ -24,7 +25,7 @@ export const CreateDepartament: React.FC<Props> = () => {
 
   const onSubmit = async (data: FormDepartamentType) => {
     try {
-      console.log(data);
+      setSubmiting(true);
       await createDepartament(data);
       toast.success('Подразделение добавлено в реестр', {
         icon: '✅',
@@ -33,7 +34,9 @@ export const CreateDepartament: React.FC<Props> = () => {
       form.reset({
         name: '',
       });
+      setSubmiting(false);
     } catch (error) {
+      setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [ADD_DEPARTAMENT_FORM]', error);
         return toast.error(error.message, { icon: '❌' });
@@ -60,7 +63,7 @@ export const CreateDepartament: React.FC<Props> = () => {
               />
             </div>
             <div className='pt-4 flex justify-end'>
-              <Button type='submit' className='w-[250px]'>
+              <Button disabled={submiting} type='submit' className='w-[250px]'>
                 <Plus className='h-4 w-4 mr-2' />
                 Добавить подразделение
               </Button>
