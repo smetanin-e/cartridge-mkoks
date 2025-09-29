@@ -1,16 +1,24 @@
-import { CreateDepartament, ReplacementsTable, Stats } from '@/shared/components';
+import { Button } from '@/shared/components/ui';
+import Link from 'next/link';
 import React from 'react';
 
 export default function Home() {
   return (
-    <div>
-      {/* Статистика */}
-      <Stats />
+    <div className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-foreground-50 p-6'>
+      <h1 className='text-5xl font-bold mb-4 text-center'>
+        Добро пожаловать в сервис управления картриджами
+      </h1>
 
-      {/* Таблица замен */}
-      <ReplacementsTable />
+      <p className='text-lg text-gray-600 mb-8 text-center max-w-xl'>
+        Фиксация замены картриджей, подготовка партий для отправки в сервис, прием партий из
+        сервиса, реестр картриджей, управление состоянием картриджей.
+      </p>
 
-      <CreateDepartament />
+      <Link href={'/replacement'}>
+        <Button>Войти</Button>
+      </Link>
+
+      <footer className='mt-20 text-gray-500 text-sm'>&copy; 2025 г. Все права защищены.</footer>
     </div>
   );
 }

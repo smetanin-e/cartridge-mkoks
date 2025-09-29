@@ -13,7 +13,8 @@ export const Header: React.FC<Props> = () => {
   return (
     <div className='flex items-center justify-between mb-8'>
       <div>
-        <Link href='/'>
+        <Link href={'/replacement'}>
+          {' '}
           <Image src={'/ygmk.png'} width={150} height={50} alt='logo' />
         </Link>
       </div>
@@ -36,7 +37,7 @@ export const Header: React.FC<Props> = () => {
           </Button>
         </Link>
 
-        <Profile name='Тестовый Юзер' />
+        <Profile name='Укрепин Сергей Александрович' />
       </div>
     </div>
   );

@@ -20,8 +20,10 @@ export const Profile: React.FC<Props> = ({ name }) => {
   //!ОПТИМИЗИРОВАТЬ
   const initials = name
     .split(' ')
+    .reverse()
     .map((n) => n[0])
     .join('')
+    .slice(1, 3)
     .toUpperCase();
 
   const bgColor = stringToColor(name);
