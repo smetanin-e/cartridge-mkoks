@@ -11,3 +11,4 @@ export * from './command';
 export * from './table';
 export * from './card';
 export * from './dropdown-menu';
+export * from './avatar';

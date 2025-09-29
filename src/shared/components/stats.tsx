@@ -26,11 +26,6 @@ export const Stats: React.FC<Props> = () => {
           count={cartridges.filter((c) => c.status === status).length}
         />
       ))}
-      <div>
-        The current theme is: {theme}
-        <Button onClick={() => setTheme('light')}>Light Mode</Button>
-        <Button onClick={() => setTheme('dark')}>Dark Mode</Button>
-      </div>
     </div>
   );
 };

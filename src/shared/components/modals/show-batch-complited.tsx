@@ -38,7 +38,7 @@ export const ShowBatchComplited: React.FC<Props> = ({ date, responsible, status,
           <DialogTitle>Партия от {date} - Выполнено</DialogTitle>
         </DialogHeader>
         <div className='space-y-4'>
-          <div className='grid grid-cols-2 gap-4 text-sm bg-green-50 p-4 rounded-lg'>
+          <div className='grid grid-cols-2 gap-4 text-sm bg-chart-2 p-4 rounded-lg'>
             <div>
               <strong>Дата отправки:</strong> {date}
             </div>

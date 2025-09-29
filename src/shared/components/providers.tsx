@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from 'next-themes';
+import { Theme } from './theme';
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   const color = 'var(--color-primary)';
@@ -22,6 +23,7 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute={'class'} enableSystem defaultTheme='system'>
         {children}
+        <Theme />
       </ThemeProvider>
 
       <NextTopLoader color={color} shadow={`0 0 10px ${color},0 0 5px ${color}`} />

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   Badge,
@@ -98,10 +99,10 @@ export const ReplacementsTable: React.FC<Props> = () => {
               {replacements.length === 0 ? (
                 <div className='text-center py-8 text-muted-foreground'>Ничего не найдено</div>
               ) : (
-                <div className='max-h-[460px] overflow-auto overflow-y-scroll'>
+                <div>
                   <Table>
                     <TableHeader>
-                      <TableRow className=''>
+                      <TableRow>
                         <TableHead>Дата</TableHead>
                         <TableHead>Подразделение</TableHead>
                         <TableHead>Установлен</TableHead>

@@ -39,7 +39,7 @@ export const Batches: React.FC<Props> = () => {
   );
 
   return (
-    <Card className='mt-6 max-h-[500px] min-h-[235px] relative pb-12'>
+    <Card className='mt-6 min-h-[210px] relative pb-12'>
       {loadingInitial ? (
         <div className='h-[100px]'>
           <LoadingBounce />
@@ -49,7 +49,7 @@ export const Batches: React.FC<Props> = () => {
           <CardHeader>
             <CardTitle>Партии отправок в сервис</CardTitle>
           </CardHeader>
-          <CardContent className='overflow-y-scroll h-[100%]'>
+          <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
