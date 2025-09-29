@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { Button } from '@/shared/components/ui';
-import { Download, Package } from 'lucide-react';
+import { Download, Package, Repeat } from 'lucide-react';
 import Image from 'next/image';
 import { Profile } from './profile';
 
@@ -19,6 +19,12 @@ export const Header: React.FC<Props> = () => {
         </Link>
       </div>
       <div className='flex gap-2 items-center'>
+        <Link href='/replacement'>
+          <Button variant='outline' className='flex items-center gap-2'>
+            <Repeat className='h-4 w-4' />
+            Замена
+          </Button>
+        </Link>
         <Link href='/service-batch'>
           <Button variant='outline' className='flex items-center gap-2'>
             <Package className='h-4 w-4' />
