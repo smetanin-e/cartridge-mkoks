@@ -6,16 +6,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Table,
   TableBody,
   TableCell,
@@ -23,11 +13,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { Filter, MoreHorizontal, Plus, Search, ToyBrick } from 'lucide-react';
+import { Plus, ToyBrick } from 'lucide-react';
 import { useCartridgeStore } from '../store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
-import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
-import { ClearButton, LoadingBounce, RegisterCartridge } from '@/shared/components';
+import {
+  CartridgeActions,
+  CartridgesFilter,
+  LoadingBounce,
+  RegisterCartridge,
+} from '@/shared/components';
 import { getStatusBadge } from '@/shared/components/utils';
 interface Props {
   className?: string;
@@ -49,10 +43,6 @@ export const CartridgeList: React.FC<Props> = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const onClickClear = () => {
-    setSearchValue('');
-  };
-
   const [showDialog, setShowDialog] = React.useState(false);
 
   return (
@@ -70,38 +60,12 @@ export const CartridgeList: React.FC<Props> = () => {
               Добавить картридж
             </Button>
           </div>
-          <div className='flex flex-col  md:flex-row gap-4 mt-2'>
-            <div className='relative '>
-              <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-              <Input
-                placeholder='Поиск...'
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className='pl-10 bg-white '
-              />
-              {searchValue && <ClearButton onClick={onClickClear} />}
-            </div>
-
-            <div className='w-full md:w-4 '>
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value as CartridgeStatus | 'all')}
-              >
-                <SelectTrigger className='bg-white'>
-                  <Filter className='h-4 w-4 mr-2' />
-                  <SelectValue placeholder='Статус' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>Все статусы</SelectItem>
-                  {Object.entries(CARTRIDGE_STATUS_CONFIG).map(([status, config]) => (
-                    <SelectItem key={status} value={status}>
-                      {config.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <CartridgesFilter
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+          />
         </CardHeader>
         <CardContent className='relative h-[625px]'>
           {loading ? (
@@ -124,11 +88,6 @@ export const CartridgeList: React.FC<Props> = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {/* <TableRow>
-                  <TableCell colSpan={4} className='text-center py-8 text-muted-foreground'>
-                    Картриджи не найдены
-                  </TableCell>
-                </TableRow> */}
                       {cartridges.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={4} className='text-center py-8 text-muted-foreground'>
@@ -143,16 +102,10 @@ export const CartridgeList: React.FC<Props> = () => {
                               <TableCell>{cartridge.model?.model}</TableCell>
                               <TableCell>{getStatusBadge(cartridge.status)}</TableCell>
                               <TableCell className='text-right'>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant='ghost' className='h-8 w-8 p-0'>
-                                      <MoreHorizontal className='h-4 w-4' />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align='end'>
-                                    <DropdownMenuItem> Статус</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
+                                <CartridgeActions
+                                  id={cartridge.id}
+                                  currentStatus={cartridge.status}
+                                />
                               </TableCell>
                             </TableRow>
                           ))}

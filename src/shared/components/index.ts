@@ -13,6 +13,8 @@ export { Printers } from './printers';
 export { Stats } from './stats';
 export { StatsCard } from './stats-card';
 export { CartridgeList } from './cartridge-list';
+export { CartridgesFilter } from './cartridges-filter';
+export { CartridgeActions } from './cartridge-actions';
 export { ReplacementsTable } from './replacements-table';
 export { SelectWithSearch } from './select-with-search';
 
