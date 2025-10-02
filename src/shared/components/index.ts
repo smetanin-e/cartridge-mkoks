@@ -10,6 +10,8 @@ export { LoadingBounce } from './loading-bounce';
 export { Profile } from './profile';
 
 export { Printers } from './printers';
+export { DeletePrinter } from './delete-printer';
+export { BatchCancel } from './batch-cancel';
 export { Stats } from './stats';
 export { StatsCard } from './stats-card';
 export { CartridgeList } from './cartridge-list';

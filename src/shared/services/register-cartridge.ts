@@ -1,4 +1,4 @@
-import { Cartridge } from '@prisma/client';
+import { Cartridge, CartridgeStatus } from '@prisma/client';
 import axios from 'axios';
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
@@ -25,6 +25,19 @@ export const getCartridges = async (): Promise<CartridgeDTO[]> => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Ошибка получения картриджей');
+    }
+    throw error;
+  }
+};
+
+export const updateCartridgeStatus = async (id: number, status: CartridgeStatus) => {
+  try {
+    const { data } = await axiosInstance.patch(ApiRoutes.CARTRIDGES + `/${id}`, { status });
+    useCartridgeStore.getState().getCartriges();
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Ошибка регистрации картриджа');
     }
     throw error;
   }

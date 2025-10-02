@@ -10,7 +10,8 @@ import { MoreHorizontal } from 'lucide-react';
 import { CARTRIDGE_STATUS_CONFIG } from '../constants';
 import { getStatusBadge } from './utils';
 import { CartridgeStatus } from '@prisma/client';
-import { updateCartridgeStatus } from '../services/update-status-cartridge';
+import { updateCartridgeStatus } from '../services/register-cartridge';
+
 interface Props {
   className?: string;
   id: number;

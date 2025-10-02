@@ -15,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { ChevronsDown, Printer } from 'lucide-react';
-import { ShowBatch, PrintBatch, LoadingBounce } from '@/shared/components';
+import { ChevronsDown, Printer, Trash2 } from 'lucide-react';
+import { ShowBatch, PrintBatch, LoadingBounce, BatchCancel } from '@/shared/components';
 
 import { useBatchList } from '@/shared/hooks';
 import { BatchStatus } from '@prisma/client';
@@ -89,6 +89,9 @@ export const Batches: React.FC<Props> = () => {
                             >
                               <Printer className='h-4 w-4' />
                             </Button>
+                            {batch.status === BatchStatus.IN_PROGRESS && (
+                              <BatchCancel cartridges={batch.cartridges} id={batch.id} />
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>

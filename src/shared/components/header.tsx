@@ -15,7 +15,7 @@ export const Header: React.FC<Props> = () => {
       <div>
         <Link href={'/replacement'}>
           {' '}
-          <Image src={'/ygmk.png'} width={150} height={50} alt='logo' />
+          <Image src={'/logo1.png'} width={60} height={60} alt='logo' />
         </Link>
       </div>
       <div className='flex gap-2 items-center'>

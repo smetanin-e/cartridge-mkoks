@@ -7,10 +7,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
   Input,
   Table,
   TableBody,
@@ -19,9 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { MoreHorizontal, Plus, PrinterIcon, Search } from 'lucide-react';
+import { Plus, PrinterIcon, Search } from 'lucide-react';
 import { usePrintersStore } from '../store/printers';
-import { ClearButton, CreatePrinter, LoadingBounce } from '@/shared/components';
+import { ClearButton, CreatePrinter, DeletePrinter, LoadingBounce } from '@/shared/components';
 
 interface Props {
   className?: string;
@@ -114,20 +110,7 @@ export const Printers: React.FC<Props> = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <div className='flex items-center justify-center'>
-                                  <Button variant='ghost' className='h-8 w-8 p-0'>
-                                    <MoreHorizontal className='h-4 w-4' />
-                                  </Button>
-                                </div>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align='end'>
-                                <DropdownMenuItem className='cursor-pointer'>
-                                  Удалить
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <DeletePrinter id={printer.id} />
                           </TableCell>
                         </TableRow>
                       ))}
