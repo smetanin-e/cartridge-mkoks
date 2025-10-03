@@ -1,5 +1,5 @@
 export { Header } from './header';
-
+export { Logo } from './logo';
 export { Theme } from './theme';
 
 export { ErrorText } from './error-text';

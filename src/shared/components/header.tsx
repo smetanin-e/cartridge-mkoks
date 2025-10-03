@@ -2,8 +2,8 @@ import Link from 'next/link';
 import React from 'react';
 import { Button } from '@/shared/components/ui';
 import { Download, Package, Repeat } from 'lucide-react';
-import Image from 'next/image';
 import { Profile } from './profile';
+import { Logo } from './logo';
 
 interface Props {
   className?: string;
@@ -14,8 +14,7 @@ export const Header: React.FC<Props> = () => {
     <div className='flex items-center justify-between mb-8'>
       <div>
         <Link href={'/replacement'}>
-          {' '}
-          <Image src={'/logo1.png'} width={60} height={60} alt='logo' />
+          <Logo width={60} height={60} />
         </Link>
       </div>
       <div className='flex gap-2 items-center'>

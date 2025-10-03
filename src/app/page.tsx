@@ -1,12 +1,12 @@
 import { Button } from '@/shared/components/ui';
 import Link from 'next/link';
 import React from 'react';
-import Image from 'next/image';
+import { Logo } from '@/shared/components';
 
 export default function Home() {
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-foreground-50 p-6'>
-      <Image src={'/logo1.png'} width={200} height={60} alt='logo' />
+      <Logo width={200} height={200} />
       <h1 className='text-5xl font-bold mb-4 text-center mt-8'>
         Добро пожаловать в сервис управления картриджами
       </h1>
