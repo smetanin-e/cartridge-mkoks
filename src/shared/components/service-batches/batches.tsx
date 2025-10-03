@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { ChevronsDown, Printer, Trash2 } from 'lucide-react';
+import { ChevronsDown, Printer } from 'lucide-react';
 import { ShowBatch, PrintBatch, LoadingBounce, BatchCancel } from '@/shared/components';
 
 import { useBatchList } from '@/shared/hooks';
@@ -34,7 +34,7 @@ export const Batches: React.FC<Props> = () => {
   });
 
   const { batches, loadBatches, hasMore, loading, loadingInitial } = useBatchList(
-    [BatchStatus.IN_PROGRESS, BatchStatus.PARTIAL_RETURN],
+    [BatchStatus.IN_PROGRESS],
     3,
   );
 
@@ -50,76 +50,84 @@ export const Batches: React.FC<Props> = () => {
             <CardTitle>Партии отправок в сервис</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Дата отправки</TableHead>
-                  <TableHead>Количество</TableHead>
-                  <TableHead>Ответственный</TableHead>
-                  <TableHead className='text-right'>Действия</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {batches &&
-                  batches.map((batch, index) => {
-                    return (
-                      <TableRow key={batch.id}>
-                        <TableCell>{batch.date}</TableCell>
-                        <TableCell>
-                          <Badge variant='outline'>{batch.cartridges.length} шт.</Badge>
-                        </TableCell>
-                        <TableCell>{batch.responsible}</TableCell>
-                        <TableCell className='text-right'>
-                          <div className='flex gap-2 justify-end'>
-                            <ShowBatch
-                              cartridges={batch.cartridges}
-                              date={batch.date}
-                              responsible={batch.responsible}
-                            />
+            {batches.length === 0 ? (
+              <div className='text-center py-8 text-muted-foreground'>
+                Партии для отправки отсутствуют
+              </div>
+            ) : (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Дата отправки</TableHead>
+                      <TableHead>Количество</TableHead>
+                      <TableHead>Ответственный</TableHead>
+                      <TableHead className='text-right'>Действия</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {batches &&
+                      batches.map((batch, index) => {
+                        return (
+                          <TableRow key={batch.id}>
+                            <TableCell>{batch.date}</TableCell>
+                            <TableCell>
+                              <Badge variant='outline'>{batch.cartridges.length} шт.</Badge>
+                            </TableCell>
+                            <TableCell>{batch.responsible}</TableCell>
+                            <TableCell className='text-right'>
+                              <div className='flex gap-2 justify-end'>
+                                <ShowBatch
+                                  cartridges={batch.cartridges}
+                                  date={batch.date}
+                                  responsible={batch.responsible}
+                                />
 
-                            <Button
-                              variant='outline'
-                              size='sm'
-                              onClick={() => {
-                                setSelectedIndex(index);
-                                setTimeout(() => {
-                                  printBatch();
-                                }, 0);
-                              }}
-                            >
-                              <Printer className='h-4 w-4' />
-                            </Button>
-                            {batch.status === BatchStatus.IN_PROGRESS && (
-                              <BatchCancel cartridges={batch.cartridges} id={batch.id} />
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-            <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
-              {hasMore && (
-                <>
-                  {loading ? (
-                    <div className='relative pb-8'>
-                      <LoadingBounce />
-                    </div>
-                  ) : (
-                    <Button
-                      className='translate-x-[-50%]'
-                      size='sm'
-                      disabled={loading}
-                      variant='ghost'
-                      onClick={() => loadBatches()}
-                    >
-                      <ChevronsDown />
-                    </Button>
+                                <Button
+                                  variant='outline'
+                                  size='sm'
+                                  onClick={() => {
+                                    setSelectedIndex(index);
+                                    setTimeout(() => {
+                                      printBatch();
+                                    }, 0);
+                                  }}
+                                >
+                                  <Printer className='h-4 w-4' />
+                                </Button>
+                                {batch.status === BatchStatus.IN_PROGRESS && (
+                                  <BatchCancel cartridges={batch.cartridges} id={batch.id} />
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+                <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
+                  {hasMore && (
+                    <>
+                      {loading ? (
+                        <div className='relative pb-8'>
+                          <LoadingBounce />
+                        </div>
+                      ) : (
+                        <Button
+                          className='translate-x-[-50%]'
+                          size='sm'
+                          disabled={loading}
+                          variant='ghost'
+                          onClick={() => loadBatches()}
+                        >
+                          <ChevronsDown />
+                        </Button>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            )}
           </CardContent>
         </>
       )}

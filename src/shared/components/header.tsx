@@ -42,7 +42,7 @@ export const Header: React.FC<Props> = () => {
           </Button>
         </Link>
 
-        <Profile name='Укрепин Сергей Александрович' />
+        <Profile name='Сметанин Евгений Евгеньевич' />
       </div>
     </div>
   );

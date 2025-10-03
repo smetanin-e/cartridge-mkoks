@@ -49,5 +49,6 @@ export async function returnCartriges(data: ReturnCartrige) {
     }
   } catch (error) {
     console.log('[ReturnCartriges] Server error', error);
+    throw error;
   }
 }

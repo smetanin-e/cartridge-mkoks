@@ -10,7 +10,9 @@ import { MoreHorizontal } from 'lucide-react';
 import { CARTRIDGE_STATUS_CONFIG } from '../constants';
 import { getStatusBadge } from './utils';
 import { CartridgeStatus } from '@prisma/client';
-import { updateCartridgeStatus } from '../services/register-cartridge';
+import { changeCartridgeStatus } from '@/app/(main)/cartridges/actions';
+import { useCartridgeStore } from '../store/cartridges';
+import toast from 'react-hot-toast';
 
 interface Props {
   className?: string;
@@ -19,6 +21,16 @@ interface Props {
 }
 
 export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
+  const updateStatus = async (id: number, status: CartridgeStatus) => {
+    try {
+      await changeCartridgeStatus(id, status);
+      useCartridgeStore.getState().getCartriges();
+      toast.success('Статус изменён');
+    } catch (error) {
+      console.error('Ошибка при смене статуса', error);
+      toast.error('Ошибка при смене статуса');
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +44,7 @@ export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
           .map(([status]) => (
             <DropdownMenuItem
               key={status}
-              onClick={() => updateCartridgeStatus(id, status as CartridgeStatus)}
+              onClick={() => updateStatus(id, status as CartridgeStatus)}
             >
               {getStatusBadge(status as CartridgeStatus)}
             </DropdownMenuItem>

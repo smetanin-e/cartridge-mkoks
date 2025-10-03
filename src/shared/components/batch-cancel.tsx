@@ -3,6 +3,10 @@ import React from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
 import { Check, Trash2, TriangleAlert, X } from 'lucide-react';
 import { BatchCartridges } from '../services/dto/service-batch.dto';
+import { batchCancel } from '@/app/(main)/service-batch/actions';
+import toast from 'react-hot-toast';
+import { useCartridgeStore } from '../store/cartridges';
+import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   className?: string;
   cartridges: BatchCartridges[];
@@ -11,6 +15,26 @@ interface Props {
 
 export const BatchCancel: React.FC<Props> = ({ cartridges, id }) => {
   const [open, setOpen] = React.useState(false);
+  const cartridgesIds = cartridges.map((c) => c.id);
+
+  const queryClient = useQueryClient();
+
+  const removeBatch = async (id: string, cartridgeIds: number[]) => {
+    try {
+      setOpen(false);
+      await batchCancel(id, cartridgeIds);
+
+      // Обновляем все списки useBatchList
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+
+      // Обновляем все списки картриджей
+      useCartridgeStore.getState().getCartriges();
+      toast.success('Партия отменена');
+    } catch (error) {
+      console.error('Не удалось удалить партию', error);
+      toast.error('Не удалось удалить партию');
+    }
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -27,11 +51,11 @@ export const BatchCancel: React.FC<Props> = ({ cartridges, id }) => {
           Отменить партию?
         </div>
         <div className='flex gap-3 justify-center'>
-          <Button variant='outline' size='sm' onClick={() => console.log(cartridges)}>
+          <Button variant='outline' size='sm' onClick={() => removeBatch(id, cartridgesIds)}>
             <Check />
             Удалить
           </Button>
-          <Button variant='outline' size='sm'>
+          <Button variant='outline' size='sm' onClick={() => setOpen(false)}>
             <X />
             Отмена
           </Button>

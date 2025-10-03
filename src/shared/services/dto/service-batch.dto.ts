@@ -34,3 +34,8 @@ export type ReturnCartrige = {
   notes: string | null;
   cartridges: number[];
 };
+
+export type RemoveBatch = {
+  id: string;
+  cartridgesIds: number[];
+};
