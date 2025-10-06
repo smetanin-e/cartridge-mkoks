@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { ClearButton, LoadingBounce, Replacement } from '@/shared/components';
+import { ClearButton, LoadingBounce, ReplaceCancel, Replacement } from '@/shared/components';
 import { ChevronsDown, Search } from 'lucide-react';
 import { useCartridgeStore } from '@/shared/store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
@@ -38,6 +38,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
   const { cartridges, getCartriges } = useCartridgeStore();
   const { departaments, getDepartaments } = useDepartamentStore();
 
+  //получаем модель картриджа для отображения рядом с номером
   const currentModel = (number: string) => {
     return cartridges.find((cartrige) => cartrige.number === number)?.model?.model;
   };
@@ -108,6 +109,7 @@ export const ReplacementsTable: React.FC<Props> = () => {
                         <TableHead>Установлен</TableHead>
                         <TableHead>Снят</TableHead>
                         <TableHead>Ответственный</TableHead>
+                        <TableHead className='text-center'>Действия</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -146,6 +148,9 @@ export const ReplacementsTable: React.FC<Props> = () => {
                             </Badge>
                           </TableCell>
                           <TableCell>{rep.responsible}</TableCell>
+                          <TableCell>
+                            <ReplaceCancel id={rep.id} />
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

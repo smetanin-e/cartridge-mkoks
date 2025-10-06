@@ -62,7 +62,7 @@ export const Replacement: React.FC<Props> = ({
       console.log(data);
       await replacing(data);
 
-      // 🔥 Обновляем все списки useBatchList
+      // Обновляем все списки useBatchList
       queryClient.invalidateQueries({ queryKey: ['replacements'] });
 
       setPopupReplacement(false);

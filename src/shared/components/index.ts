@@ -18,6 +18,7 @@ export { CartridgeList } from './cartridge-list';
 export { CartridgesFilter } from './cartridges-filter';
 export { CartridgeActions } from './cartridge-actions';
 export { ReplacementsTable } from './replacements-table';
+export { ReplaceCancel } from './replace-cancel';
 export { SelectWithSearch } from './select-with-search';
 
 export { Providers } from './providers';

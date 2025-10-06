@@ -31,8 +31,6 @@ export async function returnCartriges(data: ReturnCartrige) {
     const allReturned = cartridgesInBatch.every((c) => c.returned);
     const someReturned = cartridgesInBatch.some((c) => c.returned);
 
-    console.log('allReturned=', allReturned);
-    console.log('someReturned=', someReturned);
     let newStatus: BatchStatus | null = null;
 
     if (allReturned) {

@@ -22,16 +22,3 @@ export const registerPrinter = async (value: CreatePrinterDTO): Promise<Printer>
     throw error;
   }
 };
-
-export const deletePrinter = async (id: number) => {
-  try {
-    const { data } = await axiosInstance.delete(ApiRoutes.PRINTERS + `/${id}`);
-    usePrintersStore.getState().getPrinters();
-    return data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || 'Ошибка! Не удалось удалить принтер.');
-    }
-    throw error;
-  }
-};
