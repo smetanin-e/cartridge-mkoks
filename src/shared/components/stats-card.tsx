@@ -1,20 +1,20 @@
-'use client';
 import React from 'react';
 import { Card, CardContent } from '@/shared/components/ui';
 import { CARTRIDGE_STATUS_CONFIG } from '../constants';
 
 import { CartridgeStatus } from '@prisma/client';
-import { useCartridgeStore } from '../store/cartridges';
 import { LoadingBounce } from './loading-bounce';
+import { CartridgeDTO } from '../services/dto/cartridge-model.dto.';
 
 interface Props {
   className?: string;
   status: CartridgeStatus;
-  count: number;
+  cartridges: CartridgeDTO[];
+  loading: boolean;
 }
 
-export const StatsCard: React.FC<Props> = ({ status, count }) => {
-  const loading = useCartridgeStore((state) => state.loading);
+export const StatsCard: React.FC<Props> = ({ status, cartridges, loading }) => {
+  const count = cartridges.filter((c) => c.status === status).length;
   const config = CARTRIDGE_STATUS_CONFIG[status];
   const Icon = config.icon;
   return (

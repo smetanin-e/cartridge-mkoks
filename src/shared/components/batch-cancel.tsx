@@ -5,7 +5,6 @@ import { Check, Trash2, TriangleAlert, X } from 'lucide-react';
 import { BatchCartridges } from '../services/dto/service-batch.dto';
 import { batchCancel } from '@/app/(main)/service-batch/actions';
 import toast from 'react-hot-toast';
-import { useCartridgeStore } from '../store/cartridges';
 import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   className?: string;
@@ -28,7 +27,7 @@ export const BatchCancel: React.FC<Props> = ({ cartridges, id }) => {
       queryClient.invalidateQueries({ queryKey: ['batches'] });
 
       // Обновляем все списки картриджей
-      useCartridgeStore.getState().getCartriges();
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
       toast.success('Партия отменена');
     } catch (error) {
       console.error('Не удалось удалить партию', error);

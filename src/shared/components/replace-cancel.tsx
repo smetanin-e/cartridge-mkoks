@@ -4,7 +4,6 @@ import { Check, CircleX, TriangleAlert, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { removeReplace } from '@/app/(main)/replacement/actions';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCartridgeStore } from '../store/cartridges';
 
 interface Props {
   className?: string;
@@ -23,8 +22,10 @@ export const ReplaceCancel: React.FC<Props> = ({ id }) => {
         toast.error(res.error);
         return;
       }
+      // Обновляем все списки замен и картриджей
       queryClient.invalidateQueries({ queryKey: ['replacements'] });
-      useCartridgeStore.getState().getCartriges();
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
+
       toast.success('Запись о замене отменена', {
         icon: '✅',
       });

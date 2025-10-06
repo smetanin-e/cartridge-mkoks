@@ -1,14 +1,12 @@
-import { Cartridge } from '@prisma/client';
+import { Cartridge, CartridgeStatus } from '@prisma/client';
 import axios from 'axios';
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { CartridgeDTO } from './dto/cartridge-model.dto.';
-import { useCartridgeStore } from '../store/cartridges';
 
 export const registerCartridge = async (values: Omit<Cartridge, 'id'>): Promise<Cartridge> => {
   try {
     const { data } = await axiosInstance.post<Cartridge>('/register-cartridge', values);
-    useCartridgeStore.getState().getCartriges();
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -18,9 +16,13 @@ export const registerCartridge = async (values: Omit<Cartridge, 'id'>): Promise<
   }
 };
 
-export const getCartridges = async (): Promise<CartridgeDTO[]> => {
+export const getCartridges = async (status?: CartridgeStatus): Promise<CartridgeDTO[]> => {
   try {
-    const { data } = await axiosInstance.get<CartridgeDTO[]>(ApiRoutes.CARTRIDGES);
+    const params = new URLSearchParams();
+    if (status !== undefined) {
+      params.append('status', status);
+    }
+    const { data } = await axiosInstance.get<CartridgeDTO[]>(ApiRoutes.CARTRIDGES + `/?${params}`);
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

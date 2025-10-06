@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import { useModelsStore } from '../../store/cartridge-models';
 import { registerCartridge } from '../../services/register-cartridge';
 import { Plus, ToyBrick } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   open: boolean;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
+  const queryClient = useQueryClient();
   const [submiting, setSubmiting] = React.useState(false);
   ///!Позже отрефакторить
   const { models, getModels, setOpenModal } = useModelsStore();
@@ -50,6 +52,7 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
         numericNumber: parseInt(data.number.replace(/\D/g, ''), 10),
       };
       await registerCartridge(payload);
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
       toast.success('Картридж добавлен в реестр', {
         icon: '✅',
       });
@@ -62,7 +65,9 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
       setSubmiting(false);
       if (error instanceof Error) {
         console.log('Error [REGISTER_CARTRIDGE_FORM]', error);
-        return toast.error(error.message, { icon: '❌' });
+        toast.error(
+          error instanceof Error ? error.message : 'Не удалось зарегестрировать картридж ❌',
+        );
       }
     }
   };

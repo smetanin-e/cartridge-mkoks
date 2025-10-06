@@ -23,15 +23,13 @@ import {
   RegisterCartridge,
 } from '@/shared/components';
 import { getStatusBadge } from '@/shared/components/utils';
+import { useCartridgeList } from '../hooks';
 interface Props {
   className?: string;
 }
 
 export const CartridgeList: React.FC<Props> = () => {
-  const { loading, cartridges, getCartriges } = useCartridgeStore();
-  React.useEffect(() => {
-    getCartriges();
-  }, []);
+  const { loadingInitial, cartridges } = useCartridgeList();
 
   const [searchValue, setSearchValue] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<CartridgeStatus | 'all'>('all');
@@ -68,7 +66,7 @@ export const CartridgeList: React.FC<Props> = () => {
           />
         </CardHeader>
         <CardContent className='relative h-[625px]'>
-          {loading ? (
+          {loadingInitial ? (
             <LoadingBounce />
           ) : (
             <>

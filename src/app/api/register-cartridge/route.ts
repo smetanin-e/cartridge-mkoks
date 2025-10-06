@@ -1,4 +1,5 @@
 import { prisma } from '@/shared/lib';
+import { CartridgeStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -27,9 +28,15 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+
+    const cartridgeStatus = searchParams.get('status') as CartridgeStatus;
+    const status = cartridgeStatus ? cartridgeStatus : {};
+
     const data = await prisma.cartridge.findMany({
+      where: { status },
       include: {
         model: true,
       },

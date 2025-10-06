@@ -11,8 +11,8 @@ import { CARTRIDGE_STATUS_CONFIG } from '../constants';
 import { getStatusBadge } from './utils';
 import { CartridgeStatus } from '@prisma/client';
 import { changeCartridgeStatus } from '@/app/(main)/cartridges/actions';
-import { useCartridgeStore } from '../store/cartridges';
 import toast from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
@@ -21,14 +21,15 @@ interface Props {
 }
 
 export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
+  const queryClient = useQueryClient();
   const updateStatus = async (id: number, status: CartridgeStatus) => {
     try {
       await changeCartridgeStatus(id, status);
-      useCartridgeStore.getState().getCartriges();
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
       toast.success('Статус изменён');
     } catch (error) {
-      console.error('Ошибка при смене статуса', error);
-      toast.error('Ошибка при смене статуса');
+      console.error('[changeCartridgeStatus]', error);
+      toast.error(error instanceof Error ? error.message : 'Не удалось изменить статус ❌');
     }
   };
   return (

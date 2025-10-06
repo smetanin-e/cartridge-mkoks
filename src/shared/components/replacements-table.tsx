@@ -17,10 +17,8 @@ import {
 } from '@/shared/components/ui';
 import { ClearButton, LoadingBounce, ReplaceCancel, Replacement } from '@/shared/components';
 import { ChevronsDown, Search } from 'lucide-react';
-import { useCartridgeStore } from '@/shared/store/cartridges';
 import { CartridgeStatus } from '@prisma/client';
-import { useDepartamentStore } from '../store/departaments';
-import { useReplacementList } from '../hooks';
+import { useCartridgeList, useReplacementList } from '../hooks';
 
 interface Props {
   className?: string;
@@ -28,15 +26,12 @@ interface Props {
 
 export const ReplacementsTable: React.FC<Props> = () => {
   const [searchValue, setSearchValue] = React.useState('');
+
   const { loading, loadReplacemens, loadingInitial, replacements, hasMore } = useReplacementList(
     searchValue,
     9,
   );
-
-  const [submiting, setSubmiting] = React.useState(false);
-
-  const { cartridges, getCartriges } = useCartridgeStore();
-  const { departaments, getDepartaments } = useDepartamentStore();
+  const { cartridges } = useCartridgeList();
 
   //получаем модель картриджа для отображения рядом с номером
   const currentModel = (number: string) => {
@@ -46,14 +41,6 @@ export const ReplacementsTable: React.FC<Props> = () => {
   const onClickClear = () => {
     setSearchValue('');
   };
-
-  React.useEffect(() => {
-    getDepartaments();
-  }, []);
-
-  React.useEffect(() => {
-    getCartriges();
-  }, [submiting]);
 
   const avaibleCartridges = cartridges.filter(
     (cartridge) => cartridge.status === CartridgeStatus.AVAILABLE,
@@ -86,9 +73,6 @@ export const ReplacementsTable: React.FC<Props> = () => {
             <Replacement
               avaibleCartridges={avaibleCartridges}
               workingCartridges={workingCartridges}
-              departaments={departaments}
-              submiting={submiting}
-              setSubmiting={setSubmiting}
             />
           </div>
         </CardHeader>

@@ -10,6 +10,7 @@ export default function Replace() {
       {/* Таблица замен */}
       <ReplacementsTable />
 
+      {/* Модальное окно создания отдела*/}
       <CreateDepartament />
     </div>
   );

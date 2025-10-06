@@ -26,25 +26,17 @@ import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
-
   avaibleCartridges: CartridgeDTO[];
   workingCartridges: CartridgeDTO[];
-  departaments: Departament[];
-
-  submiting: boolean;
-  setSubmiting: (submiting: boolean) => void;
 }
 
-export const Replacement: React.FC<Props> = ({
-  avaibleCartridges,
-  workingCartridges,
-  departaments,
-  submiting,
-  setSubmiting,
-}) => {
-  const [popupReplacement, setPopupReplacement] = React.useState(false);
+export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartridges }) => {
   const queryClient = useQueryClient();
+  const [open, setOpen] = React.useState(false);
+  const [isSubmiting, setIsSubmiting] = React.useState(false);
+  const { departaments, getDepartaments } = useDepartamentStore();
   const { setOpenModal } = useDepartamentStore();
+
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
     defaultValues: {
@@ -55,20 +47,22 @@ export const Replacement: React.FC<Props> = ({
     },
   });
 
+  React.useEffect(() => {
+    getDepartaments();
+  }, []);
+
   const onSubmit = async (data: ReplacementFormType) => {
     try {
-      setSubmiting(true);
+      setIsSubmiting(true);
+
       data.date = convertDate(data.date);
-      console.log(data);
       await replacing(data);
 
       // Обновляем все списки useBatchList
       queryClient.invalidateQueries({ queryKey: ['replacements'] });
 
-      setPopupReplacement(false);
-      toast.success('Замена оформлена', {
-        icon: '✅',
-      });
+      setOpen(false);
+      toast.success('Замена оформлена ✅');
 
       form.reset({
         date: new Date().toISOString().split('T')[0],
@@ -76,17 +70,16 @@ export const Replacement: React.FC<Props> = ({
         removedCartridge: null,
         responsible: '',
       });
-      setSubmiting(false);
     } catch (error) {
-      setSubmiting(false);
-      if (error instanceof Error) {
-        console.log('Error [REPLACEMENT_FORM]', error);
-        return toast.error(error.message, { icon: '❌' });
-      }
+      console.log('Error [REPLACEMENT_FORM]', error);
+      toast.error(error instanceof Error ? error.message : 'Ошибка добавления');
+    } finally {
+      setIsSubmiting(false);
     }
   };
+
   return (
-    <Dialog open={popupReplacement} onOpenChange={setPopupReplacement}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
           <Edit className='h-4 w-4' />
@@ -181,7 +174,7 @@ export const Replacement: React.FC<Props> = ({
 
               <FormInput name='responsible' label='Ответственный' required />
 
-              <Button disabled={submiting} type='submit'>
+              <Button disabled={isSubmiting} type='submit'>
                 Подтвердить
               </Button>
             </form>

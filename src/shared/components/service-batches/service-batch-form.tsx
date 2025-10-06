@@ -41,8 +41,8 @@ export const ServiceBatchForm: React.FC<Props> = ({
       console.log(placeholder);
       await sendToService(placeholder);
 
-      // 🔥 Обновляем все списки useBatchList
       queryClient.invalidateQueries({ queryKey: ['batches'] });
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
 
       setSelectedCartridges([]);
       toast.success('Партия создана', {

@@ -23,8 +23,8 @@ import { getStatusBadge } from '@/shared/components/utils';
 
 import { ClearButton, LoadingBounce } from '@/shared/components';
 import { Search } from 'lucide-react';
-import { useCartridgeStore } from '@/shared/store/cartridges';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
+import { useCartridgeList } from '@/shared/hooks';
 interface Props {
   className?: string;
   selectedCartridges: number[];
@@ -35,7 +35,7 @@ export const CartridgesForService: React.FC<Props> = ({
   selectedCartridges,
   setSelectedCartridges,
 }) => {
-  const { cartridges, getCartriges, loading } = useCartridgeStore();
+  const { cartridges, loadingInitial } = useCartridgeList();
   const [cartridgesSearch, setCartridgesSearch] = React.useState('');
 
   const [checkedReserve, setCheckedReserve] = React.useState(false);
@@ -77,10 +77,6 @@ export const CartridgesForService: React.FC<Props> = ({
     }
   };
 
-  React.useEffect(() => {
-    getCartriges();
-  }, []);
-
   const isAllSelected =
     availableForService.length > 0 && selectedCartridges.length === availableForService.length;
 
@@ -93,7 +89,7 @@ export const CartridgesForService: React.FC<Props> = ({
   return (
     <div className='lg:col-span-2'>
       <Card className='min-h-[431px] max-h-[620px] flex flex-col relative'>
-        {loading ? (
+        {loadingInitial ? (
           <LoadingBounce />
         ) : (
           <>
