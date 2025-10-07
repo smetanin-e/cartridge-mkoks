@@ -1,15 +1,12 @@
-'use client';
-
 import React from 'react';
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui';
-import { stringToColor } from '@/shared/lib';
+import { stringToColor, userInitials } from '@/shared/lib';
 
 interface Props {
   className?: string;
@@ -17,15 +14,7 @@ interface Props {
 }
 
 export const Profile: React.FC<Props> = ({ name }) => {
-  //!ОПТИМИЗИРОВАТЬ
-  const initials = name
-    .split(' ')
-    .reverse()
-    .map((n) => n[0])
-    .join('')
-    .slice(1, 3)
-    .toUpperCase();
-
+  const initials = userInitials(name);
   const bgColor = stringToColor(name);
 
   return (
@@ -33,7 +22,6 @@ export const Profile: React.FC<Props> = ({ name }) => {
       <Popover>
         <PopoverTrigger asChild>
           <Avatar className='h-11 w-11 cursor-pointer'>
-            <AvatarImage src='Картинка' />
             <AvatarFallback style={{ backgroundColor: bgColor }} className='text-white'>
               {initials}
             </AvatarFallback>

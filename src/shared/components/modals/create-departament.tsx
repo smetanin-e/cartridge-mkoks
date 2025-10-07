@@ -37,7 +37,7 @@ export const CreateDepartament: React.FC<Props> = () => {
       handleClose();
     } catch (error) {
       console.log('Error [ADD_DEPARTAMENT_FORM]', error);
-      toast.error(error instanceof Error ? error.message : 'Ошибка добавления');
+      toast.error(error instanceof Error ? error.message : 'Ошибка добавления ❌');
     } finally {
       setIsSubmiting(false);
     }

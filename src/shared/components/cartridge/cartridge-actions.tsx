@@ -21,10 +21,22 @@ interface Props {
 }
 
 export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
+  const statuses = Object.keys(CARTRIDGE_STATUS_CONFIG).filter(
+    (key) =>
+      key === CartridgeStatus.AVAILABLE ||
+      key === CartridgeStatus.REFILL ||
+      key === CartridgeStatus.RESERVE,
+  );
+
   const queryClient = useQueryClient();
   const updateStatus = async (id: number, status: CartridgeStatus) => {
     try {
-      await changeCartridgeStatus(id, status);
+      const res = await changeCartridgeStatus(id, status);
+
+      if (!res.success && res.message) {
+        toast.error(res.message); // или alert(res.message)
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ['cartridges'] });
       toast.success('Статус изменён');
     } catch (error) {
@@ -40,9 +52,9 @@ export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        {Object.entries(CARTRIDGE_STATUS_CONFIG)
-          .filter(([s]) => s !== currentStatus)
-          .map(([status]) => (
+        {statuses
+          .filter((s) => s !== currentStatus)
+          .map((status) => (
             <DropdownMenuItem
               key={status}
               onClick={() => updateStatus(id, status as CartridgeStatus)}

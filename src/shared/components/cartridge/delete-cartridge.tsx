@@ -1,46 +1,43 @@
-'use client';
 import React from 'react';
-import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
-import { Check, Trash2, TriangleAlert, X } from 'lucide-react';
-import { BatchCartridges } from '../../services/dto/service-batch.dto';
-import { batchCancel } from '@/app/(main)/service-batch/actions';
 import toast from 'react-hot-toast';
+
+import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
+import { Check, CircleX, TriangleAlert, X } from 'lucide-react';
+
+import { deleteCartridge } from '@/app/(main)/cartridges/actions';
 import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   className?: string;
-  cartridges: BatchCartridges[];
-  id: string;
+  id: number;
 }
 
-export const DeleteBatch: React.FC<Props> = ({ cartridges, id }) => {
+export const DeleteCartridge: React.FC<Props> = ({ id }) => {
   const [open, setOpen] = React.useState(false);
-  const cartridgesIds = cartridges.map((c) => c.id);
   const queryClient = useQueryClient();
-
-  const removeBatch = async (id: string, cartridgeIds: number[]) => {
+  const deleteCartridgeById = async (id: number) => {
     try {
       setOpen(false);
+      const res = await deleteCartridge(id);
 
-      await batchCancel(id, cartridgeIds);
+      if (!res.success && res.message) {
+        toast.error(res.message); // или alert(res.message)
+        return;
+      }
 
-      // Обновляем все списки партий
-      queryClient.invalidateQueries({ queryKey: ['batches'] });
       // Обновляем все списки картриджей
       queryClient.invalidateQueries({ queryKey: ['cartridges'] });
-
-      toast.success('Партия отменена');
+      toast.success('Картридж удален ✅');
     } catch (error) {
-      console.error('[removeBatch]', error);
-      toast.error(error instanceof Error ? error.message : 'Не удалось удалить партию');
+      console.log('Error [deleteCartridgeById]', error);
+      return toast.error(error instanceof Error ? error.message : 'Ошибка удаления Картриджа ❌');
     }
   };
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className='flex items-center justify-center'>
-          <Button variant={'outline'}>
-            <Trash2 className='h-4 w-4' />
+          <Button variant='ghost' className='h-8 w-8 p-0 '>
+            <CircleX className='h-4 w-4' color='grey' />
           </Button>
         </div>
       </PopoverTrigger>
@@ -48,10 +45,10 @@ export const DeleteBatch: React.FC<Props> = ({ cartridges, id }) => {
         <div className='flex items-center gap-3 pb-2 text-sm'>
           {' '}
           <TriangleAlert size={50} color='orange' />
-          Отменить партию?
+          Подтверждение удаления!
         </div>
         <div className='flex gap-3 justify-center'>
-          <Button variant='outline' size='sm' onClick={() => removeBatch(id, cartridgesIds)}>
+          <Button variant='outline' size='sm' onClick={() => deleteCartridgeById(id)}>
             <Check />
             Удалить
           </Button>

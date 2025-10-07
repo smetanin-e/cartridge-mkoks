@@ -2,6 +2,7 @@ export { cn } from './utils';
 export { prisma } from './prisma-client';
 export { hasStatus } from './has-status';
 export { stringToColor } from './string-to-color';
+export { userInitials } from './user-initialls';
 
 export { searchPrinterFilter } from './search-printer-filter';
 export { searchCartridgesFilter } from './search-cartridges-filter';

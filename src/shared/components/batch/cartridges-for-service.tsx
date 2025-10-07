@@ -36,7 +36,7 @@ export const CartridgesForService: React.FC<Props> = ({
   setSelectedCartridges,
 }) => {
   const { cartridges, loadingInitial } = useCartridgeList();
-  const [cartridgesSearch, setCartridgesSearch] = React.useState('');
+  const [searchValue, setSearchValue] = React.useState('');
 
   const [checkedReserve, setCheckedReserve] = React.useState(false);
 
@@ -81,9 +81,7 @@ export const CartridgesForService: React.FC<Props> = ({
     availableForService.length > 0 && selectedCartridges.length === availableForService.length;
 
   const filteredCartriges = availableForService.filter((cartridge) =>
-    cartridgesSearch
-      ? cartridge.number.toLowerCase().includes(cartridgesSearch.toLowerCase())
-      : true,
+    searchValue ? cartridge.number.toLowerCase().includes(searchValue.toLowerCase()) : true,
   );
 
   return (
@@ -125,11 +123,11 @@ export const CartridgesForService: React.FC<Props> = ({
                 <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                 <Input
                   placeholder='Поиск по номеру картриджа...'
-                  value={cartridgesSearch}
-                  onChange={(e) => setCartridgesSearch(e.target.value)}
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
                   className='pl-10'
                 />
-                {cartridgesSearch && <ClearButton onClick={() => setCartridgesSearch('')} />}
+                {searchValue && <ClearButton onClick={() => setSearchValue('')} />}
               </div>
             </CardHeader>
             <CardContent className='flex-1 overflow-y-scroll h-[100%]'>

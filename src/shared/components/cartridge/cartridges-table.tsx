@@ -10,6 +10,7 @@ import {
 import { getStatusBadge } from '../utils';
 import { CartridgeActions } from './cartridge-actions';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
+import { DeleteCartridge } from './delete-cartridge';
 interface Props {
   className?: string;
   count: number;
@@ -42,8 +43,9 @@ export const CartridgesTable: React.FC<Props> = ({ count, items }) => {
                   <TableCell className='font-medium'>{cartridge.number}</TableCell>
                   <TableCell>{cartridge.model?.model}</TableCell>
                   <TableCell>{getStatusBadge(cartridge.status)}</TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className='flex items-center justify-end gap-6'>
                     <CartridgeActions id={cartridge.id} currentStatus={cartridge.status} />
+                    <DeleteCartridge id={cartridge.id} />
                   </TableCell>
                 </TableRow>
               ))}

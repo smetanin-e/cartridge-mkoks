@@ -1,14 +1,13 @@
 'use client';
 import React from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import toast from 'react-hot-toast';
 import { Send } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { FormDate, FormInput, FormTextarea } from '@/shared/components/form';
 import { FormProvider, useForm } from 'react-hook-form';
-
 import { convertDate } from '@/shared/lib';
 import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
 import { sendToService } from '@/shared/services/batch';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -18,11 +17,8 @@ interface Props {
   setSelectedCartridges: (selectedCartridges: number[]) => void;
 }
 
-export const ServiceBatchForm: React.FC<Props> = ({
-  selectedCartridges,
-  setSelectedCartridges,
-}) => {
-  const [submiting, setSubmiting] = React.useState(false);
+export const CreateBatchForm: React.FC<Props> = ({ selectedCartridges, setSelectedCartridges }) => {
+  const [isSubmiting, setIsSubmiting] = React.useState(false);
   const queryClient = useQueryClient();
   const form = useForm<ServiceFormType>({
     resolver: zodResolver(serviceSchema),
@@ -35,31 +31,23 @@ export const ServiceBatchForm: React.FC<Props> = ({
 
   const onSubmit = async (data: ServiceFormType) => {
     try {
-      setSubmiting(true);
+      setIsSubmiting(true);
       data.date = convertDate(data.date);
       const placeholder = { ...data, cartridges: selectedCartridges };
-      console.log(placeholder);
       await sendToService(placeholder);
 
       queryClient.invalidateQueries({ queryKey: ['batches'] });
       queryClient.invalidateQueries({ queryKey: ['cartridges'] });
 
       setSelectedCartridges([]);
-      toast.success('Партия создана', {
-        icon: '✅',
-      });
-      setSubmiting(false);
-      form.reset({
-        date: new Date().toISOString().split('T')[0],
-        notes: '',
-        responsible: '',
-      });
+      toast.success('Партия создана ✅');
+
+      form.reset();
     } catch (error) {
-      if (error instanceof Error) {
-        setSubmiting(false);
-        console.log('Error [SERVICE_BATCH_FORM]', error);
-        return toast.error(error.message, { icon: '❌' });
-      }
+      console.log('Error [CREATE_BATCH_FORM]', error);
+      toast.error(error instanceof Error ? error.message : 'Не удалось создать партию ❌');
+    } finally {
+      setIsSubmiting(false);
     }
   };
   return (
@@ -87,7 +75,7 @@ export const ServiceBatchForm: React.FC<Props> = ({
                 <Button
                   type='submit'
                   className='w-full'
-                  disabled={selectedCartridges.length === 0 || submiting}
+                  disabled={selectedCartridges.length === 0 || isSubmiting}
                 >
                   <Send className='h-4 w-4 mr-2' />
                   Отправить в сервис

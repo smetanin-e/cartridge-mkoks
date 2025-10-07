@@ -15,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui';
-import { ChevronsDown, Printer } from 'lucide-react';
-import { ShowBatch, PrintBatch, LoadingBounce, DeleteBatch } from '@/shared/components';
+import { Printer } from 'lucide-react';
+import { ShowBatch, PrintBatch, LoadingBounce, DeleteBatch, ShowMore } from '@/shared/components';
 
 import { useBatchList } from '@/shared/hooks';
 import { BatchStatus } from '@prisma/client';
@@ -26,17 +26,26 @@ interface Props {
 }
 
 export const Batches: React.FC<Props> = () => {
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  // какой batch печатаем
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
-  const printBatch = useReactToPrint({
-    contentRef,
-  });
-
   const { batches, loadBatches, showMore, loading, loadingInitial } = useBatchList(
     [BatchStatus.IN_PROGRESS],
     3,
   );
+
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  //Сохраняем индекс партии на которую нажали, чтобы передать этот элемент в печать
+  //* *Делаем так, потому что 'react-to-print' работает через Ref, а он в map не работает*
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+
+  const print = (index: number) => {
+    setSelectedIndex(index);
+    setTimeout(() => {
+      printBatch();
+    }, 0);
+  };
+
+  const printBatch = useReactToPrint({
+    contentRef,
+  });
 
   return (
     <Card className='mt-6 min-h-[210px] relative pb-12'>
@@ -87,10 +96,7 @@ export const Batches: React.FC<Props> = () => {
                                   variant='outline'
                                   size='sm'
                                   onClick={() => {
-                                    setSelectedIndex(index);
-                                    setTimeout(() => {
-                                      printBatch();
-                                    }, 0);
+                                    print(index);
                                   }}
                                 >
                                   <Printer className='h-4 w-4' />
@@ -105,34 +111,14 @@ export const Batches: React.FC<Props> = () => {
                       })}
                   </TableBody>
                 </Table>
-                <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
-                  {showMore && (
-                    <>
-                      {loading ? (
-                        <div className='relative pb-8'>
-                          <LoadingBounce />
-                        </div>
-                      ) : (
-                        <Button
-                          className='translate-x-[-50%]'
-                          size='sm'
-                          disabled={loading}
-                          variant='ghost'
-                          onClick={() => loadBatches()}
-                        >
-                          <ChevronsDown />
-                        </Button>
-                      )}
-                    </>
-                  )}
-                </div>
+                <ShowMore showMore={showMore} loading={loading} loadItems={loadBatches} />
               </>
             )}
           </CardContent>
         </>
       )}
 
-      {/* Компонент, который печатается */}
+      {/* Печатная форма ведомости */}
       <div className='hidden '>
         {batches[selectedIndex] && (
           <PrintBatch
