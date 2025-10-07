@@ -11,6 +11,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
   Label,
   Table,
   TableBody,
@@ -32,12 +33,12 @@ type FormDataType = {
 };
 
 interface Props {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  className?: string;
 }
 
-export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
-  const [submiting, setSubmiting] = React.useState(false);
+export const CreatePrinter: React.FC<Props> = () => {
+  const [open, setOpen] = React.useState(false);
+  const [isSubmiting, setIsSubmiting] = React.useState(false);
   const { models, setOpenModal } = useModelsStore();
 
   const form = useForm({
@@ -49,7 +50,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
 
   const onSubmit = async (data: FormDataType) => {
     try {
-      setSubmiting(true);
+      setIsSubmiting(true);
       const payload = {
         name: data.name,
         models: data.models.map((id: number) => ({ id })),
@@ -63,13 +64,13 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
       form.reset({
         name: '',
       });
-      setSubmiting(false);
     } catch (error) {
-      setSubmiting(false);
-      if (error instanceof Error) {
-        console.log('Error [ADD_PRINTER_FORM]', error);
-        return toast.error(error.message, { icon: '❌' });
-      }
+      console.log('Error [ADD_PRINTER_FORM]', error);
+      return toast.error(
+        error instanceof Error ? error.message : 'Не удалось добавить в реестр ❌',
+      );
+    } finally {
+      setIsSubmiting(false);
     }
   };
 
@@ -79,7 +80,13 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
     !form.watch('name') ||
     form.watch('name').length === 0;
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size={'sm'}>
+          <Plus className='h-4 w-4 mr-2' />
+          Добавить принтер
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
@@ -115,7 +122,7 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
                     </div>
                     <div className='text-right'>
                       <Button
-                        disabled={submiting}
+                        disabled={isSubmiting}
                         type='button'
                         onClick={() => setOpenModal(true)}
                         variant={'outline'}
@@ -174,10 +181,10 @@ export const CreatePrinter: React.FC<Props> = ({ open, onOpenChange }) => {
             </div>
 
             <DialogFooter>
-              <Button onClick={() => onOpenChange(false)} type='button' variant='outline'>
+              <Button onClick={() => setOpen(false)} type='button' variant='outline'>
                 Отмена
               </Button>
-              <Button onClick={() => onOpenChange(false)} type='submit' disabled={disabled}>
+              <Button onClick={() => setOpen(false)} type='submit' disabled={disabled}>
                 Добавить принтер
               </Button>
             </DialogFooter>

@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -19,13 +18,13 @@ import { BatchStatus } from '@prisma/client';
 import { LoadingBounce } from '../loading-bounce';
 import { getBatchStatusBadge } from '../utils';
 import { ShowBatchComplited } from '../modals';
-import { ChevronsDown } from 'lucide-react';
+import { ShowMore } from '../show-more';
 interface Props {
   className?: string;
 }
 
-export const BatchesComplited: React.FC<Props> = () => {
-  const { batches, loading, loadingInitial, hasMore, loadBatches } = useBatchList(
+export const CompletedBatches: React.FC<Props> = () => {
+  const { batches, loading, loadingInitial, showMore, loadBatches } = useBatchList(
     [BatchStatus.COMPLITED],
     3,
   );
@@ -73,27 +72,7 @@ export const BatchesComplited: React.FC<Props> = () => {
                 </TableBody>
               </Table>
             )}
-            <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
-              {hasMore && (
-                <>
-                  {loading ? (
-                    <div className='relative pb-8'>
-                      <LoadingBounce />
-                    </div>
-                  ) : (
-                    <Button
-                      className='translate-x-[-50%]'
-                      size='sm'
-                      disabled={loading}
-                      variant='ghost'
-                      onClick={() => loadBatches()}
-                    >
-                      <ChevronsDown />
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
+            <ShowMore showMore={showMore} loading={loading} loadItems={loadBatches} />
           </CardContent>
         </>
       )}

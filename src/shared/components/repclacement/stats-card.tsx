@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, CardContent } from '@/shared/components/ui';
-import { CARTRIDGE_STATUS_CONFIG } from '../constants';
+import { CARTRIDGE_STATUS_CONFIG } from '../../constants';
 
 import { CartridgeStatus } from '@prisma/client';
-import { LoadingBounce } from './loading-bounce';
-import { CartridgeDTO } from '../services/dto/cartridge-model.dto.';
+import { LoadingBounce } from '../loading-bounce';
+import { CartridgeDTO } from '../../services/dto/cartridge-model.dto.';
 
 interface Props {
   className?: string;

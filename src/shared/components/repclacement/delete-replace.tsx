@@ -1,24 +1,38 @@
 import React from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
 import { Check, CircleX, TriangleAlert, X } from 'lucide-react';
-
 import toast from 'react-hot-toast';
-import { deletePrinter } from '@/app/(main)/cartridges/actions';
-import { usePrintersStore } from '../store/printers';
+import { removeReplace } from '@/app/(main)/replacement/actions';
+import { useQueryClient } from '@tanstack/react-query';
+
 interface Props {
   className?: string;
   id: number;
 }
 
-export const DeletePrinter: React.FC<Props> = ({ id }) => {
+export const DeleteReplace: React.FC<Props> = ({ id }) => {
   const [open, setOpen] = React.useState(false);
-  const removePrinter = async (id: number) => {
-    setOpen(false);
-    await deletePrinter(id);
-    usePrintersStore.getState().getPrinters();
-    toast.success('Запись о принтере удалена', {
-      icon: '✅',
-    });
+  const queryClient = useQueryClient();
+  const deleteReplace = async (id: number) => {
+    try {
+      setOpen(false);
+      const res = await removeReplace(id);
+
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+      // Обновляем все списки замен и картриджей
+      queryClient.invalidateQueries({ queryKey: ['replacements'] });
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
+
+      toast.success('Запись о замене отменена', {
+        icon: '✅',
+      });
+    } catch (error) {
+      console.error(error, 'Не удалось отменить запись');
+      toast.error('Эту запись отменить невозможно');
+    }
   };
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -33,12 +47,12 @@ export const DeletePrinter: React.FC<Props> = ({ id }) => {
         <div className='flex items-center gap-3 pb-2 text-sm'>
           {' '}
           <TriangleAlert size={50} color='orange' />
-          Подтверждение удаления!
+          Отменить текущую замену?
         </div>
         <div className='flex gap-3 justify-center'>
-          <Button variant='outline' size='sm' onClick={() => removePrinter(id)}>
+          <Button variant='outline' size='sm' onClick={() => deleteReplace(id)}>
             <Check />
-            Удалить
+            Подтвердить
           </Button>
           <Button variant='outline' size='sm' onClick={() => setOpen(false)}>
             <X />

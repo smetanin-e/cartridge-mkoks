@@ -33,7 +33,7 @@ export const useReplacementList = (search: string, take = 10) => {
     replacements,
     loading: query.isFetchingNextPage,
     loadingInitial: query.isLoading,
-    hasMore: query.hasNextPage,
+    showMore: query.hasNextPage,
     loadReplacemens: query.fetchNextPage,
     refetch: query.refetch,
   };

@@ -16,7 +16,7 @@ import {
   TableRow,
 } from '@/shared/components/ui';
 import { ChevronsDown, Printer } from 'lucide-react';
-import { ShowBatch, PrintBatch, LoadingBounce, BatchCancel } from '@/shared/components';
+import { ShowBatch, PrintBatch, LoadingBounce, DeleteBatch } from '@/shared/components';
 
 import { useBatchList } from '@/shared/hooks';
 import { BatchStatus } from '@prisma/client';
@@ -33,7 +33,7 @@ export const Batches: React.FC<Props> = () => {
     contentRef,
   });
 
-  const { batches, loadBatches, hasMore, loading, loadingInitial } = useBatchList(
+  const { batches, loadBatches, showMore, loading, loadingInitial } = useBatchList(
     [BatchStatus.IN_PROGRESS],
     3,
   );
@@ -96,7 +96,7 @@ export const Batches: React.FC<Props> = () => {
                                   <Printer className='h-4 w-4' />
                                 </Button>
                                 {batch.status === BatchStatus.IN_PROGRESS && (
-                                  <BatchCancel cartridges={batch.cartridges} id={batch.id} />
+                                  <DeleteBatch cartridges={batch.cartridges} id={batch.id} />
                                 )}
                               </div>
                             </TableCell>
@@ -106,7 +106,7 @@ export const Batches: React.FC<Props> = () => {
                   </TableBody>
                 </Table>
                 <div className='pt-4 text-center absolute bottom-[8px] left-[50%]'>
-                  {hasMore && (
+                  {showMore && (
                     <>
                       {loading ? (
                         <div className='relative pb-8'>

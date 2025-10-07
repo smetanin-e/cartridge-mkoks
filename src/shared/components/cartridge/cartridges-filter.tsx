@@ -8,9 +8,9 @@ import {
   SelectValue,
 } from '@/shared/components/ui';
 import { Filter, Search } from 'lucide-react';
-import { ClearButton } from './cleare-button';
+import { ClearButton } from '@/shared/components';
 import { CartridgeStatus } from '@prisma/client';
-import { CARTRIDGE_STATUS_CONFIG } from '../constants';
+import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
 interface Props {
   className?: string;
   searchValue: string;

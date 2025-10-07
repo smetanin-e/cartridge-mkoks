@@ -1,5 +1,18 @@
 'use client';
 import React from 'react';
+import toast from 'react-hot-toast';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { Departament } from '@prisma/client';
+import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replacement-schema';
+import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
+import { useDepartamentStore } from '@/shared/store/departaments';
+import { convertDate } from '@/shared/lib';
+import { replacing } from '@/shared/services/replacement';
+import { getStatusBadge } from '@/shared/components/utils';
+import { Edit, Package, Plus } from 'lucide-react';
+import { FormCustomSelect, FormDate, FormInput } from '@/shared/components';
 import {
   Badge,
   Button,
@@ -9,20 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui';
-import { Edit, Package, Plus } from 'lucide-react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { FormCustomSelect, FormDate, FormInput } from '@/shared/components';
-import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
-import { Departament } from '@prisma/client';
-import { convertDate } from '@/shared/lib';
-import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replacement-schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
-import { replacing } from '@/shared/services/replacement';
-
-import { getStatusBadge } from '@/shared/components/utils';
-import { useDepartamentStore } from '@/shared/store/departaments';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   className?: string;
@@ -31,11 +30,13 @@ interface Props {
 }
 
 export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartridges }) => {
-  const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const [isSubmiting, setIsSubmiting] = React.useState(false);
+
   const { departaments, getDepartaments } = useDepartamentStore();
   const { setOpenModal } = useDepartamentStore();
+
+  const queryClient = useQueryClient();
 
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
@@ -49,27 +50,22 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
 
   React.useEffect(() => {
     getDepartaments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async (data: ReplacementFormType) => {
     try {
       setIsSubmiting(true);
-
       data.date = convertDate(data.date);
       await replacing(data);
 
       // Обновляем все списки useBatchList
       queryClient.invalidateQueries({ queryKey: ['replacements'] });
+      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
 
       setOpen(false);
       toast.success('Замена оформлена ✅');
-
-      form.reset({
-        date: new Date().toISOString().split('T')[0],
-        installedCartridge: null,
-        removedCartridge: null,
-        responsible: '',
-      });
+      form.reset();
     } catch (error) {
       console.log('Error [REPLACEMENT_FORM]', error);
       toast.error(error instanceof Error ? error.message : 'Ошибка добавления');

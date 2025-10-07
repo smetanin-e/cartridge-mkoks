@@ -25,7 +25,7 @@ export const useBatchList = (statuses?: BatchStatus[], take = 10) => {
     batches,
     loading: query.isFetchingNextPage, // для кнопки "Загрузить ещё"
     loadingInitial: query.isLoading, // для скелетона при первом рендере
-    hasMore: query.hasNextPage,
+    showMore: query.hasNextPage,
     loadBatches: query.fetchNextPage,
     refetch: query.refetch,
   };

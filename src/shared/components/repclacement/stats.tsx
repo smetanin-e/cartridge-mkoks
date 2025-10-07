@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import { CARTRIDGE_STATUS_CONFIG } from '../constants';
+import { CARTRIDGE_STATUS_CONFIG } from '../../constants';
 import { StatsCard } from './stats-card';
 import { CartridgeStatus } from '@prisma/client';
-import { useCartridgeList } from '../hooks';
+import { useCartridgeList } from '../../hooks';
 
 interface Props {
   className?: string;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
 import { Check, Trash2, TriangleAlert, X } from 'lucide-react';
-import { BatchCartridges } from '../services/dto/service-batch.dto';
+import { BatchCartridges } from '../../services/dto/service-batch.dto';
 import { batchCancel } from '@/app/(main)/service-batch/actions';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,7 +12,7 @@ interface Props {
   id: string;
 }
 
-export const BatchCancel: React.FC<Props> = ({ cartridges, id }) => {
+export const DeleteBatch: React.FC<Props> = ({ cartridges, id }) => {
   const [open, setOpen] = React.useState(false);
   const cartridgesIds = cartridges.map((c) => c.id);
 

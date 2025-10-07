@@ -4,4 +4,6 @@ export { ServiceBatchForm } from './service-batch-form';
 export { BatchesForReturn } from './batches-for-return';
 export { CartridgesForService } from './cartridges-for-service';
 export { ChoiceCartridges } from './choice-cartridges';
-export { BatchesComplited } from './batches-complited';
+export { CompletedBatches } from './completed-batches';
+
+export { DeleteBatch } from './delete-batch';

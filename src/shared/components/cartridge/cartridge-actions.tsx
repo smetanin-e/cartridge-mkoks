@@ -7,8 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui';
 import { MoreHorizontal } from 'lucide-react';
-import { CARTRIDGE_STATUS_CONFIG } from '../constants';
-import { getStatusBadge } from './utils';
+import { CARTRIDGE_STATUS_CONFIG } from '../../constants';
+import { getStatusBadge } from '../utils';
 import { CartridgeStatus } from '@prisma/client';
 import { changeCartridgeStatus } from '@/app/(main)/cartridges/actions';
 import toast from 'react-hot-toast';

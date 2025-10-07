@@ -1,37 +1,28 @@
 import React from 'react';
+import toast from 'react-hot-toast';
+
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui';
 import { Check, CircleX, TriangleAlert, X } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { removeReplace } from '@/app/(main)/replacement/actions';
-import { useQueryClient } from '@tanstack/react-query';
 
+import { deletePrinter } from '@/app/(main)/cartridges/actions';
+import { usePrintersStore } from '../../store/printers';
 interface Props {
   className?: string;
   id: number;
 }
 
-export const ReplaceCancel: React.FC<Props> = ({ id }) => {
+export const DeletePrinter: React.FC<Props> = ({ id }) => {
   const [open, setOpen] = React.useState(false);
-  const queryClient = useQueryClient();
-  const replaceCancel = async (id: number) => {
+
+  const deletePrinterById = async (id: number) => {
     try {
       setOpen(false);
-      const res = await removeReplace(id);
-
-      if (res?.error) {
-        toast.error(res.error);
-        return;
-      }
-      // Обновляем все списки замен и картриджей
-      queryClient.invalidateQueries({ queryKey: ['replacements'] });
-      queryClient.invalidateQueries({ queryKey: ['cartridges'] });
-
-      toast.success('Запись о замене отменена', {
-        icon: '✅',
-      });
+      await deletePrinter(id);
+      usePrintersStore.getState().getPrinters();
+      toast.success('Запись о принтере удалена ✅');
     } catch (error) {
-      console.error(error, 'Не удалось отменить запись');
-      toast.error('Эту запись отменить невозможно');
+      console.log('Error [deletePrinterById]', error);
+      return toast.error(error instanceof Error ? error.message : 'Ошибка удаления принтера ❌');
     }
   };
   return (
@@ -47,12 +38,12 @@ export const ReplaceCancel: React.FC<Props> = ({ id }) => {
         <div className='flex items-center gap-3 pb-2 text-sm'>
           {' '}
           <TriangleAlert size={50} color='orange' />
-          Отменить текущую замену?
+          Подтверждение удаления!
         </div>
         <div className='flex gap-3 justify-center'>
-          <Button variant='outline' size='sm' onClick={() => replaceCancel(id)}>
+          <Button variant='outline' size='sm' onClick={() => deletePrinterById(id)}>
             <Check />
-            Подтвердить
+            Удалить
           </Button>
           <Button variant='outline' size='sm' onClick={() => setOpen(false)}>
             <X />

@@ -1,4 +1,4 @@
-import { CreateDepartament, ReplacementsTable, Stats } from '@/shared/components';
+import { CreateDepartament, ReplacementList, Stats } from '@/shared/components';
 import React from 'react';
 
 export default function Replace() {
@@ -7,8 +7,8 @@ export default function Replace() {
       {/* Статистика */}
       <Stats />
 
-      {/* Таблица замен */}
-      <ReplacementsTable />
+      {/* Список оформленных замен */}
+      <ReplacementList />
 
       {/* Модальное окно создания отдела*/}
       <CreateDepartament />

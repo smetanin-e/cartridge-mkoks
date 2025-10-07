@@ -26,8 +26,10 @@ export const ChoiceCartridges: React.FC<Props> = ({
   cartridges,
 }) => {
   const avaibleCartridges = cartridges.filter((c) => !c.returned);
+
   const isAllSelected =
     cartridges.length > 0 && selectedCartridges.length === avaibleCartridges.length;
+
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       const avaibleIds = avaibleCartridges.map((c) => c.id);
