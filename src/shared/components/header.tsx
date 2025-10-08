@@ -15,7 +15,7 @@ export const Header: React.FC<Props> = () => {
   const user = useUserStore((state) => state.user);
   const initUser = useUserStore((state) => state.initUser);
   console.log(user);
-  const name = `${user?.surname} ${user?.firstName} ${user?.lastName}`;
+
   React.useEffect(() => {
     initUser();
   }, []);
@@ -50,7 +50,7 @@ export const Header: React.FC<Props> = () => {
             Картриджи
           </Button>
         </Link>
-        {user && <Profile name={name} />}
+        {user && <Profile user={user} />}
       </div>
     </div>
   );

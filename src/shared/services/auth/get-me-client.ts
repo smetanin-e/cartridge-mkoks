@@ -1,3 +1,4 @@
+import { AuthUser } from '@/@types/user.type';
 import { axiosInstance } from '@/shared/services';
 
 export async function getMeClient(): Promise<AuthUser | null> {

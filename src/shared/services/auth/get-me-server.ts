@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { axiosInstance } from '../instance';
+import { AuthUser } from '@/@types/user.type';
 
 export async function getMeServer(): Promise<AuthUser | null> {
   try {

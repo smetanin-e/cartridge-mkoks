@@ -30,6 +30,7 @@ export async function createUser(data: CreateUserType) {
         surname: data.surname,
         firstName: data.firstName,
         lastName: data.lastName,
+        role: data.role,
       },
     });
 

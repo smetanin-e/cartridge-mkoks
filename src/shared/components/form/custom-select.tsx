@@ -10,7 +10,7 @@ type CustomSelectProps<T> = {
   items: T[];
   value: T | null;
   onChange: (val: T | null) => void;
-  getKey: (item: T) => number;
+  getKey: (item: T) => number | string;
   getLabel: (item: T) => string; // используется для поиска
   placeholder?: string;
   renderItem: (item: T, selected: boolean) => React.ReactNode;
@@ -44,9 +44,9 @@ export function CustomSelect<T>({
             variant='outline'
             role='combobox'
             aria-expanded={open}
-            className='w-full justify-between font-normal relative pr-12'
+            className='w-full justify-between font-normal relative pr-12 h-8 text-md'
           >
-            <div className='flex items-center gap-2 flex-1'>
+            <div className='flex items-center gap-2 flex-1 text-[14px]'>
               {value ? (renderValue ? renderValue(value) : getLabel(value)) : placeholder}
             </div>
             {!value && <ChevronDown className='h-4 w-4 shrink-0 opacity-50' />}

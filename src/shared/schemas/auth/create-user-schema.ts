@@ -7,6 +7,7 @@ export const createUserSchema = z
     ...loginSchema.shape,
     surname: z.string().min(2, { message: 'Имя должно содержать минимум 2 символа' }),
     firstName: z.string().min(2, { message: 'Имя должно содержать минимум 2 символа' }),
+    role: z.enum(['USER', 'ADMIN'] as const).refine((val) => !!val, { message: 'Укажите роль' }),
     lastName: z.string().min(2, { message: 'Фамилия должна содержать минимум 2 символа' }),
     confirmPassword: passwordSchema,
   })

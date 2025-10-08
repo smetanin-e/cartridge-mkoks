@@ -9,3 +9,4 @@ export { ShowBatchComplited } from './show-batch-complited';
 export { CartridgesReturn } from './cartridges-return';
 
 export { Login } from './login';
+export { AddUser } from './add-user';

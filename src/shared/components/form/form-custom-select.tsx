@@ -11,7 +11,7 @@ interface Props<T> {
   error?: string;
   //==================
   items: T[];
-  getKey: (item: T) => number;
+  getKey: (item: T) => number | string;
   getLabel: (item: T) => string;
   placeholder?: string;
   renderItem: (item: T, selected: boolean) => React.ReactNode;
@@ -25,7 +25,6 @@ export const FormCustomSelect = <T extends object>({
   required,
   error,
   items,
-
   getKey,
   getLabel,
   placeholder,
@@ -57,7 +56,7 @@ export const FormCustomSelect = <T extends object>({
               <CustomSelect<T>
                 items={items}
                 value={items.find((i) => getKey(i) === field.value) ?? null}
-                onChange={(val) => field.onChange(val ? Number(getKey(val)) : null)}
+                onChange={(val) => field.onChange(val ? getKey(val) : null)}
                 getKey={getKey}
                 getLabel={getLabel}
                 placeholder={placeholder}

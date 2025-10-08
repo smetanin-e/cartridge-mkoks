@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { getMe } from '../services/auth/get-me';
 import { refreshAccessToken } from '../services/auth/refresh-access-token';
+import { AuthUser } from '@/@types/user.type';
 
 interface UserAuthState {
   //=======Авторизированный пользователь==============

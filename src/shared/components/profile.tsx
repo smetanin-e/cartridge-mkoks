@@ -11,13 +11,16 @@ import { stringToColor, userInitials } from '@/shared/lib';
 import { signOut } from '../services/auth/sign-out';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
+import { AuthUser } from '@/@types/user.type';
 
 interface Props {
   className?: string;
-  name: string;
+  user: AuthUser;
 }
 
-export const Profile: React.FC<Props> = ({ name }) => {
+export const Profile: React.FC<Props> = ({ user }) => {
+  const name = `${user?.surname} ${user?.firstName} ${user?.lastName}`;
   const initials = userInitials(name);
   const bgColor = stringToColor(name);
   const router = useRouter();
@@ -38,9 +41,15 @@ export const Profile: React.FC<Props> = ({ name }) => {
           </Avatar>
         </PopoverTrigger>
         <PopoverContent align='end' className='px-6 text-right'>
-          <span className='cursor-pointer ' onClick={logout}>
+          {user.role === 'ADMIN' && (
+            <p className='mb-4 cursor-pointer'>
+              <Link href={'/admin'}>Администрирование</Link>
+            </p>
+          )}
+
+          <p className='cursor-pointer ' onClick={logout}>
             Выход
-          </span>
+          </p>
         </PopoverContent>
       </Popover>
     </div>
