@@ -1,15 +1,24 @@
+'use client';
 import Link from 'next/link';
 import React from 'react';
 import { Button } from '@/shared/components/ui';
 import { Download, Package, Repeat } from 'lucide-react';
 import { Profile } from './profile';
 import { Logo } from './logo';
+import { useUserStore } from '../store/user';
 
 interface Props {
   className?: string;
 }
 
 export const Header: React.FC<Props> = () => {
+  const user = useUserStore((state) => state.user);
+  const initUser = useUserStore((state) => state.initUser);
+  console.log(user);
+  const name = `${user?.surname} ${user?.firstName} ${user?.lastName}`;
+  React.useEffect(() => {
+    initUser();
+  }, []);
   return (
     <div className='flex items-center justify-between mb-8'>
       <div>
@@ -41,8 +50,7 @@ export const Header: React.FC<Props> = () => {
             Картриджи
           </Button>
         </Link>
-
-        <Profile name='Сметанин Евгений Евгеньевич' />
+        {user && <Profile name={name} />}
       </div>
     </div>
   );

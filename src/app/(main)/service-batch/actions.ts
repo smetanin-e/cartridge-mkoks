@@ -6,11 +6,11 @@ export async function batchCancel(id: string, cartridgeIds: number[]) {
   try {
     const batch = await prisma.serviceBatch.findFirst({ where: { id } });
     if (!batch) {
-      throw new Error('Партия не найдена');
+      return { success: false, message: 'Партия не найдена' };
     }
 
     if (cartridgeIds.length === 0) {
-      throw new Error('Отсутствуют картриджи для отмены');
+      return { success: false, message: 'Отсутствуют картриджи для отмены' };
     }
 
     await prisma.serviceBatchCartridge.deleteMany({
@@ -23,8 +23,10 @@ export async function batchCancel(id: string, cartridgeIds: number[]) {
       where: { id: { in: cartridgeIds } },
       data: { status: CartridgeStatus.REFILL },
     });
+
+    return { success: true };
   } catch (error) {
     console.log('[batchCancel] Server error', error);
-    throw error;
+    return { success: false, message: 'Ошибка на сервере' };
   }
 }

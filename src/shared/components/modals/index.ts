@@ -7,3 +7,5 @@ export { ShowBatch } from './show-batch';
 export { ShowBatchForReturn } from './show-batch-for-return';
 export { ShowBatchComplited } from './show-batch-complited';
 export { CartridgesReturn } from './cartridges-return';
+
+export { Login } from './login';

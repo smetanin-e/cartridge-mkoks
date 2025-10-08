@@ -1,9 +1,11 @@
+import React from 'react';
+import { Login, Logo } from '@/shared/components';
+import { getMe } from '@/shared/services/auth/get-me';
 import { Button } from '@/shared/components/ui';
 import Link from 'next/link';
-import React from 'react';
-import { Logo } from '@/shared/components';
 
-export default function Home() {
+export default async function Home() {
+  const user = await getMe();
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-foreground-50 p-6'>
       <Logo width={200} height={200} />
@@ -16,9 +18,13 @@ export default function Home() {
         сервиса, реестр картриджей, управление состоянием картриджей.
       </p>
 
-      <Link href={'/replacement'}>
-        <Button>Войти</Button>
-      </Link>
+      {user ? (
+        <Link href={'/replacement'}>
+          <Button>Приступить к работе</Button>
+        </Link>
+      ) : (
+        <Login />
+      )}
 
       <footer className='mt-20 text-gray-500 text-sm'>&copy; 2025 г. Все права защищены.</footer>
     </div>

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   Avatar,
@@ -7,6 +8,9 @@ import {
   PopoverTrigger,
 } from '@/shared/components/ui';
 import { stringToColor, userInitials } from '@/shared/lib';
+import { signOut } from '../services/auth/sign-out';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface Props {
   className?: string;
@@ -16,6 +20,12 @@ interface Props {
 export const Profile: React.FC<Props> = ({ name }) => {
   const initials = userInitials(name);
   const bgColor = stringToColor(name);
+  const router = useRouter();
+  const logout = async () => {
+    await signOut();
+    router.push('/');
+    toast.success('Вы вышли из аккаунта');
+  };
 
   return (
     <div className='ml-6 '>
@@ -28,7 +38,9 @@ export const Profile: React.FC<Props> = ({ name }) => {
           </Avatar>
         </PopoverTrigger>
         <PopoverContent align='end' className='px-6 text-right'>
-          <span className='cursor-pointer '>Выход</span>
+          <span className='cursor-pointer ' onClick={logout}>
+            Выход
+          </span>
         </PopoverContent>
       </Popover>
     </div>

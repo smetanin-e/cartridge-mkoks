@@ -3,8 +3,42 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    login     String   @unique
+    password  String
+    salt      String?
+    status    Boolean  @default(true)
+    role      UserRole @default(USER)
+    surname   String
+    firstName String
+    lastName  String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    sessions Session[]
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+model Session {
+    id           String @id @default(uuid())
+    refreshToken String @unique
+
+    userId Int
+    user   User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    expiresAt DateTime
 }
 
 model Model {

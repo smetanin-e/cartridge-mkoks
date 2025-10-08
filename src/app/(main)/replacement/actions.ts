@@ -8,14 +8,11 @@ export async function removeReplace(id: number) {
     const replacement = await prisma.replacement.findFirst({
       where: { id },
     });
-    if (!replacement) throw new Error('Запись о замене картриджа не найдена');
+    if (!replacement) return { error: 'Запись о замене картриджа не найдена' };
 
     const { installedCartridgeNumber, removedCartridgeNumber, createdAt } = replacement;
     const installed = installedCartridgeNumber ? installedCartridgeNumber : 'not installed';
     const removed = removedCartridgeNumber ? removedCartridgeNumber : 'not installed';
-
-    console.log('installed=', installed);
-    console.log('removed=', removed);
 
     const usedAfter = await prisma.replacement.findFirst({
       where: {
@@ -58,7 +55,3 @@ export async function removeReplace(id: number) {
     throw error;
   }
 }
-
-// if (axios.isAxiosError(error)) {
-//       throw new Error(error.response?.data?.error || 'Ошибка отмены созданной партии');
-//     }

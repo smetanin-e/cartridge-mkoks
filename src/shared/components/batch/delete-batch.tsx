@@ -21,7 +21,11 @@ export const DeleteBatch: React.FC<Props> = ({ cartridges, id }) => {
     try {
       setOpen(false);
 
-      await batchCancel(id, cartridgeIds);
+      const res = await batchCancel(id, cartridgeIds);
+      if (!res.success && res.message) {
+        toast.error(res.message);
+        return;
+      }
 
       // Обновляем все списки партий
       queryClient.invalidateQueries({ queryKey: ['batches'] });

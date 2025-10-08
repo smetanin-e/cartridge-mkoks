@@ -6,3 +6,4 @@ export { FormCheckbox } from './form-checkbox';
 export { FormDate } from './form-date';
 export { CustomSelect } from './custom-select';
 export { FormCustomSelect } from './form-custom-select';
+export { LoginForm } from './login-form';

@@ -34,7 +34,7 @@ export const CartridgeActions: React.FC<Props> = ({ id, currentStatus }) => {
       const res = await changeCartridgeStatus(id, status);
 
       if (!res.success && res.message) {
-        toast.error(res.message); // или alert(res.message)
+        toast.error(res.message);
         return;
       }
       queryClient.invalidateQueries({ queryKey: ['cartridges'] });
