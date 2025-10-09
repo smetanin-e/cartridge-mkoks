@@ -1,6 +1,5 @@
-import { AddUser, Logo, Profile } from '@/shared/components';
+import { AddUser, Header } from '@/shared/components';
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -16,19 +15,11 @@ import {
 export default async function Admin() {
   return (
     <div>
-      {' '}
-      <div className='flex items-center gap-4 mb-6'>
-        <Logo width={60} height={60} />
-        <div className='flex-1'>
-          <h1 className='text-3xl font-bold'>Администрирование пользователей</h1>
-          <p className='text-muted-foreground'>Управление пользователями и их ролями</p>
-        </div>
-        <AddUser />
-        {/* <Profile  /> */}
-      </div>
+      <Header title='Администрирование' description='Управление пользователями и их ролями' />
       <Card>
-        <CardHeader>
+        <CardHeader className='flex items-center justify-between'>
           <CardTitle>Список пользователей</CardTitle>
+          <AddUser />
         </CardHeader>
         <CardContent>
           <Table>

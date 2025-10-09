@@ -9,9 +9,11 @@ import { useUserStore } from '../store/user';
 
 interface Props {
   className?: string;
+  title: string;
+  description: string;
 }
 
-export const Header: React.FC<Props> = () => {
+export const Header: React.FC<Props> = ({ title, description }) => {
   const user = useUserStore((state) => state.user);
   const initUser = useUserStore((state) => state.initUser);
   console.log(user);
@@ -21,10 +23,14 @@ export const Header: React.FC<Props> = () => {
   }, []);
   return (
     <div className='flex items-center justify-between mb-8'>
-      <div>
+      <div className='flex items-center gap-4'>
         <Link href={'/replacement'}>
           <Logo width={60} height={60} />
         </Link>
+        <div className='flex-1'>
+          <h1 className='text-3xl font-bold'>{title}</h1>
+          <p className='text-muted-foreground'>{description}</p>
+        </div>
       </div>
       <div className='flex gap-2 items-center'>
         <Link href='/replacement'>
