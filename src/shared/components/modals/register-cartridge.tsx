@@ -20,6 +20,7 @@ import { useModelsStore } from '../../store/cartridge-models';
 import { registerCartridge } from '../../services/register-cartridge';
 import { Plus, ToyBrick } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { CARTRIDGE_STATUS } from '@/shared/constants/cartridge-status';
 
 interface Props {
   open: boolean;
@@ -115,7 +116,12 @@ export const RegisterCartridge: React.FC<Props> = ({ open, onOpenChange }) => {
                 }
               />
 
-              <FormSelect required name='status' label='Состояние картриджа' />
+              <FormSelect
+                required
+                name='status'
+                label='Состояние картриджа'
+                data={CARTRIDGE_STATUS}
+              />
             </div>
 
             <div className='pt-4 flex justify-end gap-8'>

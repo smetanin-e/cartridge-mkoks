@@ -6,9 +6,3 @@ export type AuthUser = {
   firstName: string;
   lastName: string;
 };
-
-export type Roles = {
-  name: string;
-  label: string;
-  id: number;
-};

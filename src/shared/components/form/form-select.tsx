@@ -8,16 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui';
-import { CARTRIDGE_STATUS_CONFIG } from '@/shared/constants';
 
+export type FormSelectType = {
+  id: number;
+  label: string;
+  name: string;
+};
 interface Props {
   name: string;
   label?: string;
   required?: boolean;
   className?: string;
+  data: FormSelectType[];
 }
 
-export const FormSelect: React.FC<Props> = ({ name, label, required }) => {
+export const FormSelect: React.FC<Props> = ({ name, label, required, data }) => {
   const {
     control,
     formState: { errors },
@@ -41,13 +46,13 @@ export const FormSelect: React.FC<Props> = ({ name, label, required }) => {
           return (
             <div className='relative'>
               <Select value={value} onValueChange={field.onChange}>
-                <SelectTrigger className='h-12 text-md w-full'>
-                  <SelectValue placeholder='Выберите...' />
+                <SelectTrigger className=' text-sm w-full' size='sm'>
+                  <SelectValue placeholder='Выберите роль...' />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(CARTRIDGE_STATUS_CONFIG).map(([key, value]) => (
-                    <SelectItem key={key} value={key}>
-                      {value.label}
+                  {data.map((item) => (
+                    <SelectItem key={item.id} value={item.name}>
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

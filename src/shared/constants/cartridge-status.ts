@@ -1,4 +1,13 @@
 import { AlertCircle, Bolt, CheckCircle, Clock, LifeBuoy, TriangleAlert } from 'lucide-react';
+import { FormSelectType } from '../components/form/form-select';
+
+export const CARTRIDGE_STATUS: FormSelectType[] = [
+  { id: 1, name: 'AVAILABLE', label: 'Готов к использованию' },
+  { id: 2, name: 'RESERVE', label: 'В резерве' },
+  { id: 3, name: 'WORKING', label: 'В работе' },
+  { id: 4, name: 'SERVICE', label: 'В сервисе' },
+  { id: 5, name: 'REFILL', label: 'Требуется заправка' },
+];
 
 export const CARTRIDGE_STATUS_CONFIG = {
   AVAILABLE: {

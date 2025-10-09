@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { FormCustomSelect, FormInput } from '@/shared/components/';
+import { FormInput, FormSelect } from '@/shared/components/';
 import { Button } from '@/shared/components/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { USER_ROLES } from '@/shared/constants';
-import { Roles } from '@/@types/user.type';
 import { createUserSchema, CreateUserType } from '@/shared/schemas/auth/create-user-schema';
 import { createUser } from '@/shared/services/auth/auth-service';
 
@@ -17,6 +16,7 @@ interface Props {
 }
 
 export const RegisterForm: React.FC<Props> = ({ setOpen }) => {
+  const [isSubmiting, setIsSubmiting] = React.useState(false);
   const form = useForm<CreateUserType>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
@@ -31,20 +31,22 @@ export const RegisterForm: React.FC<Props> = ({ setOpen }) => {
 
   const onSubmit = async (data: CreateUserType) => {
     try {
-      console.log(data);
+      setIsSubmiting(true);
       await createUser(data);
       toast.success('Пользователь успешно создан ✅');
       setOpen(false);
     } catch (error) {
       console.log('Error [REGISTER_FORM]', error);
       return toast.error(error instanceof Error ? error.message : 'Не удалось создать аккаунт ❌');
+    } finally {
+      setIsSubmiting(false);
     }
   };
   return (
     <FormProvider {...form}>
       <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-8'>
-          <div className='space-y-2'>
+          <div className='space-y-2 mb-1'>
             <FormInput
               label='Фамилия'
               name='surname'
@@ -75,18 +77,7 @@ export const RegisterForm: React.FC<Props> = ({ setOpen }) => {
             />
           </div>
 
-          <FormCustomSelect<Roles>
-            name='role'
-            label='Роль'
-            required
-            error='Укажите роль'
-            items={USER_ROLES}
-            placeholder='Укажите роль пользователя'
-            getKey={(u) => u.name}
-            getLabel={(u) => u.label}
-            renderValue={(u) => u.label}
-            renderItem={(u) => u.label}
-          />
+          <FormSelect required name='role' label='Роль' data={USER_ROLES} />
         </div>
 
         <div className='border-t pt-4'>
@@ -128,10 +119,17 @@ export const RegisterForm: React.FC<Props> = ({ setOpen }) => {
           </div>
         </div>
         <div className='flex justify-end gap-6'>
-          <Button type='button' variant='outline' onClick={() => setOpen(false)}>
+          <Button disabled={isSubmiting} type='submit'>
+            Добавить пользователя
+          </Button>
+          <Button
+            disabled={isSubmiting}
+            type='button'
+            variant='outline'
+            onClick={() => setOpen(false)}
+          >
             Отмена
           </Button>
-          <Button type='submit'>Добавить пользователя</Button>
         </div>
       </form>
     </FormProvider>

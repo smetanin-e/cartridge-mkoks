@@ -4,6 +4,7 @@ import * as cartridges from './register-cartridge';
 import * as departaments from './departaments';
 import * as replacement from './replacement';
 import * as batch from './batch';
+import * as agent from './agent';
 
 export const Api = {
   models,
@@ -12,4 +13,5 @@ export const Api = {
   departaments,
   replacement,
   batch,
+  agent,
 };

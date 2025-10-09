@@ -5,4 +5,5 @@ export enum ApiRoutes {
   DEPARTAMENT = 'departament',
   REPLACEMENT = 'replacement',
   BATCH = 'batch',
+  AGENTS = 'agents',
 }
