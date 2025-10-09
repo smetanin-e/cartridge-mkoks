@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import {
+  Button,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -10,20 +12,49 @@ import {
 } from '@/shared/components/ui';
 import { useAgentStore } from '@/shared/store/agents';
 import { LoadingBounce } from '../loading-bounce';
+import { PencilLine, Shield } from 'lucide-react';
+import { useUserStore } from '@/shared/store/user';
+import toast from 'react-hot-toast';
+import { toggleAgentStatus } from '@/app/(main)/admin/actions';
+import { DeleteUser } from './delete-user';
+import { AuthUser } from '@/@types/user.type';
 interface Props {
   className?: string;
+  admin: AuthUser;
 }
 
-export const UsersList: React.FC<Props> = () => {
-  const { agents, getAgents, loading } = useAgentStore();
+export const UsersList: React.FC<Props> = ({ admin }) => {
+  useUserStore.getState().initUser();
+
+  const { agents, getAgents, loadingItems } = useAgentStore();
+
+  const [loading, setLoading] = React.useState(false);
+
+  const toggleStatus = async (id: number, currentUserId: number) => {
+    try {
+      setLoading(true);
+      const res = await toggleAgentStatus(id, currentUserId);
+      if (res?.message) {
+        toast.error(res.message);
+        return;
+      }
+      useAgentStore.getState().getAgents();
+      toast.success('Статус изменен ✅');
+    } catch (error) {
+      console.error(error, '[Server error] Ошибка изменения статуса');
+      toast.error('Ошибка изменения статуса');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   React.useEffect(() => {
     getAgents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <>
-      {loading ? (
+    <div className='relative min-h-[210px]'>
+      {loadingItems ? (
         <LoadingBounce />
       ) : (
         <Table>
@@ -33,6 +64,7 @@ export const UsersList: React.FC<Props> = () => {
               <TableHead>Логин</TableHead>
               <TableHead>Роль</TableHead>
               <TableHead>Статус</TableHead>
+              <TableHead className='text-right'>Управление</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -41,29 +73,34 @@ export const UsersList: React.FC<Props> = () => {
             ) : (
               agents.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell>
+                  <TableCell className='flex items-center gap-4'>
                     <div className='font-medium'>{`${user.surname} ${user.firstName} ${user.lastName}`}</div>
+                    {admin?.id === user.id && <Shield className='h-5 w-5' color='green' />}
                   </TableCell>
                   <TableCell>{user.login}</TableCell>
                   <TableCell>{user.role}</TableCell>
 
                   <TableCell>
                     <div className='flex items-center gap-2'>
-                      {/* <Switch checked={true} onCheckedChange={(checked) => console.log('')} /> */}
+                      <Switch
+                        checked={user.status}
+                        disabled={loading}
+                        onCheckedChange={() => toggleStatus(user.id, admin!.id)}
+                        className='data-[state=checked]:bg-success data-[state=unchecked]:bg-gray-400'
+                      />
                       <span>{user.status ? 'Активен' : 'Заблокирован'}</span>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {/* <Select value={'1'} onValueChange={(value) => console.log(value)}>
-                    <SelectTrigger className='w-[180px]'>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={'1'}>Пользователь</SelectItem>
-
-                      <SelectItem value={'2'}>Администратор</SelectItem>
-                    </SelectContent>
-                  </Select> */}
+                  <TableCell className='text-right flex gap-4 justify-end'>
+                    <Button variant='ghost' className='h-8 w-8 p-0'>
+                      <PencilLine className='h-4 w-4' />
+                    </Button>
+                    <DeleteUser
+                      loading={loading}
+                      setLoading={setLoading}
+                      id={user.id}
+                      currentUserId={admin!.id}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -71,6 +108,6 @@ export const UsersList: React.FC<Props> = () => {
           </TableBody>
         </Table>
       )}{' '}
-    </>
+    </div>
   );
 };

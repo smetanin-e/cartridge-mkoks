@@ -1,8 +1,11 @@
 import { AddUser, Header } from '@/shared/components';
 import { UsersList } from '@/shared/components/admin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import { getMe } from '@/shared/services/auth/get-me';
 
 export default async function Admin() {
+  const admin = await getMe();
+  if (!admin) return null;
   return (
     <div>
       <Header title='Администрирование' description='Управление пользователями и их ролями' />
@@ -12,7 +15,7 @@ export default async function Admin() {
           <AddUser />
         </CardHeader>
         <CardContent>
-          <UsersList />
+          <UsersList admin={admin} />
         </CardContent>
       </Card>
     </div>

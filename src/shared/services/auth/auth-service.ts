@@ -2,7 +2,7 @@
 
 import { generateSalt, hashPassword, verifyPassword } from '@/shared/lib/auth/passwordHasher';
 import { prisma } from '@/shared/lib/prisma-client';
-import { CreateUserType } from '@/shared/schemas/auth/create-user-schema';
+import { CreateUserType, UpdateUserType } from '@/shared/schemas/auth/create-user-schema';
 import { generateRefreshToken } from './token-sevice';
 
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
@@ -37,6 +37,35 @@ export async function createUser(data: CreateUserType) {
     return user;
   } catch (error) {
     console.log('Error [CREATE_USER]', error);
+    throw error;
+  }
+}
+
+export async function updateUser(data: UpdateUserType) {
+  try {
+    const findUser = await prisma.user.findFirst({
+      where: {
+        id: data.id,
+      },
+    });
+
+    if (!findUser) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const user = await prisma.user.update({
+      where: { id: findUser.id },
+      data: {
+        surname: data.surname,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: data.role,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.log('Error [UPDATE_USER]', error);
     throw error;
   }
 }

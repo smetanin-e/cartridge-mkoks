@@ -24,4 +24,14 @@ export const createUserSchema = z
     },
   );
 
+export const updateUserSchema = createUserSchema
+  .omit({
+    login: true,
+    password: true,
+    confirmPassword: true,
+  })
+  .extend({
+    id: z.number(),
+  });
 export type CreateUserType = z.infer<typeof createUserSchema>;
+export type UpdateUserType = z.infer<typeof updateUserSchema>;

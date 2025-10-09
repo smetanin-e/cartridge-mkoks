@@ -5,14 +5,14 @@ import { Api } from '../services';
 interface UserAgentState {
   //=======Список пользователей ==============
   agents: Agent[];
-  loading: boolean;
+  loadingItems: boolean;
   error: boolean;
   getAgents: () => Promise<void>;
 }
 
 export const useAgentStore = create<UserAgentState>((set) => ({
   agents: [],
-  loading: true,
+  loadingItems: true,
   error: false,
   getAgents: async () => {
     try {
@@ -22,7 +22,7 @@ export const useAgentStore = create<UserAgentState>((set) => ({
       console.error(error);
       set({ error: true });
     } finally {
-      set({ loading: false });
+      set({ loadingItems: false });
     }
   },
 }));

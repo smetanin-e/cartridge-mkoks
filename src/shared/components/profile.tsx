@@ -40,16 +40,19 @@ export const Profile: React.FC<Props> = ({ user }) => {
             </AvatarFallback>
           </Avatar>
         </PopoverTrigger>
-        <PopoverContent align='end' className='px-6 text-right'>
-          {user.role === 'ADMIN' && (
-            <p className='mb-4 cursor-pointer'>
-              <Link href={'/admin'}>Администрирование</Link>
-            </p>
-          )}
+        <PopoverContent align='end' className='px-2 py-2 text-right'>
+          <p className='font-bold text-[12px] px-4'>{`${user.surname} ${user.firstName[0]}.${user.lastName[0]}.`}</p>
+          <div className='py-2'>
+            {user.role === 'ADMIN' && (
+              <p className='mb-4 px-4 cursor-pointer hover:shadow-md'>
+                <Link href={'/admin'}>Администрирование</Link>
+              </p>
+            )}
 
-          <p className='cursor-pointer ' onClick={logout}>
-            Выход
-          </p>
+            <p className='px-4 cursor-pointer hover:shadow-md' onClick={logout}>
+              Выход
+            </p>
+          </div>
         </PopoverContent>
       </Popover>
     </div>
