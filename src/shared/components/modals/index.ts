@@ -10,3 +10,4 @@ export { CartridgesReturn } from './cartridges-return';
 
 export { Login } from './login';
 export { AddUser } from './add-user';
+export { UpdateUser } from './update-user';

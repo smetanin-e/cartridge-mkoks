@@ -8,3 +8,5 @@ export { CustomSelect } from './custom-select';
 export { FormCustomSelect } from './form-custom-select';
 export { LoginForm } from './login-form';
 export { RegisterForm } from './register-form';
+
+export { UpdateUserForm } from './update-user-form';

@@ -8,30 +8,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui';
-import { UserPlus } from 'lucide-react';
+import { PencilLine, UserPlus } from 'lucide-react';
 import React from 'react';
-import { RegisterForm } from '../form';
+import { UpdateUserForm } from '../form';
+import { Agent } from '@/shared/services/dto/agent.dto';
 
-export const AddUser = () => {
+interface Props {
+  className?: string;
+  user: Agent;
+}
+
+export const UpdateUser: React.FC<Props> = ({ user }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlus className='h-4 w-4 mr-2' />
-          Добавить пользователя
+        <Button variant='ghost' className='h-8 w-8 p-0'>
+          <PencilLine className='h-4 w-4' />
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <UserPlus className='h-5 w-5' />
-            Добавить нового пользователя
+            Обновление данных пользователя
           </DialogTitle>
         </DialogHeader>
 
-        <RegisterForm setOpen={setOpen} />
+        <UpdateUserForm setOpen={setOpen} user={user} />
       </DialogContent>
     </Dialog>
   );

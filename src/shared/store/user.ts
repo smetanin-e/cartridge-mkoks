@@ -1,29 +1,35 @@
 import { create } from 'zustand';
 import { getMe } from '../services/auth/get-me';
 import { refreshAccessToken } from '../services/auth/refresh-access-token';
-import { AuthUser } from '@/@types/user.type';
+import { AuthUser } from '../services/dto/agent.dto';
 
 interface UserAuthState {
   //=======Авторизированный пользователь==============
   user: AuthUser | null;
   loading: boolean;
+  initialized: boolean;
   setUser: (user: AuthUser | null) => void;
   initUser: () => Promise<void>;
 }
 
-export const useUserStore = create<UserAuthState>((set) => ({
+export const useUserStore = create<UserAuthState>((set, get) => ({
   user: null,
   loading: true,
+  initialized: false,
   setUser: (user) => set({ user }),
   initUser: async () => {
+    if (get().initialized) {
+      return;
+    }
+    set({ loading: true, initialized: true });
     try {
-      const me = await getMe();
-      if (me) {
-        set({ user: me, loading: false });
+      let me = await getMe();
+      if (!me) {
+        await refreshAccessToken();
+        me = await getMe();
       }
-      await refreshAccessToken();
-      const meAfterRefresh = await getMe();
-      set({ user: meAfterRefresh, loading: false });
+
+      set({ user: me, loading: false });
     } catch {
       set({ user: null, loading: false });
     }

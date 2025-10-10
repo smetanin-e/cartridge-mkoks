@@ -12,7 +12,7 @@ import { signOut } from '../services/auth/sign-out';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { AuthUser } from '@/@types/user.type';
+import { AuthUser } from '../services/dto/agent.dto';
 
 interface Props {
   className?: string;

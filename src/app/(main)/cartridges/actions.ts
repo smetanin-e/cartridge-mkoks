@@ -16,7 +16,7 @@ export async function changeCartridgeStatus(id: number, status: CartridgeStatus)
       return {
         success: false,
         message:
-          'Картридж находится в сервисе на заправке! Изменитьстатус картриджа можно, оформив возврат из сервиса',
+          'Картридж находится в сервисе на заправке! Изменить статус картриджа можно, оформив возврат из сервиса',
       };
     }
 
@@ -24,7 +24,7 @@ export async function changeCartridgeStatus(id: number, status: CartridgeStatus)
       return {
         success: false,
         message:
-          'Картридж находится в работе, его статус изменить нельзя! Изменитьстатус картриджа можно, оформив замену',
+          'Картридж находится в работе, его статус изменить нельзя! Изменить статус картриджа можно, оформив замену',
       };
     }
 
@@ -68,6 +68,13 @@ export async function deleteCartridge(id: number) {
     });
     if (!cartridge) {
       return { success: false, message: 'Картридж не найден' };
+    }
+
+    if (
+      cartridge.status === CartridgeStatus.WORKING ||
+      cartridge.status === CartridgeStatus.SERVICE
+    ) {
+      return { success: false, message: 'Удаление запрещено' };
     }
 
     const hasRelations =
