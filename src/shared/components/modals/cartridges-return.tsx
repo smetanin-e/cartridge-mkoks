@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui';
 import { BatchCartridges } from '@/shared/services/dto/service-batch.dto';
-import { ChoiceCartridges, FormDate, FormInput, FormTextarea } from '@/shared/components';
+import { ChoiceCartridges, FormDate, FormTextarea, ResponsibleForm } from '@/shared/components';
 import { FormProvider, useForm } from 'react-hook-form';
 import { convertDate } from '@/shared/lib';
 import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema';
@@ -121,13 +121,7 @@ export const CartridgesReturn: React.FC<Props> = ({
             <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
               <div className='grid grid-cols-2 gap-4'>
                 <FormDate name='date' label='Дата приема' />
-                <div>
-                  <FormInput
-                    name='responsible'
-                    label='Ответственный за прием'
-                    placeholder='ФИО ответственного'
-                  />
-                </div>
+                <ResponsibleForm />
               </div>
               <div>
                 <FormTextarea

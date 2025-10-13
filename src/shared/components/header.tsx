@@ -6,6 +6,8 @@ import { Download, Package, Repeat } from 'lucide-react';
 import { Profile } from './profile';
 import { Logo } from './logo';
 import { useUserStore } from '../store/user';
+import { useAgentStore } from '../store/agents';
+import { UserRole } from '@prisma/client';
 
 interface Props {
   className?: string;
@@ -15,11 +17,16 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ title, description }) => {
   const user = useUserStore((state) => state.user);
+  const getAgents = useAgentStore((state) => state.getAgents);
   const initUser = useUserStore((state) => state.initUser);
   console.log(user);
 
   React.useEffect(() => {
     initUser();
+
+    getAgents();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className='flex items-center justify-between mb-8'>

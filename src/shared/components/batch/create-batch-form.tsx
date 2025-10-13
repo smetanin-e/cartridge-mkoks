@@ -3,7 +3,7 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { Send } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
-import { FormDate, FormInput, FormTextarea } from '@/shared/components/form';
+import { FormDate, FormInput, FormTextarea, ResponsibleForm } from '@/shared/components/form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { convertDate } from '@/shared/lib';
 import { ServiceFormType, serviceSchema } from '@/shared/schemas/service-schema';
@@ -61,7 +61,7 @@ export const CreateBatchForm: React.FC<Props> = ({ selectedCartridges, setSelect
             <div className='space-y-4 '>
               <FormDate name='date' label='Дата отправки' required />
 
-              <FormInput name='responsible' label='Ответственный' required />
+              <ResponsibleForm />
               <FormTextarea
                 name='notes'
                 label='Примечания'

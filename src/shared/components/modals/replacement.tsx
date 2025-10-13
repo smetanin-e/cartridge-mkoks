@@ -4,15 +4,21 @@ import toast from 'react-hot-toast';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Departament } from '@prisma/client';
+import { Departament, UserRole } from '@prisma/client';
 import { ReplacementFormType, replacementSchema } from '@/shared/schemas/replacement-schema';
 import { CartridgeDTO } from '@/shared/services/dto/cartridge-model.dto.';
 import { useDepartamentStore } from '@/shared/store/departaments';
-import { convertDate } from '@/shared/lib';
+import { convertDate, shortName } from '@/shared/lib';
 import { replacing } from '@/shared/services/replacement';
 import { getStatusBadge } from '@/shared/components/utils';
 import { Edit, Package, Plus } from 'lucide-react';
-import { FormCustomSelect, FormDate, FormInput } from '@/shared/components';
+import {
+  FormCustomSelect,
+  FormDate,
+  FormInput,
+  FormSelect,
+  ResponsibleForm,
+} from '@/shared/components';
 import {
   Badge,
   Button,
@@ -22,6 +28,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui';
+import { useUserStore } from '@/shared/store/user';
+import { useAgentStore } from '@/shared/store/agents';
+import { convertAgentsForSelect } from '@/shared/lib/convert-agents-for-select';
 
 interface Props {
   className?: string;
@@ -32,11 +41,12 @@ interface Props {
 export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartridges }) => {
   const [open, setOpen] = React.useState(false);
   const [isSubmiting, setIsSubmiting] = React.useState(false);
-
   const { departaments, getDepartaments } = useDepartamentStore();
   const { setOpenModal } = useDepartamentStore();
 
   const queryClient = useQueryClient();
+  const currentUser = useUserStore((state) => state.user);
+  const agents = useAgentStore((state) => state.agents);
 
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
@@ -44,7 +54,6 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
       date: new Date().toISOString().split('T')[0],
       installedCartridge: null,
       removedCartridge: null,
-      responsible: '',
     },
   });
 
@@ -52,7 +61,18 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
     getDepartaments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  React.useEffect(() => {
+    if (!currentUser) return;
 
+    if (agents && agents.length > 0) {
+      const foundAgent = agents.find((a) => a.id === currentUser.id);
+      if (foundAgent) {
+        form.setValue('responsible', shortName(foundAgent)); // 👈 важно: значение должно совпадать с value в <SelectItem value={item.name}>
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
+  if (!currentUser) return;
   const onSubmit = async (data: ReplacementFormType) => {
     try {
       setIsSubmiting(true);
@@ -168,7 +188,7 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
                 )}
               />
 
-              <FormInput name='responsible' label='Ответственный' required />
+              <ResponsibleForm />
 
               <Button disabled={isSubmiting} type='submit'>
                 Подтвердить

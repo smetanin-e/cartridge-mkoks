@@ -14,7 +14,7 @@ export type FormSelectType = {
   label: string;
   name: string;
 };
-interface Props {
+interface Props extends React.InputHTMLAttributes<HTMLSelectElement> {
   name: string;
   label?: string;
   required?: boolean;
@@ -47,7 +47,7 @@ export const FormSelect: React.FC<Props> = ({ name, label, required, data }) => 
             <div className='relative'>
               <Select value={value} onValueChange={field.onChange}>
                 <SelectTrigger className=' text-sm w-full' size='sm'>
-                  <SelectValue placeholder='Выберите роль...' />
+                  <SelectValue placeholder='Выберите...' />
                 </SelectTrigger>
                 <SelectContent>
                   {data.map((item) => (

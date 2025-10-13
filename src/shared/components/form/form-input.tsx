@@ -5,12 +5,13 @@ import { Input } from '@/shared/components/ui';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  type: string;
   label?: string;
   required?: boolean;
   className?: string;
 }
 
-export const FormInput: React.FC<Props> = ({ name, label, required, ...props }) => {
+export const FormInput: React.FC<Props> = ({ name, label, required, type, ...props }) => {
   const {
     register,
     formState: { errors },
@@ -34,9 +35,9 @@ export const FormInput: React.FC<Props> = ({ name, label, required, ...props }) 
       )}
 
       <div className='relative max-w-[462px]'>
-        <Input className='h-8 text-md' {...register(name)} {...props} />
+        <Input className='h-8 text-md' {...register(name)} {...props} type={type} />
 
-        {value && <ClearButton onClick={onClickClear} />}
+        {value && !required && <ClearButton onClick={onClickClear} />}
       </div>
 
       {errorText && <ErrorText text={errorText} className='absolute text-[12px] right-0' />}
