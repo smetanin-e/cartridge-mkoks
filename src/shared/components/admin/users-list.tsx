@@ -18,6 +18,7 @@ import { toggleAgentStatus } from '@/app/(main)/admin/actions';
 import { DeleteUser } from './delete-user';
 import { AuthUser } from '@/shared/services/dto/agent.dto';
 import { UpdateUser } from '../modals';
+import { ChangePassword } from '../modals/change-password';
 
 interface Props {
   className?: string;
@@ -111,9 +112,7 @@ export const UsersList: React.FC<Props> = ({ admin }) => {
                       </>
                     )}
                     <div className='flex items-center justify-center'>
-                      <Button variant='ghost' className='h-8 w-8 p-0'>
-                        <KeyRound className='h-4 w-4' />
-                      </Button>
+                      <ChangePassword id={user.id} />
                     </div>
                   </TableCell>
                 </TableRow>

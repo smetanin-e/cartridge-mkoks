@@ -9,9 +9,10 @@ import toast from 'react-hot-toast';
 import { USER_ROLES } from '@/shared/constants';
 import { updateUserSchema, UpdateUserType } from '@/shared/schemas/update-user-schema';
 import { Agent } from '@/shared/services/dto/agent.dto';
-import { updateAgent } from '@/app/(main)/admin/actions';
+
 import { useUserStore } from '@/shared/store/user';
 import { useAgentStore } from '@/shared/store/agents';
+import { updateUser } from '@/shared/services/auth/auth-service';
 
 interface Props {
   className?: string;
@@ -39,11 +40,8 @@ export const UpdateUserForm: React.FC<Props> = ({ setOpen, user }) => {
   const onSubmit = async (data: UpdateUserType) => {
     try {
       setIsSubmiting(true);
-      const res = await updateAgent(data, authUser.id);
-      if (res?.message) {
-        toast.error(res.message);
-        return;
-      }
+      await updateUser(data, authUser.id);
+
       useAgentStore.getState().getAgents();
       toast.success('Данные обновлены ✅');
       setOpen(false);

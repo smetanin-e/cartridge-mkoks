@@ -2,8 +2,10 @@
 
 import { generateSalt, hashPassword, verifyPassword } from '@/shared/lib/auth/passwordHasher';
 import { prisma } from '@/shared/lib/prisma-client';
-import { CreateUserType, UpdateUserType } from '@/shared/schemas/auth/create-user-schema';
+import { CreateUserType } from '@/shared/schemas/auth/create-user-schema';
 import { generateRefreshToken } from './token-sevice';
+import { UpdateUserType } from '@/shared/schemas/update-user-schema';
+import { ChangePasswordType } from '@/shared/schemas/change-password-schema';
 
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 
@@ -41,7 +43,7 @@ export async function createUser(data: CreateUserType) {
   }
 }
 
-export async function updateUser(data: UpdateUserType) {
+export async function updateUser(data: UpdateUserType, currentUserId: number) {
   try {
     const findUser = await prisma.user.findFirst({
       where: {
@@ -51,6 +53,10 @@ export async function updateUser(data: UpdateUserType) {
 
     if (!findUser) {
       throw new Error('Пользователь не найден');
+    }
+
+    if (findUser.id === currentUserId) {
+      throw new Error('Запрещено обновлять собственную учетную запись');
     }
 
     const user = await prisma.user.update({
@@ -104,3 +110,37 @@ export async function loginUser(login: string, password: string) {
 
   return { user, refreshToken };
 }
+
+export const changePassword = async (formData: ChangePasswordType, userId: number) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const isValidPassword = await verifyPassword(
+      formData.currentPassword,
+      user.password,
+      user.salt!,
+    );
+    if (!isValidPassword) {
+      throw new Error('Неверный пароль');
+    }
+
+    const salt = generateSalt();
+    const hashedPassword = await hashPassword(formData.password, salt);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        salt,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.log('[changePassword] Server error', error);
+    throw error;
+  }
+};
