@@ -33,6 +33,14 @@ export async function removeReplace(id: number) {
       return { error: 'Невозможно удалить запись' };
     }
 
+    //!========================================================
+    //!Исправить этот код при изменении архитектуры
+    const removedCartridge = await prisma.cartridge.findUnique({ where: { number: installed } });
+    if (!removedCartridge) return { error: 'Снятый картридж отсутствует' };
+    if (removedCartridge.status !== CartridgeStatus.REFILL)
+      return { error: 'Невозможно удалить запись' };
+    //!========================================================
+
     await prisma.replacement.delete({ where: { id } });
 
     if (installedCartridgeNumber) {
