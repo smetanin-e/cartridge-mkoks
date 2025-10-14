@@ -31,14 +31,14 @@ async function generateData() {
 
 async function clearData() {
   await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`;
-  //   await prisma.$executeRaw`TRUNCATE TABLE "Model" RESTART IDENTITY CASCADE`;
-  //   await prisma.$executeRaw`TRUNCATE TABLE "Cartridge" RESTART IDENTITY CASCADE`;
-  //   await prisma.$executeRaw`TRUNCATE TABLE "Printer" RESTART IDENTITY CASCADE`;
-  //   await prisma.$executeRaw`TRUNCATE TABLE "Replacement" RESTART IDENTITY CASCADE`;
-  //   await prisma.$executeRaw`TRUNCATE TABLE "Departament" RESTART IDENTITY CASCADE`;
-  //await prisma.$executeRaw`TRUNCATE TABLE "Session" RESTART IDENTITY CASCADE`;
-  //await prisma.$executeRaw`TRUNCATE TABLE "Category" RESTART IDENTITY CASCADE`;
-  //await prisma.$executeRaw`TRUNCATE TABLE "SubCategory" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Model" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Cartridge" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Printer" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Replacement" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Departament" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Session" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "ServiceBatch" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "ServiceBatchCartridge" RESTART IDENTITY CASCADE`;
 }
 
 async function main() {

@@ -40,6 +40,7 @@ export const ResponsibleForm: React.FC = () => {
     <FormInput
       name='responsible'
       label='Ответственный'
+      type='text'
       required
       readOnly
       value={shortName(currentUser)}

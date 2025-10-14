@@ -35,7 +35,8 @@ export async function removeReplace(id: number) {
 
     //!========================================================
     //!Исправить этот код при изменении архитектуры
-    const removedCartridge = await prisma.cartridge.findUnique({ where: { number: installed } });
+    const removedCartridge = await prisma.cartridge.findUnique({ where: { number: removed } });
+    console.log('removedCartridge', removedCartridge);
     if (!removedCartridge) return { error: 'Снятый картридж отсутствует' };
     if (removedCartridge.status !== CartridgeStatus.REFILL)
       return { error: 'Невозможно удалить запись' };

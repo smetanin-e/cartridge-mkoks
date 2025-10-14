@@ -29,8 +29,6 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui';
 import { useUserStore } from '@/shared/store/user';
-import { useAgentStore } from '@/shared/store/agents';
-import { convertAgentsForSelect } from '@/shared/lib/convert-agents-for-select';
 
 interface Props {
   className?: string;
@@ -46,7 +44,6 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
 
   const queryClient = useQueryClient();
   const currentUser = useUserStore((state) => state.user);
-  const agents = useAgentStore((state) => state.agents);
 
   const form = useForm<ReplacementFormType>({
     resolver: zodResolver(replacementSchema),
@@ -61,17 +58,7 @@ export const Replacement: React.FC<Props> = ({ avaibleCartridges, workingCartrid
     getDepartaments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  React.useEffect(() => {
-    if (!currentUser) return;
 
-    if (agents && agents.length > 0) {
-      const foundAgent = agents.find((a) => a.id === currentUser.id);
-      if (foundAgent) {
-        form.setValue('responsible', shortName(foundAgent)); // 👈 важно: значение должно совпадать с value в <SelectItem value={item.name}>
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
   if (!currentUser) return;
   const onSubmit = async (data: ReplacementFormType) => {
     try {

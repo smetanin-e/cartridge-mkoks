@@ -7,7 +7,6 @@ import { Profile } from './profile';
 import { Logo } from './logo';
 import { useUserStore } from '../store/user';
 import { useAgentStore } from '../store/agents';
-import { UserRole } from '@prisma/client';
 
 interface Props {
   className?: string;

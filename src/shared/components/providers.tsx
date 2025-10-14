@@ -5,6 +5,7 @@ import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from 'next-themes';
 import { Theme } from './theme';
+import { refreshAccessToken } from '../services/auth/refresh-access-token';
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   const color = 'var(--color-primary)';
@@ -14,6 +15,7 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   React.useEffect(() => {
     setMounted(true);
+    refreshAccessToken();
   }, []);
 
   if (!mounted) {

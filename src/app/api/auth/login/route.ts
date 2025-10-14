@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     const { login, password } = parsed.data;
     const { user, refreshToken } = await loginUser(login, password);
 
-    const accessToken = generateAccessToken({
+    const accessToken = await generateAccessToken({
       userId: user.id,
       role: user.role,
     });
