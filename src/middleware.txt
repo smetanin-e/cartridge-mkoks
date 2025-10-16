@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { refreshAccessToken } from './shared/services/auth/refresh-access-token';
+import { validateRefreshToken } from './shared/services/auth/validate-refresh-token';
+import { generateAccessToken } from './shared/services/auth/token-sevice';
+import { setAccessTokenCookie } from './shared/lib/auth/set-access-token-cookie';
+import jwt from 'jsonwebtoken';
 
 export async function middleware(req: NextRequest) {
   console.log('💡 middleware start');
@@ -7,20 +10,37 @@ export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('access_token')?.value;
   const refreshToken = req.cookies.get('refresh_token')?.value;
 
-  console.log('accessToken', accessToken);
-  console.log('refreshToken', refreshToken);
-
   if (!accessToken && !refreshToken) {
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
+  if (accessToken) {
+    try {
+      jwt.verify(accessToken, process.env.JWT_SECRET!);
+      return NextResponse.next();
+    } catch (error) {}
+  }
+
   if (refreshToken) {
-    const user = await refreshAccessToken();
-    console.log(user);
+    try {
+      const user = await validateRefreshToken(refreshToken);
+      if (!user) {
+        throw new Error('Refresh токен невалиден');
+      }
+      const newAccess = await generateAccessToken({ userId: user.id, role: user.role });
+      const res = NextResponse.redirect(req.nextUrl);
+      setAccessTokenCookie(res, newAccess, 60 * 15); // 15 минут
+      return res;
+    } catch (error) {
+      url.pathname = '/';
+      return NextResponse.redirect(url);
+    }
   }
 
   console.log('✅  middleware end');
+  // Если дошли сюда → нет access и нет refresh
+
   return NextResponse.next();
 }
 

@@ -26,7 +26,7 @@ interface Props {
 }
 
 export const UsersList: React.FC<Props> = ({ admin }) => {
-  const { agents, getAgents, loadingItems } = useAgentStore();
+  const { agents, loadingItems } = useAgentStore();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -47,10 +47,6 @@ export const UsersList: React.FC<Props> = ({ admin }) => {
     }
   };
 
-  React.useEffect(() => {
-    getAgents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <div className='relative min-h-[210px]'>
       {loadingItems ? (

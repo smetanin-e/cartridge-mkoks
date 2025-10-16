@@ -22,7 +22,6 @@ export const Header: React.FC<Props> = ({ title, description }) => {
 
   React.useEffect(() => {
     initUser();
-
     getAgents();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
